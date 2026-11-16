@@ -168,8 +168,8 @@
 .scene-backdrop{inset:-18px}
 .scene-backdrop>img[src*="/sunset."]{object-position:center bottom}
 
-/* Frame the monitor down to the hips, fading the lower edge behind dialogue. */
-.character[data-character="班长"][data-portrait="image"]{width:var(--monitor-width,22vw);height:var(--monitor-height,500px);top:var(--monitor-top,140px);bottom:auto;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%)}
-.character[data-character="班长"][data-portrait="image"]>img{position:absolute;top:0;left:0;width:100%;height:auto;object-position:top;object-fit:contain}
-@media(max-width:760px){.character[data-character="班长"][data-portrait="image"]{left:4%}}
-@media(orientation:landscape) and (max-height:600px){.character[data-character="班长"][data-portrait="image"]{left:4%}}
+/* Frame supplied portraits down to the hips and fade their lower edge behind dialogue. */
+.character[data-portrait="image"]{width:var(--portrait-width,22vw);height:var(--portrait-height,500px);top:var(--portrait-top,140px);bottom:auto;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%)}
+.character[data-portrait="image"]>img{position:absolute;top:0;left:0;width:100%;height:auto;object-position:top;object-fit:contain}
+@media(max-width:760px){.character[data-portrait="image"]{left:4%}}
+@media(orientation:landscape) and (max-height:600px){.character[data-portrait="image"]{left:4%}}

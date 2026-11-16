@@ -10,12 +10,12 @@ export const chapters = [
 export const backgrounds = {开学典礼:'openingCeremony',雨中校园:'rainCampus',车窗:'chechuang',校门:'xiaomen',文管学馆:'wenguan',图书馆:'tushuguan',小南湖:'xiaonanhu',二食堂:'ercantang',宿舍楼下:'sushe',军训场:'junxun',教室:'jiaoshi',走廊:'zoulang',文管门口:'wenguanmenkou',夜路:'sunset'};
 export const characters = {
   主角:{file:'zhujue',side:'center',color:'#7a9f88',title:'一个普通同学'},
-  班长:{file:'banzhang',side:'left',color:'#789789',title:'班委'},
+  班长:{file:'banzhang',portraitHip:.62,side:'left',color:'#789789',title:'班委'},
   团支书:{file:'tuanzhishu',side:'left',color:'#be8e73',title:'班委'},
-  生活委员:{file:'shenghuo',side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
+  生活委员:{file:'shenghuo',portraitHip:.56,side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
   组宣:{file:'zuxuan',side:'left',color:'#8d88b1',title:'组织 · 宣传'},
-  学习委员:{file:'xuewei',side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
-  文体委员:{file:'wenti',side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
+  学习委员:{file:'xuewei',portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
+  文体委员:{file:'wenti',portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
   学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
   心理委员:{file:'xinli',side:'left',color:'#89a789',title:'班委'},
 };

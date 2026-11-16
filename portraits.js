@@ -37,19 +37,18 @@ export class PortraitLayer {
   }
 
   fit() {
-    if (!this.dialogue || this.container.dataset.character !== '班长' ||
-        this.container.dataset.portrait !== 'image' || !this.image.naturalWidth) return;
+    if (!this.dialogue || this.container.dataset.portrait !== 'image' || !this.image.naturalWidth) return;
     const dialogue = this.dialogue.getBoundingClientRect();
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 0;
     const parentTop = this.container.offsetParent?.getBoundingClientRect().top || 0;
     // Frame the original artwork down to the hips, aligned with the dialogue edge.
-    const hipRatio = this.image.naturalHeight / this.image.naturalWidth * .62;
+    const hipRatio = this.image.naturalHeight / this.image.naturalWidth * this.hipFraction;
     const desiredWidth = innerWidth <= 760 ? Math.min(280, innerWidth * .62) : Math.min(330, innerWidth * .22);
-    const width = Math.min(desiredWidth, Math.max(60, dialogue.top - headerBottom - 30) / hipRatio);
-    const visibleHeight = width * hipRatio;
-    this.container.style.setProperty('--monitor-width', width + 'px');
-    this.container.style.setProperty('--monitor-top', (dialogue.top - visibleHeight - parentTop) + 'px');
-    this.container.style.setProperty('--monitor-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
+    const visibleHeight = Math.min(desiredWidth * 1.3, Math.max(60, dialogue.top - headerBottom - 30));
+    const width = visibleHeight / hipRatio;
+    this.container.style.setProperty('--portrait-width', width + 'px');
+    this.container.style.setProperty('--portrait-top', (dialogue.top - visibleHeight - parentTop) + 'px');
+    this.container.style.setProperty('--portrait-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
   }
 
   hide() {
@@ -73,6 +72,7 @@ export class PortraitLayer {
     this.image.alt = name;
     this.label.textContent = name;
     this.container.dataset.character = name;
+    this.hipFraction = character.portraitHip ?? .62;
     this.container.dataset.portrait = source ? 'image' : 'placeholder';
     this.image.onload = () => {
       if (sequence !== this.sequence || !this.image.complete || !this.image.naturalWidth) return;

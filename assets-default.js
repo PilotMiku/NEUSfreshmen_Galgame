@@ -110,5 +110,8 @@ export const defaultAssets = {
   "thumb_trainingFormation": "assets/photos/trainingFormation.thumb.webp",
   "trainingFormation": "assets/photos/trainingFormation.webp",
   "banzhang": "img_human/banzhang.png",
-  "mobile_sunset": "assets/photos/sunset.mobile.webp"
+  "mobile_sunset": "assets/photos/sunset.mobile.webp",
+  "shenghuo": "img_human/shenghuo.png",
+  "xuewei": "img_human/xuewei.png",
+  "wenti": "img_human/wenti.png"
 };
