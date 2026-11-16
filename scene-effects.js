@@ -130,15 +130,16 @@ export class SceneEffects{
  get busy(){return this.playing;}
  clear(){clearTimeout(this.timer);this.timer=null;this.key=null;this.effect=null;this.playing=false;this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();this.pile.clear();this.words.clear();document.body.classList.remove('cinematic-scene');}
  renderWarnings(elapsed=0){
-  const width=this.overlay.clientWidth,height=this.overlay.clientHeight,columns=Math.max(3,Math.ceil(width/180)),size=width/columns;
-  const rows=Math.ceil(height/(size*.66)),count=columns*rows,fragment=document.createDocumentFragment();
-  const positions=Array.from({length:count},(_,index)=>index);
-  for(let index=count-1;index>0;index--){const other=Math.floor(Math.random()*(index+1));[positions[index],positions[other]]=[positions[other],positions[index]];}
+  const width=this.overlay.clientWidth,height=this.overlay.clientHeight;
+  const size=Math.max(120,Math.min(190,Math.min(width,height)*.22));
+  const count=Math.max(20,Math.ceil(width*height/(size*size)*2.1)),fragment=document.createDocumentFragment();
+  const delays=[0,...Array.from({length:count-2},()=>Math.random()*2800),2800].sort((a,b)=>a-b);
   for(let index=0;index<count;index++){
    const sign=node('span','course-warning-sign');sign.innerHTML=warningIcon;
-   const position=positions[index],column=position%columns,row=Math.floor(position/columns);
-   sign.style.left=(column+.5+(Math.random()-.5)*.38)*100/columns+'%';sign.style.top=(row+.5+(Math.random()-.5)*.36)*100/rows+'%';
-   sign.style.width=size*(1.22+Math.random()*.18)+'px';sign.style.setProperty('--warning-delay',(index/(count-1)*2800-elapsed)+'ms');fragment.append(sign);
+   // Independent positions intentionally allow clusters, gaps and overlapping signs.
+   sign.style.left=Math.random()*100+'%';sign.style.top=Math.random()*100+'%';
+   sign.style.width=size*(.65+Math.random()*.95)+'px';sign.style.rotate=(Math.random()-.5)*28+'deg';
+   sign.style.setProperty('--warning-delay',(delays[index]-elapsed)+'ms');fragment.append(sign);
   }
   this.warnings.replaceChildren(fragment);
  }

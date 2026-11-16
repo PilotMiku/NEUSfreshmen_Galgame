@@ -39,10 +39,10 @@ test('Confirmed dorm and rain photos retain their correct meaning',async()=>{
  assert.equal(map.sushe,1248);assert.equal(map.rainCampus,1259);assert.equal(map.openingCeremony,1230);assert.equal(map.trainingPractice,'军训1.jpg');
  assert(albums.rainDiary.photos[0].caption.includes('同学'));assert.equal(story[sceneIndex['opening-ceremony']].bg,'开学典礼');
 });
-test('WebP gallery images and thumbnails are packaged without replacing backgrounds',async()=>{
+test('WebP gallery images and thumbnails remain separate from responsive backgrounds',async()=>{
  const manifest=JSON.parse(await readFile(new URL('../asset-manifest.json',import.meta.url),'utf8'));
  for(const key of new Set(Object.values(albums).flatMap(album=>album.photos.map(photo=>photo.key)))){
   for(const prefix of ['gallery_','thumb_']){const path=manifest[prefix+key];assert(path?.endsWith('.webp'));const bytes=await readFile(new URL('../'+path,import.meta.url));assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');}
  }
- for(const key of Object.values(backgrounds))if(manifest[key])assert(manifest[key].endsWith('.jpg'));
+ for(const key of Object.values(backgrounds))if(manifest[key])assert(manifest[key].endsWith('.bg.webp'));
 });

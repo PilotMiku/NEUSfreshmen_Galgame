@@ -2,11 +2,11 @@
   "chechuang": 1241,
   "xiaomen": 1219,
   "wenguan": 1224,
-  "tushuguan": 1242,
+  "tushuguan": "图书馆.jpg",
   "xiaonanhu": 1234,
   "junxun": 1231,
   "jiaoshi": 1220,
-  "zoulang": 1237,
+  "zoulang": "过道.jpg",
   "wenguanmenkou": 1224,
   "yelu": 1239,
   "registration": 1215,
@@ -32,5 +32,9 @@
   "treeRoad": 1250,
   "trainingFriends": 1257,
   "grassField": 1251,
-  "trainingPractice": "军训1.jpg"
+  "trainingPractice": "军训1.jpg",
+  "trainingFlag": "军训升旗.jpg",
+  "trainingDrill": "军训训练.jpg",
+  "trainingShooting": "模拟射击.jpg",
+  "trainingFormation": "合唱团.jpg"
 }

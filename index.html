@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="app">
-  <div class="scene-backdrop" aria-hidden="true"><img id="background" src="assets/photos/xiaomen.jpg" alt=""><div class="scene-tint"></div><div class="grain"></div></div>
+  <div class="scene-backdrop" aria-hidden="true"><img id="background" src="assets/photos/xiaomen.mobile.webp" fetchpriority="high" decoding="async" alt=""><div class="scene-tint"></div><div class="grain"></div></div>
   <header class="topbar">
     <!-- 校徽来源：https://www.neu.edu.cn/xygk/ddbs.htm -->
     <a class="brand" id="brand" href="#" aria-label="返回新生首页"><img class="brand-emblem" src="assets/neu-emblem.png" alt="东北大学校徽" width="52" height="52"><span class="brand-name">新生<span>东北大学 · 入学篇</span></span></a>
@@ -49,6 +49,7 @@
 </div>
 <dialog id="modal"><div class="modal-heading"><div><span class="modal-eyebrow" id="modal-eyebrow"></span><h2 id="modal-title"></h2></div><button id="modal-close" class="icon-button" aria-label="关闭弹窗">×</button></div><div id="modal-body"></div></dialog>
 <dialog id="photo-viewer" class="photo-viewer" tabindex="-1" aria-labelledby="photo-title"><header><h2 id="photo-title" data-photo-title></h2><span data-photo-count></span><button type="button" data-photo-close aria-label="关闭相册">×</button></header><p data-photo-story hidden></p><figure><img alt=""><figcaption data-photo-caption></figcaption></figure><footer><button type="button" data-photo-previous>← 上一张</button><button type="button" data-photo-play aria-pressed="false">▷ 播放</button><button type="button" data-photo-next>下一张 →</button></footer></dialog>
+<div id="asset-status" class="asset-status" hidden><span id="asset-message" role="status"></span><button id="asset-retry" type="button">重试</button></div>
 <div id="toast" class="toast" role="status"></div>
 <noscript>请启用 JavaScript 来开启《新生》的故事。</noscript>
 <script type="module" src="app.js"></script>

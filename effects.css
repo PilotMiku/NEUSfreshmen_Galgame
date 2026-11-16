@@ -152,3 +152,10 @@
  .todo-card>span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.course-word{animation:none;transform:none;opacity:.56}.chat-phone .phone-content{scroll-behavior:auto}.chat-row,.chat-typing i,.chat-draft:after{animation:none}.cinematic-letter,.cinematic-overlay>p{animation:none;opacity:1;transform:none}.course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}}
+
+/* Asset feedback stays outside the reading area. */
+.asset-status{position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:9;max-width:90vw;padding:8px 12px;border:1px solid #c8d5e3;border-radius:8px;background:#fffdf5ed;color:#415772;font-size:12px;box-shadow:0 2px 12px #20375215;display:flex;align-items:center;gap:12px}
+.asset-status[hidden]{display:none}.asset-status button,.photo-status button{padding:7px 12px;border:1px solid currentColor;border-radius:5px;white-space:nowrap}
+.photo-viewer figure{position:relative}.photo-status{display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;min-height:28px;font-size:14px}
+.photo-status:has(button[hidden]):has(span:empty){display:none}.photo-status button[hidden]{display:none}
+.photo-viewer img[hidden]{display:none}
