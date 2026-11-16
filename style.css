@@ -53,3 +53,50 @@
 @media(max-width:760px) and (max-height:720px){.home-copy{top:4%}.live-panel{top:3%;padding:20px;max-height:calc(100% - 80px)}}
 
 .live-scene .chapter-ribbon,.live-scene .location-label{visibility:hidden}
+
+.brand-emblem{display:block;width:52px;height:52px;object-fit:contain;flex-shrink:0;border-radius:50%}
+@media(max-width:760px){.brand-emblem{width:42px;height:42px}}
+
+@media(min-width:761px){
+ .phone{top:2%;width:320px;height:480px;border-width:7px;border-radius:36px;padding:17px 17px 26px;display:flex;flex-direction:column}
+ .phone:before{width:78px;height:16px;left:calc(50% - 39px)}
+ .phone-top{font-size:10px;margin-bottom:25px;flex-shrink:0}
+ .phone-heading{font-size:20px;padding-bottom:15px;flex-shrink:0}
+ .phone-content{font-size:13px;max-height:none;min-height:0;flex:1;padding-top:13px}
+ .phone-home{bottom:9px;width:80px;height:4px;left:calc(50% - 40px)}
+ .phone-item{padding:11px 4px;gap:11px}
+ .phone-checkbox{width:15px;height:15px}
+ .phone-item.checked .phone-checkbox{line-height:14px}
+ .phone-item small{font-size:10px}
+ .phone-avatar{width:31px;height:31px;font-size:12px}
+ .phone-bubble{padding:10px 12px;margin:8px 0 16px}
+ .phone-bubble.out{margin-left:30px}
+ .phone-time{font-size:10px;margin:10px}
+ .phone .album-grid{gap:8px}
+ .phone .album-grid img{height:115px}
+ .phone .album-caption{font-size:11px}
+ .phone-warn{font-size:11px;padding:10px}
+ .phone-pixel{font-size:16px;padding:27px 10px}
+ .phone-pixel strong{font-size:34px}
+ .phone-courses{font-size:22px;padding:15px 0}
+}
+@media(min-width:1600px){
+ .phone{top:0;right:18%}
+}
+@media(min-width:1600px) and (min-height:1000px){
+ .phone{top:3%;width:350px;height:525px}
+ .phone .album-grid img{height:130px}
+}
+@media(min-width:761px) and (max-height:850px){
+ .phone{top:0;width:280px;height:min(405px,calc(100svh - 370px));padding:15px 15px 23px;border-radius:32px}
+ .phone-top{font-size:9px;margin-bottom:19px}
+ .phone-heading{font-size:18px;padding-bottom:11px}
+ .phone-content{font-size:12px;padding-top:10px}
+ .phone-item{padding:8px 3px;gap:8px}
+ .phone .album-grid img{height:90px}
+ .phone-pixel{padding:18px 8px;font-size:14px}
+}
+@media(min-width:1600px) and (max-height:850px){
+ .home-copy{top:5%}
+ .phone{height:min(405px,calc(100svh - 400px))}
+}
