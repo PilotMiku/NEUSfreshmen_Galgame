@@ -166,6 +166,7 @@
 
 /* A small overscan hides the blurred edge during scenery transitions. */
 .scene-backdrop{inset:-18px}
+.scene-backdrop>img[src*="/sunset."]{object-position:center bottom}
 
 /* Frame the monitor down to the hips, fading the lower edge behind dialogue. */
 .character[data-character="班长"][data-portrait="image"]{width:var(--monitor-width,22vw);height:var(--monitor-height,500px);top:var(--monitor-top,140px);bottom:auto;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%)}

@@ -17,7 +17,7 @@ export const defaultAssets = {
   "trainingTrack": "assets/photos/trainingTrack.webp",
   "friendship": "assets/photos/friendship.webp",
   "autumn": "assets/photos/autumn.webp",
-  "sunset": "assets/photos/sunset.webp",
+  "sunset": "assets/photos/sunset.bg.webp",
   "flowers": "assets/photos/flowers.webp",
   "cat": "assets/photos/cat.webp",
   "sushe": "assets/photos/sushe.bg.webp",
@@ -109,5 +109,6 @@ export const defaultAssets = {
   "gallery_trainingFormation": "assets/photos/trainingFormation.webp",
   "thumb_trainingFormation": "assets/photos/trainingFormation.thumb.webp",
   "trainingFormation": "assets/photos/trainingFormation.webp",
-  "banzhang": "img_human/banzhang.png"
+  "banzhang": "img_human/banzhang.png",
+  "mobile_sunset": "assets/photos/sunset.mobile.webp"
 };

@@ -7,7 +7,7 @@ export const chapters = [
   {name:'试着开口', en:'心理班会', note:'现场互动'},
   {name:'没那么沉了', en:'今天晚上', note:'文管学馆门口'},
 ];
-export const backgrounds = {开学典礼:'openingCeremony',雨中校园:'rainCampus',车窗:'chechuang',校门:'xiaomen',文管学馆:'wenguan',图书馆:'tushuguan',小南湖:'xiaonanhu',二食堂:'ercantang',宿舍楼下:'sushe',军训场:'junxun',教室:'jiaoshi',走廊:'zoulang',文管门口:'wenguanmenkou',夜路:'yelu'};
+export const backgrounds = {开学典礼:'openingCeremony',雨中校园:'rainCampus',车窗:'chechuang',校门:'xiaomen',文管学馆:'wenguan',图书馆:'tushuguan',小南湖:'xiaonanhu',二食堂:'ercantang',宿舍楼下:'sushe',军训场:'junxun',教室:'jiaoshi',走廊:'zoulang',文管门口:'wenguanmenkou',夜路:'sunset'};
 export const characters = {
   主角:{file:'zhujue',side:'center',color:'#7a9f88',title:'一个普通同学'},
   班长:{file:'banzhang',side:'left',color:'#789789',title:'班委'},
