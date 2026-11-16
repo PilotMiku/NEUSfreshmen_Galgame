@@ -65,7 +65,7 @@ at('教室','ke',2);
 scene('一大波课程正在接近。',{id:'courses',effect:'course-warning',cinematicTitle:'一大波课程正在接近'});
 scene('高数——导数咋求来着？（我盯着公式看了半天，又翻回前一页。）',{id:'s25',effect:'math'});
 scene('线代——开心消消乐？等会儿，我是不是消错了？',{id:'s26',effect:'matrix'});
-scene('英语——阿巴阿巴。老师刚才说到哪了？',{id:'s27'});
+scene('英语——阿巴阿巴。老师刚才说到哪了？',{id:'s27',effect:'english'});
 system('宿主修为，散尽中。',{id:'s28'});
 scene('这就是……大学吗。',{id:'s29'});
 at('走廊');

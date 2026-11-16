@@ -6,7 +6,7 @@ import {TodoList,SceneEffects} from './scene-effects.js';
 const $=id=>document.getElementById(id),sound=new Soundtrack(),KEY='xinsheng.v1';
 const portraits=new PortraitLayer($('character'),$('character-image'),$('character-tag'));
 const phoneTodos=new TodoList(count=>{$('phone-title').textContent='待办事项 · '+count;});
-const effects=new SceneEffects($('cinematic'),$('todo-rain'),$('dialogue'),todos,()=>scheduleAuto());
+const effects=new SceneEffects($('cinematic'),$('todo-rain'),$('dialogue'),todos,()=>scheduleAuto(),$('scene-decoration'));
 const gallery=new PhotoViewer($('photo-viewer'),()=>{clearTimeout(autoTimer);clearTimeout(slideshowTimer);slideshowTimer=null;slideshowPlayedFor=story[state.index].id;effects.pause(true);phoneTodos.pause(true);},()=>{syncPauses();scheduleAuto();});
 let storeAvailable=true;
 const storage={get(key,fallback=null){try{const v=localStorage.getItem(KEY+'.'+key);if(v===null)return fallback;const value=JSON.parse(v);return key==='auto'||/^slot[123]$/.test(key)?normalizeSave(value)||fallback:value;}catch{return fallback;}},set(key,value){try{localStorage.setItem(KEY+'.'+key,JSON.stringify(value));return true;}catch{storeAvailable=false;return false;}}};

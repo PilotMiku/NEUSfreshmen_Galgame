@@ -2,6 +2,39 @@ import {createTodoBody,stepTodoPhysics} from './todo-physics.js';
 const node=(tag,className,text)=>{const element=document.createElement(tag);element.className=className;if(text!==undefined)element.textContent=text;return element;};
 const courseIntroDuration=3500,courseTextDuration=4200;
 const warningIcon='<svg viewBox="0 0 100 91" focusable="false" aria-hidden="true"><path d="M50 4 98 87.14H2Z" fill="#ffe16a" stroke="#bc8431" stroke-width="3" stroke-linejoin="round"/><path d="M46 33h8l-1 27h-6Z" fill="#d83c46"/><circle cx="50" cy="69" r="4.5" fill="#d83c46"/></svg>';
+const courseWords={
+ math:['(x²)′ = 2x','lim x→0','∫ f(x) dx','Δx → 0','y = f(x)','(sin x)′ = cos x','dy / dx','∫ x dx','连续 · 可导','极限存在吗？','求导法则','f′(x)','ε > 0','高等数学'],
+ matrix:['[ 1 0 ; 0 1 ]','A · B ≠ B · A','det(A)','矩阵相乘','Ax = b','λI − A','线性相关？','rank(A)','初等行变换','[ a₁ a₂ a₃ ]','逆矩阵 A⁻¹','向量空间','特征值 λ','齐次方程组'],
+ english:['Could you repeat that?','assignment','Take notes.','vocabulary','Unit 1','Listen carefully.','presentation','What does it mean?','paragraph','deadline','Read aloud.','How do you spell it?','grammar','One more time?'],
+};
+
+class CourseWords{
+ constructor(container,dialogue){
+  this.container=container;this.dialogue=dialogue;this.layer=node('div','course-words hidden');container.append(this.layer);
+  this.layer.setAttribute('aria-hidden','true');this.measure=()=>{
+   if(!this.active)return;
+   const height=Math.max(0,dialogue.getBoundingClientRect().top-this.layer.getBoundingClientRect().top-14),width=this.layer.clientWidth;
+   this.layer.style.height=height+'px';
+   const columns=width<500?2:width>740&&height<200?5:4,rows=Math.ceil(this.layer.children.length/columns);
+   this.layer.style.setProperty('--course-columns',columns);
+   Array.from(this.layer.children).forEach((word,index)=>{word.style.left=((index%columns+.5)*100/columns)+'%';word.style.top=((Math.floor(index/columns)+.5)*100/rows)+'%';});
+  };
+  this.observer=new ResizeObserver(this.measure);this.observer.observe(dialogue);window.addEventListener('resize',this.measure);
+ }
+ set(effect){
+  this.active=!!courseWords[effect];this.layer.classList.toggle('hidden',!this.active);this.layer.replaceChildren();
+  if(!this.active)return;
+  courseWords[effect].forEach((text,index)=>{
+   const word=node('span','course-word',text);word.style.setProperty('--word-duration',(12+Math.random()*8)+'s');
+   word.style.setProperty('--word-delay',(-Math.random()*16)+'s');word.style.setProperty('--word-appear',index*45+'ms');
+   word.style.setProperty('--word-x',(Math.random()>.5?1:-1)*(6+Math.random()*6)+'px');word.style.setProperty('--word-y',(Math.random()>.5?1:-1)*(5+Math.random()*5)+'px');
+   word.style.setProperty('--word-tilt',(Math.random()-.5)*6+'deg');this.layer.append(word);
+  });
+  this.measure();requestAnimationFrame(this.measure);
+ }
+ pause(value){this.layer.classList.toggle('effect-paused',value);}
+ clear(){this.active=false;this.layer.replaceChildren();this.layer.classList.add('hidden');}
+}
 
 export class TodoList{
  constructor(onChange){this.onChange=onChange;this.target=0;this.count=0;this.paused=false;}
@@ -84,16 +117,16 @@ export class FallingTodos{
 }
 
 export class SceneEffects{
- constructor(overlay,pile,dialogue,todos,onFinished){
+ constructor(overlay,pile,dialogue,todos,onFinished,decoration){
   this.overlay=overlay;this.heading=overlay.querySelector('[data-cinematic-title]');this.note=overlay.querySelector('[data-cinematic-note]');
   this.warnings=node('div','course-warning-signs');this.warnings.setAttribute('aria-hidden','true');overlay.prepend(this.warnings);
   overlay.style.setProperty('--course-intro',courseIntroDuration+'ms');
   window.addEventListener('resize',()=>{if(this.effect==='course-warning'&&this.playing)this.renderWarnings(courseIntroDuration+courseTextDuration-this.remaining+(this.paused?0:performance.now()-this.startedAt));});
-  this.pile=new FallingTodos(pile,dialogue,todos);this.onFinished=onFinished;this.key=null;this.playing=false;
+  this.pile=new FallingTodos(pile,dialogue,todos);this.words=new CourseWords(decoration,dialogue);this.onFinished=onFinished;this.key=null;this.playing=false;
  }
  get cinematic(){return ['binding','welcome','course-warning'].includes(this.effect);}
  get busy(){return this.playing;}
- clear(){clearTimeout(this.timer);this.timer=null;this.key=null;this.effect=null;this.playing=false;this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();this.pile.clear();document.body.classList.remove('cinematic-scene');}
+ clear(){clearTimeout(this.timer);this.timer=null;this.key=null;this.effect=null;this.playing=false;this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();this.pile.clear();this.words.clear();document.body.classList.remove('cinematic-scene');}
  renderWarnings(elapsed=0){
   const width=this.overlay.clientWidth,height=this.overlay.clientHeight,columns=Math.max(3,Math.ceil(width/180)),size=width/columns;
   const rows=Math.ceil(height/(size*.66)),count=columns*rows,fragment=document.createDocumentFragment();
@@ -111,6 +144,7 @@ export class SceneEffects{
   this.pile.set(scene.effect==='overload'?scene.overflowCount||12:0,reduced);
   if(scene.id===this.key&&this.effect===scene.effect)return;
   clearTimeout(this.timer);this.timer=null;this.key=scene.id;this.effect=scene.effect;this.playing=false;
+  this.words.set(scene.effect);
   this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();document.body.classList.toggle('cinematic-scene',this.cinematic);
   if(!this.cinematic)return;
   const title=(scene.cinematicTitle||scene.text).replaceAll('{name}',name);
@@ -125,7 +159,7 @@ export class SceneEffects{
  resumeTimer(){if(!this.playing||this.paused)return;this.startedAt=performance.now();this.timer=setTimeout(()=>this.finish(),this.remaining);}
  finish(){if(!this.playing)return false;clearTimeout(this.timer);this.timer=null;this.playing=false;this.overlay.classList.add('finished');this.onFinished();return true;}
  pause(value){
-  if(this.paused===value)return;this.paused=value;this.pile.pause(value);this.overlay.classList.toggle('effect-paused',value);
+  if(this.paused===value)return;this.paused=value;this.pile.pause(value);this.words.pause(value);this.overlay.classList.toggle('effect-paused',value);
   if(value){if(this.timer){clearTimeout(this.timer);this.timer=null;this.remaining=Math.max(0,this.remaining-(performance.now()-this.startedAt));}}
   else this.resumeTimer();
  }

@@ -9,6 +9,15 @@
 .todo-added{animation:todo-added .28s ease-out both}
 @keyframes todo-added{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}
 .scene-decoration.overload:after,.scene-decoration.warning:after{display:none}
+.scene-decoration.math:after,.scene-decoration.matrix:after,.scene-decoration.english:after{display:none}
+.course-words{position:absolute;top:175px;left:4%;right:4%;height:300px;overflow:hidden;pointer-events:none}
+.course-word{position:absolute;translate:-50% -50%;width:max-content;max-width:calc(100% / var(--course-columns) - 18px);text-align:center;font-family:var(--serif);font-size:clamp(18px,1.65vw,28px);line-height:1.45;letter-spacing:.5px;color:#f4f7ff;text-shadow:0 1px 3px #20334b,0 0 10px #1d3048cc;opacity:.9;animation:course-word-drift var(--word-duration) var(--word-delay) ease-in-out infinite alternate,course-word-appear .8s var(--word-appear) ease-out both}
+.course-word:nth-child(3n+2){color:#ffe2ee}
+.course-word:nth-child(3n){color:#d0eaff}
+.pure .course-words{visibility:hidden}
+@keyframes course-word-drift{from{transform:translate(calc(var(--word-x) * -1),calc(var(--word-y) * -1)) rotate(calc(var(--word-tilt) * -1))}to{transform:translate(var(--word-x),var(--word-y)) rotate(var(--word-tilt))}}
+@keyframes course-word-appear{from{opacity:0}to{opacity:.9}}
+.motion-reduced .course-word{animation:none;transform:none;opacity:.9}
 .todo-rain{position:absolute;top:0;left:0;right:0;height:100%;z-index:3;overflow:hidden;pointer-events:none}
 .todo-card{position:absolute;left:0;top:0;display:flex;align-items:center;gap:12px;padding:10px 15px;box-sizing:border-box;background:#faf7ee;color:#344b3b;border:1px solid #b9c3aa;border-radius:4px;box-shadow:0 4px 9px #1c30232b;will-change:transform}
 .todo-card small{font-family:var(--serif);font-size:21px;font-style:italic;color:#859874;flex-shrink:0}
@@ -60,6 +69,8 @@
 .motion-reduced .cinematic-letter,.motion-reduced .cinematic-overlay>p{animation:none;opacity:1;transform:none}
 .motion-reduced .course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}
 @media(max-width:760px){
+ .course-words{top:145px}
+ .course-word{font-size:clamp(12px,3.6vw,17px);letter-spacing:.1px}
  .stage-direction{font-size:.68em;line-height:1.65;margin-top:6px}
  .simulator>p{font-size:11px}
  .has-phone .simulator>p,.has-portrait .simulator>p{font-size:10px;line-height:1.7}
@@ -79,6 +90,8 @@
  .photo-viewer footer button{font-size:10px;padding:7px 10px}
 }
 @media(orientation:landscape) and (max-height:600px){
+ .course-words{top:54px}
+ .course-word{font-size:clamp(11px,3svh,16px);letter-spacing:.1px}
  .stage-direction{margin-top:4px;font-size:.68em;line-height:1.5}
  .dialogue>p{margin:6px 0;line-height:1.45}
  .cinematic-overlay{gap:14px;padding:20px}
@@ -95,4 +108,4 @@
  .photo-viewer footer button{min-height:26px;padding:5px 10px;font-size:10px}
  .todo-card>span{font-size:13px}
 }
-@media(prefers-reduced-motion:reduce){.cinematic-letter,.cinematic-overlay>p{animation:none;opacity:1;transform:none}.course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}}
+@media(prefers-reduced-motion:reduce){.course-word{animation:none;transform:none;opacity:.9}.cinematic-letter,.cinematic-overlay>p{animation:none;opacity:1;transform:none}.course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}}
