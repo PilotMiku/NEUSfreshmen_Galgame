@@ -20,4 +20,6 @@ npm run dev
 
 支持单人游玩和班会现场模式。进度自动保存在当前浏览器，也可手动存读档。
 
+人物立绘可后续替换：[添加方法](img_human/README.md)。
+
 `npm test` 检查剧情，`npm run build` 生成静态站点。推送到 main 后自动部署至 GitHub Pages。

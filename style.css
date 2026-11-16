@@ -58,45 +58,183 @@
 @media(max-width:760px){.brand-emblem{width:42px;height:42px}}
 
 @media(min-width:761px){
- .phone{top:2%;width:320px;height:480px;border-width:7px;border-radius:36px;padding:17px 17px 26px;display:flex;flex-direction:column}
+ .phone{top:0;width:370px;height:520px;border-width:7px;border-radius:36px;padding:19px 19px 26px;display:flex;flex-direction:column;transform:rotate(3deg)}
  .phone:before{width:78px;height:16px;left:calc(50% - 39px)}
  .phone-top{font-size:10px;margin-bottom:25px;flex-shrink:0}
- .phone-heading{font-size:20px;padding-bottom:15px;flex-shrink:0}
- .phone-content{font-size:13px;max-height:none;min-height:0;flex:1;padding-top:13px}
+ .phone-heading{font-size:22px;padding-bottom:15px;flex-shrink:0}
+ .phone-content{font-size:14px;max-height:none;min-height:0;flex:1;padding-top:13px}
  .phone-home{bottom:9px;width:80px;height:4px;left:calc(50% - 40px)}
  .phone-item{padding:11px 4px;gap:11px}
  .phone-checkbox{width:15px;height:15px}
  .phone-item.checked .phone-checkbox{line-height:14px}
- .phone-item small{font-size:10px}
- .phone-avatar{width:31px;height:31px;font-size:12px}
+ .phone-item small{font-size:11px}
+ .phone-avatar{width:34px;height:34px;font-size:13px}
  .phone-bubble{padding:10px 12px;margin:8px 0 16px}
  .phone-bubble.out{margin-left:30px}
  .phone-time{font-size:10px;margin:10px}
  .phone .album-grid{gap:8px}
- .phone .album-grid img{height:115px}
+ .phone .album-grid img{height:128px}
  .phone .album-caption{font-size:11px}
  .phone-warn{font-size:11px;padding:10px}
  .phone-pixel{font-size:16px;padding:27px 10px}
  .phone-pixel strong{font-size:34px}
  .phone-courses{font-size:22px;padding:15px 0}
+ .has-phone .simulator{left:5%;right:auto;top:178px}
 }
 @media(min-width:1600px){
  .phone{top:0;right:18%}
 }
 @media(min-width:1600px) and (min-height:1000px){
- .phone{top:3%;width:350px;height:525px}
- .phone .album-grid img{height:130px}
+ .phone{top:1%;width:410px;height:610px}
+ .phone-content{font-size:15px}
+ .phone .album-grid img{height:150px}
+}
+@media(min-width:1600px) and (max-height:999px){
+ .phone{height:min(520px,calc(100svh - 405px))}
 }
 @media(min-width:761px) and (max-height:850px){
- .phone{top:0;width:280px;height:min(405px,calc(100svh - 370px));padding:15px 15px 23px;border-radius:32px}
+ .phone{top:0;width:320px;height:min(430px,calc(100svh - 350px));padding:15px 15px 23px;border-radius:32px}
  .phone-top{font-size:9px;margin-bottom:19px}
- .phone-heading{font-size:18px;padding-bottom:11px}
- .phone-content{font-size:12px;padding-top:10px}
+ .phone-heading{font-size:20px;padding-bottom:11px}
+ .phone-content{font-size:13px;padding-top:10px}
  .phone-item{padding:8px 3px;gap:8px}
- .phone .album-grid img{height:90px}
+ .phone .album-grid img{height:100px}
  .phone-pixel{padding:18px 8px;font-size:14px}
 }
 @media(min-width:1600px) and (max-height:850px){
  .home-copy{top:5%}
- .phone{height:min(405px,calc(100svh - 400px))}
+ .phone{height:min(430px,calc(100svh - 395px))}
 }
+
+.character{left:8%;right:auto;top:auto;bottom:221px;width:clamp(220px,24vw,350px);height:min(56svh,530px);z-index:3;pointer-events:none;opacity:0;visibility:hidden;transform:translate(-24px,8px);animation:none;transition:opacity .35s ease,transform .35s ease,visibility 0s .35s}
+.character.is-visible{opacity:1;visibility:visible;transform:translate(0,0);transition:opacity .35s ease,transform .35s ease}
+.character>img{width:100%;height:100%;object-fit:contain;object-position:bottom;filter:drop-shadow(0 8px 18px #183f3433)}
+.character-tag{display:none}
+@media(min-width:1600px){.character{left:13%;bottom:245px}}
+@media(min-width:761px) and (max-height:790px){.character{bottom:200px;height:50svh}}
+@media(max-width:760px){.character{left:4%;right:auto;top:auto;bottom:231px;width:58vw;height:min(45svh,400px)}}
+@media(max-width:760px) and (max-height:720px){.character{bottom:208px;height:43svh}}
+@media(max-width:760px){
+ .has-phone .simulator,.has-portrait .simulator{top:65px;width:200px;padding:8px 11px}
+ .has-phone .sim-title,.has-portrait .sim-title{padding-bottom:5px}
+ .has-phone .simulator>p,.has-portrait .simulator>p{font-size:9px;line-height:1.65;margin:7px 0}
+ .has-phone .sim-bars,.has-portrait .sim-bars{display:none}
+}
+@media(max-width:760px) and (max-height:720px){.has-phone .simulator{top:45px}}
+@media(max-width:760px) and (max-height:720px){.has-portrait .simulator{top:20px;width:180px}}
+
+/* Compact desktop layout when a phone is rotated; no restart required. */
+@media(orientation:landscape) and (max-height:600px){
+ #app{min-height:0;height:100svh}
+ .topbar,.in-game .topbar{height:48px;padding:0 max(3%,env(safe-area-inset-right)) 0 max(3%,env(safe-area-inset-left))}
+ .brand{gap:8px}
+ .brand-emblem{width:32px;height:32px}
+ .brand-name{font-size:17px;letter-spacing:2px}
+ .brand-name>span{font-size:6px;letter-spacing:.5px}
+ .top-middle{display:none}
+ .header-actions{gap:7px}
+ .icon-button{width:27px;height:27px;font-size:16px}
+ .home,.game,.ending{height:calc(100% - 48px)}
+ .home-copy{top:4%;left:6%;max-width:50%;right:auto}
+ .eyebrow{font-size:8px;letter-spacing:1px;gap:8px}
+ .edition{font-size:7px;padding:2px 4px}
+ .title-wrap{width:270px;margin:4px 0 8px}
+ h1{font-size:70px;line-height:1.1;letter-spacing:5px}
+ h1>i{font-size:42px;left:-15px;top:3px}
+ .title-note{left:196px;top:3px;height:70px;font-size:7px;letter-spacing:2px}
+ .home-lead{font-size:16px;line-height:1.5;letter-spacing:1px;margin:6px 0 14px}
+ .home-description{display:none}
+ .primary-button{padding:10px 16px;font-size:11px;gap:8px}
+ .primary-button .button-arrow{font-size:17px;margin-left:13px}
+ .play-triangle{font-size:18px}
+ .continue-button{font-size:10px;padding:10px 3px;gap:18px}
+ .start-actions{gap:18px}
+ .home-meta{font-size:8px;margin-top:12px;gap:9px}
+ .home-meta button{font-size:8px}
+ .photo-caption{bottom:20%;right:6%;font-size:9px;padding:8px 11px}
+ .home-footer{bottom:10px;padding-top:9px;font-size:8px}
+ .footer-right{font-size:8px}
+ .game{--landscape-phone-width:clamp(155px,23vw,220px)}
+ .chapter-ribbon{top:8px;left:3%;gap:9px}
+ .chapter-ribbon>span:first-child{font-size:27px}
+ .chapter-ribbon>div{padding-left:9px}
+ .chapter-ribbon small{font-size:7px;letter-spacing:1px}
+ .chapter-ribbon h2{font-size:12px;letter-spacing:1px;margin-top:3px}
+ .chapter-line{width:25px}
+ .location-label{left:3%;top:65px;font-size:8px;padding:4px 8px}
+ .has-portrait .chapter-ribbon,.has-portrait .location-label{left:27%}
+ .phone{right:max(4%,env(safe-area-inset-right));top:4px;width:var(--landscape-phone-width);height:calc(100svh - 104px - env(safe-area-inset-bottom));border:5px solid #eeeedd;border-radius:24px;padding:10px 10px 17px;display:flex;flex-direction:column;transform:none}
+ .phone:before{width:55px;height:11px;left:calc(50% - 27.5px)}
+ .phone-top{font-size:7px;margin-bottom:12px;flex-shrink:0}
+ .phone-heading{font-size:14px;padding-bottom:8px;flex-shrink:0}
+ .phone-content{font-size:10px;max-height:none;min-height:0;flex:1;padding-top:7px}
+ .phone-home{height:3px;width:56px;bottom:6px;left:calc(50% - 28px)}
+ .phone-item{padding:6px 2px;gap:6px}
+ .phone-item small{font-size:8px}
+ .phone-checkbox{width:11px;height:11px}
+ .phone-item.checked .phone-checkbox{line-height:10px}
+ .phone-avatar{width:23px;height:23px;font-size:9px}
+ .phone-bubble{font-size:10px;padding:7px 8px;margin:5px 0 9px}
+ .phone-bubble.out{margin-left:16px}
+ .phone-time{font-size:7px;margin:6px}
+ .phone .album-grid{gap:5px}
+ .phone .album-grid img{height:clamp(48px,calc(20svh - 10px),90px)}
+ .phone .album-caption{font-size:8px;padding:2px}
+ .phone-warn{font-size:8px;padding:7px;margin-top:8px}
+ .phone-pixel{font-size:11px;padding:15px 6px}
+ .phone-pixel strong{font-size:25px;margin-bottom:8px}
+ .phone-courses{font-size:15px;padding:8px 0}
+ .dialogue{left:max(3%,env(safe-area-inset-left));right:3%;bottom:calc(36px + env(safe-area-inset-bottom));min-height:0;padding:11px 16px 10px}
+ .has-phone .dialogue{right:calc(var(--landscape-phone-width) + 8%)}
+ .dialogue-heading{font-size:10px;letter-spacing:1px;gap:6px}
+ #speaker-note,.dialogue-count{font-size:7px}
+ .dialogue>p{font-size:calc(var(--dialogue-size) - 6px);line-height:1.55;letter-spacing:.5px;margin:8px 0;min-height:0}
+ .dialogue-bottom{font-size:7px;letter-spacing:.5px}
+ .advance-hint{gap:7px}
+ .advance-hint>span{font-size:11px}
+ .game-toolbar{left:max(3%,env(safe-area-inset-left));right:max(3%,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));gap:17px;justify-content:center}
+ .game-toolbar button{font-size:13px;gap:5px}
+ .game-toolbar button>span{font-size:9px;letter-spacing:0}
+ .toolbar-divider,.toolbar-tip{display:none}
+ .character{left:4%;bottom:100px;height:calc(100svh - 150px);width:clamp(140px,24vw,220px)}
+ .simulator{left:auto;right:4%;top:8px;width:200px;padding:9px 12px}
+ .has-portrait .simulator{left:auto;right:4%;top:8px}
+ .has-phone .simulator{left:32%;right:auto;top:8px}
+ .sim-title{font-size:8px;padding-bottom:6px}
+ .sim-title>span{font-size:15px}
+ .simulator>p{font-size:10px;line-height:1.7;margin:8px 0}
+ .sim-bars>span{font-size:7px}
+ .choice-panel{top:8%;width:min(540px,80%)}
+ .choice-eyebrow{font-size:9px;letter-spacing:2px}
+ .choice-panel h3{font-size:18px;margin:9px 0 14px}
+ .choice-panel #choices{gap:8px}
+ .choice-button{padding:11px 16px;gap:12px}
+ .choice-button>span{font-size:18px}
+ .choice-button strong{font-size:14px}
+ .choice-button small{font-size:8px;margin-top:5px}
+ .choice-panel>p{font-size:8px;margin-top:12px}
+ .live-panel{top:5px;bottom:auto;width:min(680px,88%);max-height:calc(100% - 45px - env(safe-area-inset-bottom));padding:16px 22px}
+ .live-badge{font-size:8px}
+ .live-panel h3{font-size:19px;margin:12px 0 8px}
+ .live-panel>p,.live-panel blockquote{font-size:11px;line-height:1.7;margin:8px 0}
+ .live-panel blockquote{padding:8px 12px}
+ .live-panel textarea{font-size:10px;min-height:48px;max-height:80px;margin:5px 0;padding:8px}
+ .live-bottom{margin-top:7px}
+ .live-bottom>span{font-size:8px;max-width:none}
+ .live-bottom .primary-button{padding:9px 13px;font-size:10px}
+ dialog{max-height:90svh;padding:15px 24px}
+ .modal-heading{padding-bottom:10px;margin-bottom:10px}
+ .modal-heading h2{font-size:20px}
+ .form-label{margin:12px 0 7px}
+ .mode-options{margin-bottom:12px}
+ .mode-option{padding:9px 12px}
+ .name-input{padding:9px 12px}
+ .ending{justify-content:flex-start;padding:12px 20px 20px}
+ .ending-eyebrow{font-size:9px;margin-bottom:8px}
+ .ending h2{font-size:23px;line-height:1.5}
+ .ending>p{font-size:10px;margin:5px 0 10px}
+ .ending-memo{width:380px;padding:10px 20px;font-size:10px}
+ .ending-actions{margin:13px 0 10px}
+ .toast{bottom:55px}
+}
+@media(orientation:landscape) and (max-height:360px){.home-meta{display:none}.home-copy{top:3%}}

@@ -1,6 +1,8 @@
 import {story,chapters,characters,backgrounds,todos,nextIndex,validSave} from './story.js';
 import {Soundtrack} from './audio.js';
+import {PortraitLayer} from './portraits.js';
 const $=id=>document.getElementById(id),sound=new Soundtrack(),KEY='xinsheng.v1';
+const portraits=new PortraitLayer($('character'),$('character-image'),$('character-tag'));
 let storeAvailable=true;
 const storage={get(key,fallback=null){try{const v=localStorage.getItem(KEY+'.'+key);return v===null?fallback:JSON.parse(v);}catch{return fallback;}},set(key,value){try{localStorage.setItem(KEY+'.'+key,JSON.stringify(value));return true;}catch{storeAvailable=false;return false;}}};
 let settings={speed:32,volume:.35,font:21,mode:'solo',sound:false,motion:matchMedia('(prefers-reduced-motion: reduce)').matches};
@@ -11,7 +13,7 @@ if(['solo','live'].includes(savedSettings.mode))settings.mode=savedSettings.mode
 for(const k of ['sound','motion'])if(typeof savedSettings[k]==='boolean')settings[k]=savedSettings[k];
 }
 let state={version:1,index:0,name:'同学',trail:[],branch:null,notes:{},date:''};
-let screen='home',auto=false,pure=false,typing=false,typeTimer,autoTimer,toastTimer,fullText='',assets={xiaomen:'assets/photos/xiaomen.jpg'},activeBg='',activeWho='';
+let screen='home',auto=false,pure=false,typing=false,typeTimer,autoTimer,toastTimer,fullText='',assets={xiaomen:'assets/photos/xiaomen.jpg'},activeBg='';
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
 function toast(text){$('toast').textContent=text;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2600);}
 function applySettings(){document.documentElement.style.setProperty('--dialogue-size',settings.font+'px');document.body.classList.toggle('motion-reduced',settings.motion);$('sound').classList.toggle('sound-on',settings.sound);$('sound').setAttribute('aria-label',settings.sound?'关闭声音':'开启声音');sound.setVolume(settings.volume);sound.setEnabled(settings.sound);}
@@ -20,14 +22,21 @@ function cleanTimers(){clearInterval(typeTimer);clearTimeout(autoTimer);typing=f
 function snapshot(){return {...state,trail:[...state.trail],notes:{...state.notes},date:new Date().toISOString()};}
 function autoSave(){storage.set('auto',snapshot());$('continue').disabled=false;}
 function background(name){const key=backgrounds[name]||'xiaomen',src=assets[key]||'assets/'+key+'.svg';if(activeBg===src)return;activeBg=src;$('background').onerror=()=>{$('background').onerror=null;$('background').src='assets/'+key+'.svg';};$('background').src=src;}
-function showScreen(next){screen=next;for(const id of ['home','game','ending'])$(id).classList.toggle('hidden',id!==next);document.body.classList.toggle('in-game',next==='game');document.body.classList.toggle('ending-screen',next==='ending');document.body.classList.remove('pure','choice-scene','live-scene','blackout','glitch','pixel');pure=false;}
-function showHome(){cleanTimers();setAuto(false);showScreen('home');background('校门');sound.play('open');$('top-caption').textContent='新生心理班会 · 互动剧场';$('continue').disabled=!validSave(storage.get('auto'));activeWho='';}
+function showScreen(next){portraits.hide();screen=next;for(const id of ['home','game','ending'])$(id).classList.toggle('hidden',id!==next);document.body.classList.toggle('in-game',next==='game');document.body.classList.toggle('ending-screen',next==='ending');document.body.classList.remove('pure','choice-scene','live-scene','blackout','glitch','pixel','has-phone','has-portrait');pure=false;}
+function showHome(){cleanTimers();setAuto(false);showScreen('home');background('校门');sound.play('open');$('top-caption').textContent='新生心理班会 · 互动剧场';$('continue').disabled=!validSave(storage.get('auto'));}
 function setAuto(value){auto=value;$('auto').classList.toggle('active',auto);$('auto').setAttribute('aria-pressed',String(auto));$('auto').querySelector('span').textContent=auto?'自动中':'自动';clearTimeout(autoTimer);if(auto&&!typing)scheduleAuto();}
 function scheduleAuto(){clearTimeout(autoTimer);if(!auto||screen!=='game'||$('modal').open||document.hidden||pure)return;const s=story[state.index];if(['choice','live','end'].includes(s.kind))return;autoTimer=setTimeout(()=>advance(),Math.max(1800,fullText.length*65));}
 function finishText(){clearInterval(typeTimer);$('dialogue-text').textContent=fullText;typing=false;scheduleAuto();}
 function typeText(text){clearInterval(typeTimer);clearTimeout(autoTimer);fullText=text;$('dialogue-text').textContent='';if(settings.speed===0||settings.motion){finishText();return;}typing=true;const chars=Array.from(text);let n=0;typeTimer=setInterval(()=>{n++;$('dialogue-text').textContent=chars.slice(0,n).join('');if(n>=chars.length)finishText();},settings.speed);}
 function currentStats(){for(let i=state.trail.length-1;i>=0;i--){const s=story[state.trail[i]]?.stats;if(s)return s;}return [70,50,60];}
 function showGame(){showScreen('game');render();}
+function renderPortrait(scene){
+ const who=scene.character||(scene.spoken&&scene.who!=='我'?scene.who:null);
+ const visible=!!who&&!['choice','live','end'].includes(scene.kind);
+ document.body.classList.toggle('has-portrait',visible);
+ if(!visible){portraits.hide();return;}
+ portraits.show(who,characters[who],assets);
+}
 function render(){
 cleanTimers();const s=story[state.index];if(!s)return;if(s.kind==='end'){showEnding();return;}
 for(const [cls,val]of [['choice-scene',s.kind==='choice'],['live-scene',s.kind==='live'],['blackout',s.effect==='blackout'],['glitch',s.effect==='glitch'],['pixel',s.effect==='pixel']])document.body.classList.toggle(cls,val);
@@ -36,7 +45,7 @@ const chapter=chapters[s.chapter];$('chapter-number').textContent=String(s.chapt
 $('speaker').textContent=s.who;$('speaker-note').textContent=s.who==='我'?(s.spoken?'对话':'旁白'):characters[s.who]?.title||(s.who==='NEU生活模拟器'?'系统消息':'');
 const chapterScenes=story.filter(v=>v.chapter===s.chapter);$('scene-count').textContent=String(chapterScenes.indexOf(s)+1).padStart(2,'0')+' / '+String(chapterScenes.length).padStart(2,'0');$('chapter-progress').style.width=((state.index+1)/story.length*100)+'%';
 $('simulator').classList.toggle('hidden',!s.sim&&!s.stats);$('sim-text').textContent=(s.sim||'当前状态').replaceAll('{name}',state.name);const stats=s.stats||currentStats();['energy','happiness','study'].forEach((k,i)=>$(k).style.width=stats[i]+'%');$('simulator').classList.toggle('danger',stats[0]<20);
-const who=s.character||(characters[s.who]?s.who:null),hasPortrait=who&&!!assets[characters[who].file];$('character').classList.toggle('hidden',!hasPortrait);if(hasPortrait){const c=characters[who];$('character').className='character '+c.side;const src=assets[c.file]||'assets/'+c.file+'.svg';if(activeWho!==src){activeWho=src;$('character-image').onerror=()=>{$('character-image').onerror=null;$('character').classList.add('hidden');};$('character-image').src=src;}$('character-image').alt=who;$('character-tag').textContent=who+' · '+c.title;}
+renderPortrait(s);
 $('scene-decoration').className='scene-decoration '+(s.decoration||s.effect||'');renderPhone(s.phone);
 $('choice-panel').classList.toggle('hidden',s.kind!=='choice');if(s.kind==='choice'){setAuto(false);$('choices').replaceChildren();s.choices.forEach((c,i)=>{const b=el('button','choice-button');b.append(el('span','',String(i+1).padStart(2,'0')));const copy=el('div');copy.append(el('strong','',c.text),el('small','',c.detail));b.append(copy,el('i','','→'));b.onclick=()=>{state.branch=c.target;advance(i);};$('choices').append(b);});}
 $('live-panel').classList.toggle('hidden',s.kind!=='live');if(s.kind==='live'){setAuto(false);$('live-badge').textContent=settings.mode==='live'?'现场模式 · 等待主持人继续':'班会互动';$('live-title').textContent=s.live.title;$('live-prompt').textContent=s.live.prompt;$('live-response').textContent=s.live.response;$('live-response').classList.toggle('hidden',settings.mode==='live');$('live-note').value=state.notes[s.id]||'';$('live-hint').textContent=settings.mode==='live'?'分享结束后，由主持人继续。':'可留空，直接继续。';$('live-next').firstChild.textContent=settings.mode==='live'?'现场分享结束 ':'继续故事 ';}
@@ -55,7 +64,7 @@ function slotsModal(mode){const wrap=el('div'),rows=mode==='load'?['auto',1,2,3]
 function restore(data){if(!validSave(data)){toast('这份存档无法读取。');return;}state=structuredClone(data);setAuto(false);showGame();}
 function logModal(){const wrap=el('div');for(const index of [...state.trail,state.index]){const s=story[index],row=el('div','log-item');row.append(el('small','',chapters[s.chapter].name+' · '+s.who),el('p','',s.text.replaceAll('{name}',state.name)));if(s.kind==='choice'&&state.branch)row.append(el('small','','我选择了：'+(s.choices.find(c=>c.target===state.branch)?.text||'')));if(state.notes[s.id])row.append(el('p','','我的想法：'+state.notes[s.id]));wrap.append(row);}openModal('对话记录',wrap,'回看');requestAnimationFrame(()=>$('modal').scrollTop=$('modal').scrollHeight);}
 function howTo(){const wrap=el('div','modal-copy');for(const text of ['你是普通同学“我”。点击画面或按空格 / 回车推进；文字还没出现完时，点击可立即显示。','按 ← 返回上一句；按 A 切换自动播放；按 H 隐藏界面；Esc 关闭弹窗或退出隐藏界面。','选择不会判分。军训后的两个选择会留下不同回忆，之后回到同一段大学生活。','“自己读完”提供参考回应。“班会现场”会在主持人环节暂停，直到点击“现场分享结束”。自动播放会停在选择和分享环节。','每句剧情自动保存，也可使用三个手动存档。回看只展示你走过的故事。开启声音后，配乐会随剧情变化。'])wrap.append(el('p','',text));openModal('操作说明',wrap,'操作说明');}
-function renderPhone(kind){$('phone').classList.toggle('hidden',!kind);if(!kind)return;const content=$('phone-content'),title=$('phone-title');content.replaceChildren();
+function renderPhone(kind){document.body.classList.toggle('has-phone',!!kind);$('phone').classList.toggle('hidden',!kind);if(!kind)return;const content=$('phone-content'),title=$('phone-title');content.replaceChildren();
 const line=(name,small,checked=false)=>{const n=el('div','phone-item'+(checked?' checked':''));n.append(el('span','phone-checkbox',checked?'✓':''));const text=el('span','',name);if(small)text.append(el('small','',small));n.append(text);n.style.animationDelay=content.children.length*.07+'s';content.append(n);};
 const msg=(text,out=false)=>content.append(el('div','phone-bubble'+(out?' out':''),text));
 const album=keys=>{const grid=el('div','album-grid');for(const name of keys){const img=el('img');img.src=assets[name]||'assets/'+name+'.svg';img.alt='校园相册';grid.append(img);}content.append(grid,el('div','album-caption','九月 · 相册'));};
@@ -86,4 +95,4 @@ window.addEventListener('keydown',e=>{if($('modal').open||['INPUT','TEXTAREA','S
 document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(autoTimer);sound.stop();if(screen==='game')autoSave();}else{sound.update();scheduleAuto();}});
 window.addEventListener('pagehide',()=>{if(screen==='game')autoSave();});
 applySettings();showHome();
-try{const response=await fetch('asset-manifest.json',{cache:'no-store'});if(response.ok){assets=await response.json();sound.assetMap=assets;if(screen==='home')background('校门');}}catch{}
+try{const response=await fetch('asset-manifest.json',{cache:'no-store'});if(response.ok){assets=await response.json();sound.assetMap=assets;if(screen==='home')background('校门');else if(screen==='game')renderPortrait(story[state.index]);}}catch{}
