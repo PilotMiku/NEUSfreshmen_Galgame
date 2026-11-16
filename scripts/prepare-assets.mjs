@@ -6,7 +6,7 @@ await mkdir(file('assets/photos/'),{recursive:true});
 const photos=JSON.parse(await readFile(file('photo-map.json'),'utf8'));
 let originals=[];try{originals=await readdir(file('\u56fe\u7247/'));}catch{}
 const manifest={};
-for(const [key,number]of Object.entries(photos)){const source=originals.find(name=>name.includes('_'+number+'_'));if(source){await copyFile(file('\u56fe\u7247/'+source),file('assets/photos/'+key+'.jpg'));manifest[key]='assets/photos/'+key+'.jpg';}}
+for(const [key,reference]of Object.entries(photos)){const source=typeof reference==='number'?originals.find(name=>name.includes('_'+reference+'_')):originals.find(name=>name===reference);if(!source)throw new Error('素材未找到：'+reference);await copyFile(file('\u56fe\u7247/'+source),file('assets/photos/'+key+'.jpg'));manifest[key]='assets/photos/'+key+'.jpg';}
 const svg=(body)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#9dbcc4"/><stop offset="1" stop-color="#e8ecdc"/></linearGradient><linearGradient id="grass" x2="0" y2="1"><stop stop-color="#9cae7e"/><stop offset="1" stop-color="#738e6c"/></linearGradient></defs>'+body+'</svg>';
 function trees(x,y,s){return '<g transform="translate('+x+' '+y+') scale('+s+')"><path d="M0 0L-5 160H9L3 0" fill="#6d7051"/><ellipse cy="-5" rx="47" ry="70" fill="#718d65"/><ellipse cx="-23" cy="-25" rx="40" ry="54" fill="#8fa16b"/><ellipse cx="17" cy="-43" rx="34" ry="43" fill="#a0ad72"/><path d="M2 20L-20 -17M1 51L25 9" stroke="#5f7957" stroke-width="3" fill="none"/></g>';}
 function campus(label){let windows='';for(let row=0;row<4;row++)for(let col=0;col<10;col++)windows+='<rect x="'+(601+col*65)+'" y="'+(381+row*56)+'" width="35" height="38" fill="#607f7d"/><path d="M'+(618+col*65)+' '+(381+row*56)+'v38" stroke="#c8c5a5" stroke-width="3"/>';
@@ -27,11 +27,11 @@ await writeFile(file('assets/'+c.file+'.svg'),'<svg xmlns="http://www.w3.org/200
 
 // Missing campus photos use a location card rather than an invented building.
 function locationCard(title, subtitle, night=false){
- const bg=night?'#24352f':'#e8e2d4',ink=night?'#b7c6b4':'#7d806c',line=night?'#738673':'#b3b5a0';
+ const bg=night?'#18243b':'#f3f6ff',ink=night?'#c6d4ec':'#6b83a4',line=night?'#718aaf':'#b6c9e3';
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="'+bg+'"/><path d="M100 130h1400v740H100z" fill="none" stroke="'+line+'" stroke-opacity=".3"/><path d="M715 355h170M715 560h170" stroke="'+line+'" stroke-opacity=".5"/><text x="800" y="453" text-anchor="middle" font-family="Songti SC,STSong,serif" font-size="58" letter-spacing="15" fill="'+ink+'">'+title+'</text><text x="800" y="510" text-anchor="middle" font-family="PingFang SC,sans-serif" font-size="18" letter-spacing="5" fill="'+ink+'">'+subtitle+'</text></svg>';
 }
 await writeFile(file('assets/ercantang.svg'),locationCard('\u4e8c\u98df\u5802','\u6c99\u53d1\u533a'));
 await writeFile(file('assets/sushe.svg'),locationCard('\u5bbf\u820d\u697c\u4e0b','00:47',true));
 
 await writeFile(file('asset-manifest.json'),JSON.stringify(manifest,null,2));
-console.log('Prepared '+Object.keys(manifest).length+' campus photos, 12 fallback scenes and 9 original vector characters.');
+console.log('Prepared '+Object.keys(manifest).length+' photo entries and '+Object.keys(backgrounds).length+' fallback scenes.');

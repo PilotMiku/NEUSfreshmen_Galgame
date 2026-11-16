@@ -1,0 +1,98 @@
+:root{--ink:#3c4d70;--muted:#6c7b94;--green:#567ba4;--paper:#fffaf6;--line:#c0cfe3;--sakura:#e3a1b7;--sky:#a9cee9}
+body{background:#fffaf6}
+.scene-tint{background:linear-gradient(90deg,#fffaf6f7 0%,#fffaf6e6 28%,#fff7f261 49%,#fff7f200 77%),linear-gradient(0deg,#fff5efde,transparent 25%)}
+.in-game .scene-tint{background:linear-gradient(0deg,#243d6547,transparent 65%),linear-gradient(180deg,#fffaf6e8,transparent 20%)}
+.top-middle,.eyebrow,.title-note,.home-description{color:#667d9b}
+.brand-name,h1{color:#3d587d}
+h1>i{color:#cc8ea6}
+.edition{border-color:#afc4df;background:#f8fbff80;color:#59799f;border-radius:6px}
+.little-line{background:#8baed1}
+.title-note{border-color:#c5d4e7}
+.primary-button{background:#557ba5;color:#fffdf7;border:1px solid #3f638c;border-radius:9px;box-shadow:3px 3px 0 #b9cce380;font-weight:500}
+.primary-button:hover{background:#466b97;box-shadow:4px 4px 0 #b9cce3b3;transform:translateY(-1px)}
+.secondary-button,.slot-action{border-color:#a9bfdc;background:#f6f9ff;border-radius:7px;color:#4b688b}
+.secondary-button:hover,.slot-action:hover{background:#e8f2ff}
+.continue-button{border-color:#aebed5;color:#59779d}
+.home-meta,.home-meta button{color:#718099}
+.green-dot,.photo-pin{background:#d49bb2}
+.meta-separator{background:#bfd1e5}
+.photo-caption{border:1px solid #c6d3e4;border-radius:7px;background:#fff8f8ed;color:#657896;box-shadow:3px 3px 0 #bfd2e244}
+.photo-date{color:#8d718a;border-color:#d7c5d2}
+.home-footer{color:#73839c;border-color:#b3c6df55}
+.icon-button{border-color:#a9bfdc88;background:#fcfbffb8;color:#4c6f95}
+.icon-button:hover{background:#fdfaff}
+.location-label{background:#4d71968f;color:#fffdf7;border:1px solid #eff4ff80;box-shadow:2px 2px 0 #344f6822}
+.chapter-ribbon>span:first-child,.chapter-ribbon h2,.chapter-ribbon small{color:#fffaf7;text-shadow:1px 2px 4px #26476ab3}
+.dialogue{background:#fffbf7f7;border:2px solid #a6bfdc;border-radius:12px;box-shadow:4px 5px 0 #6e90b23b;backdrop-filter:blur(8px)}
+.dialogue-heading{color:#43648b}
+.speaker-mark{border-color:#cd8daa;background:#ffe3ee}
+#speaker-note,.dialogue-count,.dialogue-bottom{color:#71809a}
+.stage-direction{color:#7e7890}
+.game-toolbar{color:#fffaf7;text-shadow:0 1px 6px #244f7dcc}
+.game-toolbar button:hover,.game-toolbar button.active{color:#ffd5e6}
+.chapter-progress{background:#e4edff66}
+.chapter-progress i{background:#f4c3d5}
+.simulator{background:#f6fafff5;border:1px solid #acc3df;border-left:4px solid #d4a1bc;border-radius:8px;color:#496589;box-shadow:3px 3px 0 #6e90b22e}
+.sim-title{color:#7d7791}
+.phone{background:#f8fbff;border-color:#edf4ff;box-shadow:0 0 0 2px #99b4d6,6px 7px 0 #4464873b}
+.phone:before{background:#dae7f7}
+.phone-top,.phone-heading,.phone-content{color:#45638a}
+.phone-heading{border-color:#c2d2e8}
+.phone-home{background:#a3b8d4}
+.phone-content{scrollbar-color:#a7bfdc transparent}
+.phone-item{border-color:#d2dff0}
+.phone-checkbox{border-color:#a6bddb}
+.phone-item.checked{color:#6682a4}
+.phone-item.checked .phone-checkbox{background:#7c9bc1;border-color:#7c9bc1}
+.phone-avatar{background:#dcecff;color:#4e739e}
+.phone-bubble{background:#fbe4ec;color:#665877}
+.phone-bubble.out{background:#dceaf9;color:#45638a}
+.phone-time,.album-caption{color:#7a859c}
+.album-photo{border-color:#d0ddee;background:#e7eff8;border-radius:5px}
+.phone-warn{background:#fff0db;color:#8b7159}
+.phone-pixel{background:#edf3ff;border-color:#9ab5d8;color:#506d9a}
+.phone-courses{color:#a8738e}
+.todo-card{background:#fffbf6;border:2px solid #a9bfdc;border-radius:8px;color:#4a6387;box-shadow:3px 4px 0 #315e8b3b}
+.todo-card:nth-child(3n+2){background:#edf5ff}
+.todo-card:nth-child(3n){background:#fff0f5}
+.todo-card small{color:#ae7c99}
+.todo-card.todo-card-last{background:#ffe2ed;border-color:#cd97b0}
+.choice-button{background:#fffaf7f5;border:2px solid #b0c4df;border-radius:9px;color:#4b678c;box-shadow:3px 4px 0 #315e8b33}
+.choice-button:hover{background:#fce8f0}
+.choice-button>span{color:#ba88a3}
+.choice-button small{color:#79829a}
+.live-panel{background:#fffaf7f7;border:2px solid #b3c7e1;border-radius:12px;box-shadow:4px 5px 0 #315e8b33}
+.live-badge{color:#8e718d;border-left-color:#dda9c1}
+.live-panel>p{color:#6c7d98}
+.live-panel blockquote{background:#edf4ff;border-left-color:#9ebcdd;color:#4f6d93;border-radius:0 6px 6px 0}
+.live-panel textarea,.name-input,.setting-row select{background:#fffdfb;border:1px solid #bdcce2;color:#4d678b;border-radius:7px}
+.live-panel textarea::placeholder{color:#9296ac}
+.live-bottom>span,.storage-note{color:#78859e}
+.ending-screen .scene-tint{background:#fff7f0f0}
+.ending-eyebrow,.ending>small{color:#b0809c}
+.ending h2{color:#456489}
+.ending h2 span{color:#ae7a97}
+.ending>p{color:#718099}
+.ending-memo{background:#f0f5fff0;border:1px solid #b5c9e1;border-radius:8px;color:#6781a3;box-shadow:3px 3px 0 #c3d5eb66}
+.ending-memo>div{border-color:#b4c7e0}
+dialog{background:#fffaf6;border-color:#b3c7e1;border-radius:12px;color:#49658b}
+.modal-heading,.setting-row,.log-item{border-color:#d1dcee}
+.modal-copy{color:#72819b}
+.mode-option{background:#f4f7ff;border-color:#c1cfe5;border-radius:8px;color:#557399}
+.mode-option:has(input:checked){background:#fce9f1;border-color:#cc9bb5}
+.mode-option small{color:#7c819a}
+.slot{background:#f0f5ff;border-color:#c1d0e6;border-radius:8px}
+.slot-number{color:#b38aa3}
+.slot-info small,.log-item>small{color:#7f8ba3}
+.toast{background:#49678e;color:#fffaf6;border-radius:8px}
+.cinematic-overlay,.cinematic-overlay.finished{background:#172339;color:#fff7f0}
+.cinematic-overlay>p{color:#c8d7ee}
+.course-warning.finished{background:#101725}
+.course-warning .cinematic-heading{color:#ffe3e9;text-shadow:2px 3px 0 #8b5b79}
+.photo-viewer{background:#17243b;border-color:#a1b8d7;color:#fff9f3;border-radius:9px}
+.photo-viewer [data-photo-count],.photo-viewer figcaption{color:#c6d5ee}
+.photo-viewer footer{border-color:#c8d7ee44}
+.photo-viewer footer button{border-color:#abc0de99;color:#fff7f4;border-radius:7px}
+@keyframes course-blackout{to{background:#101725}}
+@media(max-width:760px){.dialogue{border-radius:10px;box-shadow:3px 4px 0 #6e90b233}.primary-button{box-shadow:2px 3px 0 #b9cce380}}
+@media(orientation:landscape) and (max-height:600px){.dialogue{border-radius:8px;box-shadow:3px 3px 0 #6e90b22e}.live-panel{border-radius:9px}}

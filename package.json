@@ -1,6 +1,6 @@
 {
   "name": "xinsheng-neu", "version": "1.0.0", "private": true, "type": "module",
   "description": "新生 · 一段属于普通同学的大学生活视觉小说",
-  "scripts": {"dev": "node scripts/server.mjs", "start": "node scripts/server.mjs", "build": "node scripts/build.mjs", "test": "node --test tests/story.test.mjs"},
+  "scripts": {"dev": "node scripts/server.mjs", "start": "node scripts/server.mjs", "build": "node scripts/build.mjs", "test": "node --test"},
   "engines": {"node": ">=20"}
 }
