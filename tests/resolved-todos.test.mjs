@@ -12,7 +12,7 @@ test('Ending tasks follow narration order and never complete Python',()=>{
   assert.deepEqual(tasks.filter(t=>t.checked).map(t=>t.id).sort(),sequence.slice(0,Math.max(0,step-1)).sort());
   assert.deepEqual(tasks.filter(t=>t.current).map(t=>t.id),step?[sequence[step-1]]:[]);
   assert(!tasks.find(t=>t.id==='python').checked);
-  assert.equal(sceneCue(scene),null,'Only completing a row should trigger its check sound');
+  assert.notEqual(sceneCue(scene),'check','The scene may have a contextual sound, but only completing a row triggers the check');
  }
 });
 

@@ -3,9 +3,9 @@ const node=(tag,className,text)=>{const element=document.createElement(tag);elem
 const courseIntroDuration=3500,courseTextDuration=4200;
 const warningIcon='<svg viewBox="0 0 100 91" focusable="false" aria-hidden="true"><path d="M50 4 98 87.14H2Z" fill="#ffe16a" stroke="#bc8431" stroke-width="3" stroke-linejoin="round"/><path d="M46 33h8l-1 27h-6Z" fill="#d83c46"/><circle cx="50" cy="69" r="4.5" fill="#d83c46"/></svg>';
 const courseWords={
- math:['(x²)′ = 2x','lim x→0','∫ f(x) dx','Δx → 0','y = f(x)','(sin x)′ = cos x','dy / dx','∫ x dx','连续 · 可导','极限存在吗？','求导法则','f′(x)','ε > 0','高等数学'],
- matrix:['[ 1 0 ; 0 1 ]','A · B ≠ B · A','det(A)','矩阵相乘','Ax = b','λI − A','线性相关？','rank(A)','初等行变换','[ a₁ a₂ a₃ ]','逆矩阵 A⁻¹','向量空间','特征值 λ','齐次方程组'],
- english:['Could you repeat that?','assignment','Take notes.','vocabulary','Unit 1','Listen carefully.','presentation','What does it mean?','paragraph','deadline','Read aloud.','How do you spell it?','grammar','One more time?'],
+ math:['(x²)′ = 2x','lim x→0','∫ f(x) dx','Δx → 0','y = f(x)','(sin x)′ = cos x','dy / dx','∫ x dx','连续 · 可导','极限存在吗？','求导法则','f′(x)','ε > 0','高等数学','洛必达法则','∫₀¹ x dx = ½','微分中值定理','(eˣ)′ = eˣ','dx → 0','泰勒公式','无穷小量','f″(x)','定积分','不定积分 + C','分部积分','单调性','凹凸性','收敛还是发散？'],
+ matrix:['[ 1 0 ; 0 1 ]','A · B ≠ B · A','det(A)','矩阵相乘','Ax = b','λI − A','线性相关？','rank(A)','初等行变换','[ a₁ a₂ a₃ ]','逆矩阵 A⁻¹','向量空间','特征值 λ','齐次方程组','Aᵀ','行列式展开','正交向量','内积 ⟨u, v⟩','线性无关','基础解系','单位矩阵 I','矩阵的秩','特征向量','A + B','高斯消元','对角矩阵','线性组合','维数 dim V'],
+ english:['Could you repeat that?','assignment','Take notes.','vocabulary','Unit 1','Listen carefully.','presentation','What does it mean?','paragraph','deadline','Read aloud.','How do you spell it?','grammar','One more time?','Turn to page 20.','Work in pairs.','pronunciation','Fill in the blanks.','comprehension','Keep practicing.','topic sentence','discussion','due tomorrow','Give an example.','translation','essay writing','Check your answers.','Any questions?'],
 };
 
 class CourseWords{

@@ -17,8 +17,9 @@ export const characters = {
   学习委员:{file:'xuewei',companion:'xuewei_stand',companionStyle:{height:.86,x:.30,y:.17,opacity:.32},portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
   文体委员:{file:'wenti',companion:'wenti_stand',companionStyle:{height:1.18,x:.19,y:.16,opacity:.36},portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
   毛学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
-  心理委员:{file:'xinli',side:'left',color:'#89a789',title:'班委'},
 };
+// The life committee member also serves as the psychology committee member.
+characters.心理委员=characters.生活委员;
 export const todos=['学生会面试','班委会','年级会选拔','篮球队选拔','志愿者协会招募','四六级报考','商业精英挑战赛','国庆放假','高数课','线代课','大学生心理健康教育','Python课','劳动教育'];
 export const story=[];
 let context={chapter:0,bg:'车窗',music:'open'};
