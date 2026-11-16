@@ -17,8 +17,8 @@ export const albums={
 };
 
 export class PhotoViewer{
- constructor(dialog,onOpen,onClose){
-  this.dialog=dialog;this.onOpen=onOpen;this.onClose=onClose;
+ constructor(dialog,onOpen,onClose,onPhoto=()=>{}){
+  this.dialog=dialog;this.onOpen=onOpen;this.onClose=onClose;this.onPhoto=onPhoto;
   this.title=dialog.querySelector('[data-photo-title]');this.image=dialog.querySelector('img');
   this.storyText=dialog.querySelector('[data-photo-story]');
   this.caption=dialog.querySelector('[data-photo-caption]');this.count=dialog.querySelector('[data-photo-count]');
@@ -55,7 +55,8 @@ export class PhotoViewer{
   this.title.textContent=this.album.title;this.caption.textContent=item.caption;
   this.count.textContent=(this.index+1)+' / '+this.album.photos.length;
   this.previous.disabled=this.index===0;this.next.textContent=this.index===this.album.photos.length-1?'完成 →':'下一张 →';
-  this.image.alt=item.caption;this.image.src=this.assets[item.key]||'assets/'+item.key+'.svg';
+  this.image.alt=item.caption;this.image.src=this.assets['gallery_'+item.key]||this.assets[item.key]||'assets/'+item.key+'.svg';
+  this.onPhoto();
   this.image.getAnimations().forEach(animation=>animation.cancel());
   if(!document.body.classList.contains('motion-reduced'))this.image.animate([{opacity:.25,transform:'scale(.96)'},{opacity:1,transform:'scale(1)'}],{duration:380,easing:'ease-out'});
   this.updatePlayback();
@@ -69,7 +70,7 @@ export class PhotoViewer{
   const grid=document.createElement('div');grid.className='album-grid';
   album.photos.forEach((item,index)=>{
    const button=document.createElement('button');button.className='album-photo';button.type='button';button.setAttribute('aria-label','查看照片：'+item.caption);
-   const image=document.createElement('img');image.src=assets[item.key]||'assets/'+item.key+'.svg';image.alt=item.caption;
+   const image=document.createElement('img');image.src=assets['thumb_'+item.key]||assets[item.key]||'assets/'+item.key+'.svg';image.alt=item.caption;image.decoding='async';
    button.append(image);button.onclick=()=>this.show(kind,assets,index);grid.append(button);
   });
   const hint=document.createElement('div');hint.className='album-caption';hint.textContent=album.photos.length+' 张照片 · 点开查看';

@@ -34,4 +34,5 @@ await writeFile(file('assets/ercantang.svg'),locationCard('\u4e8c\u98df\u5802','
 await writeFile(file('assets/sushe.svg'),locationCard('\u5bbf\u820d\u697c\u4e0b','00:47',true));
 
 await writeFile(file('asset-manifest.json'),JSON.stringify(manifest,null,2));
+await import('./optimize-photos.mjs');
 console.log('Prepared '+Object.keys(manifest).length+' photo entries and '+Object.keys(backgrounds).length+' fallback scenes.');

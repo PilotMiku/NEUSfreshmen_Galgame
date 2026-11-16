@@ -1,8 +1,10 @@
 // Original, locally synthesized ambient motifs. Optional user MP3s take priority.
+import {EventSounds} from './event-sounds.js';
 export class Soundtrack {
- constructor(){this.enabled=false;this.volume=.35;this.current='off';this.timer=null;this.ctx=null;this.master=null;this.voices=new Set();this.assetMap={};this.media=null;this.tick=0;}
- async unlock(){try{if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.ctx=new AC();this.master=this.ctx.createGain();this.master.gain.value=this.volume*.35;this.master.connect(this.ctx.destination);}if(this.ctx.state==='suspended')await this.ctx.resume();this.update();}catch{}}
- setEnabled(value){this.enabled=value;this.update();}
+ constructor(){this.enabled=false;this.volume=.35;this.current='off';this.timer=null;this.ctx=null;this.master=null;this.voices=new Set();this.assetMap={};this.media=null;this.tick=0;this.events=new EventSounds();}
+ async unlock(){try{if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.ctx=new AC();this.master=this.ctx.createGain();this.master.gain.value=this.volume*.35;this.master.connect(this.ctx.destination);this.events.attach(this.ctx);}if(this.ctx.state==='suspended')await this.ctx.resume();this.update();}catch{}}
+ setEnabled(value){if(this.enabled===value)return;this.enabled=value;this.events.setEnabled(value);this.update();}
+ cue(name,options){this.events.play(name,options);}
  setVolume(value){this.volume=value;if(this.master)this.master.gain.setTargetAtTime(value*.35,this.ctx.currentTime,.2);if(this.media)this.media.volume=value;}
  play(track){if(track===this.current)return;this.current=track;this.tick=0;this.update();}
  stop(){clearInterval(this.timer);this.timer=null;for(const voice of this.voices){try{voice.stop();}catch{}}this.voices.clear();if(this.media){this.media.pause();this.media.src='';this.media=null;}}

@@ -2,6 +2,8 @@
 
 原图保存在本地“图片”文件夹；游戏使用 `assets/photos/` 中的副本。`photo-map.json` 可填写微信图片编号，也可填写完整文件名。运行 `node scripts/prepare-assets.mjs` 后重新构建。
 
+素材整理需本机安装 `cwebp`。相册使用 1600 像素宽的 WebP，手机缩略图另存为 384 像素宽的 WebP；背景照片保留原文件。可单独运行 `node scripts/optimize-photos.mjs` 重新压缩，本地原图不会改动。GitHub 构建直接使用已整理的素材，无需安装编码器。
+
 已确认：
 
 - 1248：宿舍楼外景。

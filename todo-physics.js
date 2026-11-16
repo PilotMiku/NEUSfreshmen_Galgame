@@ -85,11 +85,13 @@ function findContacts(bodies,width,floor){
 export function stepTodoPhysics(bodies,width,floor,dt){
  for(const body of bodies){body.vy+=1050*dt;body.vx*=Math.exp(-.15*dt);body.omega*=Math.exp(-.55*dt);body.x+=body.vx*dt;body.y+=body.vy*dt;body.angle=(body.angle+body.omega*dt)%(Math.PI*2);}
  const contacts=findContacts(bodies,width,floor);
- for(const contact of contacts)contact.bounce=contact.contacts.map(point=>{const a=velocity(contact.a,point),b=velocity(contact.b,point),speed=dot({x:b.x-a.x,y:b.y-a.y},contact.normal);return speed< -80?-speed*contact.restitution:0;});
+ let impact=0;
+ for(const contact of contacts)contact.bounce=contact.contacts.map(point=>{const a=velocity(contact.a,point),b=velocity(contact.b,point),speed=dot({x:b.x-a.x,y:b.y-a.y},contact.normal);impact=Math.max(impact,-speed);return speed< -80?-speed*contact.restitution:0;});
  for(let iteration=0;iteration<6;iteration++)for(const contact of contacts)solve(contact);
  for(let iteration=0;iteration<3;iteration++)for(const {a,b,normal,depth} of findContacts(bodies,width,floor)){
   const correction=Math.max(0,depth-.3)*.7/(a.invMass+(b?.invMass||0));
   a.x-=normal.x*correction*a.invMass;a.y-=normal.y*correction*a.invMass;
   if(b){b.x+=normal.x*correction*b.invMass;b.y+=normal.y*correction*b.invMass;}
  }
+ return impact;
 }

@@ -25,10 +25,10 @@ class CourseWords{
   this.active=!!courseWords[effect];this.layer.classList.toggle('hidden',!this.active);this.layer.replaceChildren();
   if(!this.active)return;
   courseWords[effect].forEach((text,index)=>{
-   const word=node('span','course-word',text);word.style.setProperty('--word-duration',(12+Math.random()*8)+'s');
+   const word=node('span','course-word',text);word.style.setProperty('--word-duration',(9+Math.random()*6)+'s');
    word.style.setProperty('--word-delay',(-Math.random()*16)+'s');word.style.setProperty('--word-appear',index*45+'ms');
-   word.style.setProperty('--word-x',(Math.random()>.5?1:-1)*(6+Math.random()*6)+'px');word.style.setProperty('--word-y',(Math.random()>.5?1:-1)*(5+Math.random()*5)+'px');
-   word.style.setProperty('--word-tilt',(Math.random()-.5)*6+'deg');this.layer.append(word);
+   word.style.setProperty('--word-x',(Math.random()>.5?1:-1)*(28+Math.random()*30)+'px');word.style.setProperty('--word-y',(Math.random()>.5?1:-1)*(20+Math.random()*22)+'px');
+   word.style.setProperty('--word-tilt',(Math.random()-.5)*12+'deg');this.layer.append(word);
   });
   this.measure();requestAnimationFrame(this.measure);
  }
@@ -37,7 +37,7 @@ class CourseWords{
 }
 
 export class TodoList{
- constructor(onChange){this.onChange=onChange;this.target=0;this.count=0;this.paused=false;}
+ constructor(onChange,onCue=()=>{}){this.onChange=onChange;this.onCue=onCue;this.target=0;this.count=0;this.paused=false;}
  set(container,todos,target,reduced){
   if(this.container!==container||!this.container?.isConnected){this.clear();this.container=container;this.todos=todos;}
   while(this.count>target){this.container.lastElementChild?.remove();this.count--;}
@@ -51,6 +51,7 @@ export class TodoList{
    const row=node('div','phone-item todo-added');row.append(node('span','phone-checkbox'),node('span','',this.todos[this.count]));
    row.style.setProperty('--todo-order',this.count);this.container.append(row);this.count++;
    this.onChange?.(this.count);
+   this.onCue('todo');
    this.container.scrollTop=this.container.scrollHeight;
    if(!this.reduced)break;
   }
@@ -59,7 +60,8 @@ export class TodoList{
 }
 
 export class FallingTodos{
- constructor(container,dialogue,todos){
+ constructor(container,dialogue,todos,onCue){
+  this.onCue=onCue;
   this.container=container;this.dialogue=dialogue;this.todos=todos;this.bodies=[];this.target=0;this.active=false;this.paused=false;
   this.resize=()=>this.measure(true);window.addEventListener('resize',this.resize);
   this.observer=new ResizeObserver(()=>this.measure(false));this.observer.observe(dialogue);
@@ -106,7 +108,7 @@ export class FallingTodos{
    this.frame=null;if(this.paused||!this.active||this.reduced)return;
    const dt=Math.min(.04,(now-this.lastTime)/1000);this.lastTime=now;this.spawnTime+=dt;this.sinceSpawn=(this.sinceSpawn||0)+dt;
    if(this.bodies.length<this.target&&this.spawnTime>.18){this.spawn();this.spawnTime=0;}
-   this.accumulator+=dt;while(this.accumulator>=1/120){stepTodoPhysics(this.bodies,this.width,this.floor,1/120);this.accumulator-=1/120;}
+   this.accumulator+=dt;while(this.accumulator>=1/120){const impact=stepTodoPhysics(this.bodies,this.width,this.floor,1/120);if(impact>160&&now-(this.lastImpact||0)>160){this.onCue?.('bounce',{strength:Math.min(.8,impact/900),variant:Math.round(Math.random()*10)-5});this.lastImpact=now;}this.accumulator-=1/120;}
    this.paint();
    const moving=this.bodies.some(body=>Math.abs(body.vy)>10||Math.abs(body.vx)>5||Math.abs(body.omega)>.08);
    this.restFrames=moving?0:this.restFrames+1;
@@ -117,12 +119,12 @@ export class FallingTodos{
 }
 
 export class SceneEffects{
- constructor(overlay,pile,dialogue,todos,onFinished,decoration){
+ constructor(overlay,pile,dialogue,todos,onFinished,decoration,onCue){
   this.overlay=overlay;this.heading=overlay.querySelector('[data-cinematic-title]');this.note=overlay.querySelector('[data-cinematic-note]');
   this.warnings=node('div','course-warning-signs');this.warnings.setAttribute('aria-hidden','true');overlay.prepend(this.warnings);
   overlay.style.setProperty('--course-intro',courseIntroDuration+'ms');
   window.addEventListener('resize',()=>{if(this.effect==='course-warning'&&this.playing)this.renderWarnings(courseIntroDuration+courseTextDuration-this.remaining+(this.paused?0:performance.now()-this.startedAt));});
-  this.pile=new FallingTodos(pile,dialogue,todos);this.words=new CourseWords(decoration,dialogue);this.onFinished=onFinished;this.key=null;this.playing=false;
+  this.pile=new FallingTodos(pile,dialogue,todos,onCue);this.words=new CourseWords(decoration,dialogue);this.onFinished=onFinished;this.key=null;this.playing=false;
  }
  get cinematic(){return ['binding','welcome','course-warning'].includes(this.effect);}
  get busy(){return this.playing;}
