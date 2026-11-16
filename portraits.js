@@ -21,15 +21,35 @@ export function portraitPlaceholder(name, color = '#789789') {
 }
 
 export class PortraitLayer {
-  constructor(container, image, label) {
+  constructor(container, image, label, dialogue) {
     this.container = container;
     this.image = image;
     this.label = label;
+    this.dialogue = dialogue;
     this.key = null;
     this.sequence = 0;
     this.frame = null;
     container.className = 'character left';
     container.setAttribute('aria-hidden', 'true');
+    this.reflow = () => this.fit();
+    if (dialogue) new ResizeObserver(this.reflow).observe(dialogue);
+    window.addEventListener('resize', this.reflow);
+  }
+
+  fit() {
+    if (!this.dialogue || this.container.dataset.character !== '班长' ||
+        this.container.dataset.portrait !== 'image' || !this.image.naturalWidth) return;
+    const dialogue = this.dialogue.getBoundingClientRect();
+    const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 0;
+    const parentTop = this.container.offsetParent?.getBoundingClientRect().top || 0;
+    // Frame the original artwork down to the hips, aligned with the dialogue edge.
+    const hipRatio = this.image.naturalHeight / this.image.naturalWidth * .62;
+    const desiredWidth = innerWidth <= 760 ? Math.min(280, innerWidth * .62) : Math.min(330, innerWidth * .22);
+    const width = Math.min(desiredWidth, Math.max(60, dialogue.top - headerBottom - 30) / hipRatio);
+    const visibleHeight = width * hipRatio;
+    this.container.style.setProperty('--monitor-width', width + 'px');
+    this.container.style.setProperty('--monitor-top', (dialogue.top - visibleHeight - parentTop) + 'px');
+    this.container.style.setProperty('--monitor-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
   }
 
   hide() {
@@ -56,6 +76,7 @@ export class PortraitLayer {
     this.container.dataset.portrait = source ? 'image' : 'placeholder';
     this.image.onload = () => {
       if (sequence !== this.sequence || !this.image.complete || !this.image.naturalWidth) return;
+      this.fit();
       this.frame = requestAnimationFrame(() => {
         if (sequence !== this.sequence) return;
         this.container.setAttribute('aria-hidden', 'false');

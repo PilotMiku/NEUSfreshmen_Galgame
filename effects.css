@@ -167,8 +167,8 @@
 /* A small overscan hides the blurred edge during scenery transitions. */
 .scene-backdrop{inset:-18px}
 
-/* The monitor is framed from the waist up and fades behind the dialogue. */
-.character[data-character="班长"][data-portrait="image"]{width:clamp(310px,32vw,470px);height:min(64svh,580px);bottom:145px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%)}
+/* Frame the monitor down to the hips, fading the lower edge behind dialogue. */
+.character[data-character="班长"][data-portrait="image"]{width:var(--monitor-width,22vw);height:var(--monitor-height,500px);top:var(--monitor-top,140px);bottom:auto;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 52%,#0009 76%,transparent 100%)}
 .character[data-character="班长"][data-portrait="image"]>img{position:absolute;top:0;left:0;width:100%;height:auto;object-position:top;object-fit:contain}
-@media(max-width:760px){.character[data-character="班长"][data-portrait="image"]{width:min(85vw,360px);height:min(53svh,450px);bottom:153px;left:4%}}
-@media(orientation:landscape) and (max-height:600px){.character[data-character="班长"][data-portrait="image"]{width:clamp(260px,34vw,340px);height:calc(100svh - 70px);bottom:30px;left:4%}}
+@media(max-width:760px){.character[data-character="班长"][data-portrait="image"]{left:4%}}
+@media(orientation:landscape) and (max-height:600px){.character[data-character="班长"][data-portrait="image"]{left:4%}}

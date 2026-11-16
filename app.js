@@ -8,7 +8,7 @@ import {BackgroundTransition} from './background-transition.js';
 import {defaultAssets} from './assets-default.js';
 import {fetchManifest,backgroundSource,loadImage,preloadImage} from './asset-loader.js';
 const $=id=>document.getElementById(id),sound=new Soundtrack(),KEY='xinsheng.v1';
-const portraits=new PortraitLayer($('character'),$('character-image'),$('character-tag'));
+const portraits=new PortraitLayer($('character'),$('character-image'),$('character-tag'),$('dialogue'));
 const phoneTodos=new TodoList(count=>{$('phone-title').textContent='待办事项 · '+count;},name=>sound.cue(name));
 const effects=new SceneEffects($('cinematic'),$('todo-rain'),$('dialogue'),todos,()=>scheduleAuto(),$('scene-decoration'),(name,options)=>sound.cue(name,options));
 const gallery=new PhotoViewer($('photo-viewer'),()=>{clearTimeout(autoTimer);clearTimeout(slideshowTimer);slideshowTimer=null;slideshowPlayedFor=story[state.index].id;effects.pause(true);phoneTodos.pause(true);chat.pause(true);sound.events.stop();},()=>{syncPauses();scheduleAuto();},()=>sound.cue('photo'));
