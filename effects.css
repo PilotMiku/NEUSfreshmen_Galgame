@@ -10,14 +10,15 @@
 @keyframes todo-added{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}
 .scene-decoration.overload:after,.scene-decoration.warning:after{display:none}
 .scene-decoration.math:after,.scene-decoration.matrix:after,.scene-decoration.english:after{display:none}
-.course-words{position:absolute;top:175px;left:4%;right:4%;height:300px;overflow:hidden;pointer-events:none}
-.course-word{position:absolute;translate:-50% -50%;width:max-content;max-width:calc(100% / var(--course-columns) - 18px);text-align:center;font-family:var(--serif);font-size:clamp(24px,2.2vw,38px);line-height:1.45;letter-spacing:.5px;color:#f4f7ff;text-shadow:0 1px 3px #20334b,0 0 10px #1d304880;opacity:.56;animation:course-word-drift var(--word-duration) var(--word-delay) ease-in-out infinite alternate,course-word-appear .8s var(--word-appear) ease-out both}
+.course-words{position:fixed;top:0;left:0;right:0;height:300px;overflow:hidden;pointer-events:none}
+.course-word{position:absolute;top:0;left:0;width:max-content;max-width:calc(100vw - 28px);text-align:center;font-family:var(--serif);font-size:clamp(24px,2.2vw,38px);line-height:1.45;letter-spacing:.5px;color:#f4f7ff;text-shadow:0 1px 3px #20334b,0 0 10px #1d304880;opacity:.56;will-change:transform;animation:course-word-appear .8s var(--word-appear) ease-out both}
+.course-word-copy{display:block;animation:course-word-float var(--word-duration) var(--word-delay) ease-in-out infinite alternate}
 .course-word:nth-child(3n+2){color:#ffe2ee}
 .course-word:nth-child(3n){color:#d0eaff}
 .pure .course-words{visibility:hidden}
-@keyframes course-word-drift{from{transform:translate(calc(var(--word-x) * var(--word-motion,1) * -1),calc(var(--word-y) * var(--word-motion,1) * -1)) rotate(calc(var(--word-tilt) * -1))}to{transform:translate(calc(var(--word-x) * var(--word-motion,1)),calc(var(--word-y) * var(--word-motion,1))) rotate(var(--word-tilt))}}
+@keyframes course-word-float{from{transform:translateY(-4px) rotate(calc(var(--word-tilt) * -1))}to{transform:translateY(4px) rotate(var(--word-tilt))}}
 @keyframes course-word-appear{from{opacity:0}to{opacity:.56}}
-.motion-reduced .course-word{animation:none;transform:none;opacity:.56}
+.motion-reduced .course-word{animation:none;opacity:.56}.motion-reduced .course-word-copy{animation:none;transform:none}
 .chat-phone{display:flex;flex-direction:column}
 .chat-phone .phone-heading{position:relative;text-align:center;padding-left:18px;padding-right:18px}
 .chat-phone .phone-heading:before{content:'‹';position:absolute;left:0;font-size:1.6em;line-height:.85}
@@ -107,8 +108,7 @@
 .motion-reduced .cinematic-letter,.motion-reduced .cinematic-overlay>p{animation:none;opacity:1;transform:none}
 .motion-reduced .course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}
 @media(max-width:760px){
- .course-words{top:145px}
- .course-word{font-size:clamp(16px,4.6vw,22px);letter-spacing:.1px;--word-motion:.55}
+ .course-word{font-size:clamp(16px,4.6vw,22px);letter-spacing:.1px}
  .chat-row{gap:4px;margin:8px 0}.chat-avatar{width:21px;height:21px;font-size:8px;border-radius:5px}.chat-message{max-width:calc(100% - 25px)}
  .chat-bubble{font-size:10px;padding:6px 7px}.chat-sender{font-size:7px}.chat-delivery{font-size:7px}.chat-thread{padding:2px 4px 7px}
  .chat-compose{gap:4px;padding-top:5px}.chat-voice{font-size:14px}.chat-draft{font-size:9px;padding:4px 5px;min-height:24px}.chat-draft:empty:before{font-size:8px}.chat-send{font-size:8px;padding:5px}
@@ -132,8 +132,7 @@
  .photo-viewer footer button{font-size:10px;padding:7px 10px}
 }
 @media(orientation:landscape) and (max-height:600px){
- .course-words{top:54px}
- .course-word{font-size:clamp(13px,3.8svh,20px);letter-spacing:.1px;--word-motion:.35}
+ .course-word{font-size:clamp(13px,3.8svh,20px);letter-spacing:.1px}
  .chat-row{margin:7px 0;gap:4px}.chat-avatar{width:20px;height:20px;font-size:8px}.chat-message{max-width:calc(100% - 24px)}.chat-bubble{font-size:10px;padding:5px 7px}.chat-compose{padding-top:4px;margin-top:3px}.chat-draft{min-height:22px;padding:3px 5px;font-size:9px}.chat-send{font-size:8px;padding:4px}.chat-photos .album-grid img{height:54px}
  .stage-direction{margin-top:4px;font-size:.68em;line-height:1.5}
  .dialogue>p{margin:6px 0;line-height:1.45}
@@ -151,7 +150,7 @@
  .photo-viewer footer button{min-height:26px;padding:5px 10px;font-size:10px}
  .todo-card>span{font-size:13px}
 }
-@media(prefers-reduced-motion:reduce){.course-word{animation:none;transform:none;opacity:.56}.chat-phone .phone-content{scroll-behavior:auto}.chat-row,.chat-typing i,.chat-draft:after{animation:none}.cinematic-letter,.cinematic-overlay>p{animation:none;opacity:1;transform:none}.course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}}
+@media(prefers-reduced-motion:reduce){.course-word{animation:none;opacity:.56}.course-word-copy{animation:none;transform:none}.chat-phone .phone-content{scroll-behavior:auto}.chat-row,.chat-typing i,.chat-draft:after{animation:none}.cinematic-letter,.cinematic-overlay>p{animation:none;opacity:1;transform:none}.course-warning .cinematic-heading{animation:none;transform:none;white-space:normal;max-width:90%;font-size:clamp(26px,6vw,76px)}}
 
 /* Asset feedback stays outside the reading area. */
 .asset-status{position:fixed;left:50%;top:8px;transform:translateX(-50%);z-index:9;max-width:90vw;padding:8px 12px;border:1px solid #c8d5e3;border-radius:8px;background:#fffdf5ed;color:#415772;font-size:12px;box-shadow:0 2px 12px #20375215;display:flex;align-items:center;gap:12px}

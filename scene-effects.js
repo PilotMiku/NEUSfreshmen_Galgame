@@ -10,30 +10,56 @@ const courseWords={
 
 class CourseWords{
  constructor(container,dialogue){
-  this.container=container;this.dialogue=dialogue;this.layer=node('div','course-words hidden');container.append(this.layer);
-  this.layer.setAttribute('aria-hidden','true');this.measure=()=>{
+  this.dialogue=dialogue;this.layer=node('div','course-words hidden');container.append(this.layer);
+  this.layer.setAttribute('aria-hidden','true');this.bodies=[];
+  this.measure=()=>{
    if(!this.active)return;
-   const height=Math.max(0,dialogue.getBoundingClientRect().top-this.layer.getBoundingClientRect().top-14),width=this.layer.clientWidth;
-   this.layer.style.height=height+'px';
-   const columns=width<500?2:width>740&&height<200?5:4,rows=Math.ceil(this.layer.children.length/columns);
-   this.layer.style.setProperty('--course-columns',columns);
-   Array.from(this.layer.children).forEach((word,index)=>{word.style.left=((index%columns+.5)*100/columns)+'%';word.style.top=((Math.floor(index/columns)+.5)*100/rows)+'%';});
+   const previousWidth=this.width,previousHeight=this.height;
+   this.height=Math.max(0,dialogue.getBoundingClientRect().top-14);this.layer.style.height=this.height+'px';this.width=this.layer.clientWidth;
+   for(const body of this.bodies){
+    const oldX=Math.max(1,(previousWidth||this.width)-body.width-16),oldY=Math.max(1,(previousHeight||this.height)-body.height-16);
+    const u=body.x===undefined?Math.random():(body.x-8)/oldX,v=body.y===undefined?Math.random():(body.y-8)/oldY;
+    body.width=body.element.offsetWidth;body.height=body.element.offsetHeight;
+    const spaceX=Math.max(0,this.width-body.width-16),spaceY=Math.max(0,this.height-body.height-16);
+    body.x=8+Math.max(0,Math.min(1,u))*spaceX;body.y=8+Math.max(0,Math.min(1,v))*spaceY;
+   }
+   this.paint();
   };
   this.observer=new ResizeObserver(this.measure);this.observer.observe(dialogue);window.addEventListener('resize',this.measure);
  }
- set(effect){
-  this.active=!!courseWords[effect];this.layer.classList.toggle('hidden',!this.active);this.layer.replaceChildren();
+ set(effect,reduced=false){
+  this.clear();this.active=!!courseWords[effect];this.reduced=reduced;this.layer.classList.toggle('hidden',!this.active);
   if(!this.active)return;
   courseWords[effect].forEach((text,index)=>{
-   const word=node('span','course-word',text);word.style.setProperty('--word-duration',(9+Math.random()*6)+'s');
-   word.style.setProperty('--word-delay',(-Math.random()*16)+'s');word.style.setProperty('--word-appear',index*45+'ms');
-   word.style.setProperty('--word-x',(Math.random()>.5?1:-1)*(28+Math.random()*30)+'px');word.style.setProperty('--word-y',(Math.random()>.5?1:-1)*(20+Math.random()*22)+'px');
-   word.style.setProperty('--word-tilt',(Math.random()-.5)*12+'deg');this.layer.append(word);
+   const word=node('span','course-word'),copy=node('span','course-word-copy',text);word.append(copy);
+   word.style.setProperty('--word-duration',(6+Math.random()*4)+'s');word.style.setProperty('--word-delay',(-Math.random()*10)+'s');
+   word.style.setProperty('--word-appear',index*45+'ms');word.style.setProperty('--word-tilt',(Math.random()-.5)*6+'deg');
+   this.layer.append(word);
+   const angle=Math.random()*Math.PI*2,speed=9+Math.random()*3;
+   this.bodies.push({element:word,width:0,height:0,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed});
   });
-  this.measure();requestAnimationFrame(this.measure);
+  this.measure();this.run();
  }
- pause(value){this.layer.classList.toggle('effect-paused',value);}
- clear(){this.active=false;this.layer.replaceChildren();this.layer.classList.add('hidden');}
+ paint(){for(const body of this.bodies)body.element.style.transform=`translate3d(${body.x.toFixed(2)}px,${body.y.toFixed(2)}px,0)`;}
+ run(){
+  if(this.frame||!this.active||this.paused||this.reduced)return;
+  this.lastTime=performance.now();
+  const step=now=>{
+   this.frame=null;if(!this.active||this.paused||this.reduced)return;
+   const dt=Math.min(.05,(now-this.lastTime)/1000);this.lastTime=now;
+   for(const body of this.bodies){
+    body.x+=body.vx*dt;body.y+=body.vy*dt;
+    const right=Math.max(8,this.width-body.width-8),bottom=Math.max(8,this.height-body.height-8);
+    if(body.x<8||body.x>right){body.x=Math.max(8,Math.min(right,body.x));body.vx*=-1;}
+    if(body.y<8||body.y>bottom){body.y=Math.max(8,Math.min(bottom,body.y));body.vy*=-1;}
+   }
+   this.paint();this.frame=requestAnimationFrame(step);
+  };
+  this.frame=requestAnimationFrame(step);
+ }
+ setReduced(value){this.reduced=value;cancelAnimationFrame(this.frame);this.frame=null;if(!value)this.run();}
+ pause(value){this.paused=value;this.layer.classList.toggle('effect-paused',value);cancelAnimationFrame(this.frame);this.frame=null;if(!value)this.run();}
+ clear(){cancelAnimationFrame(this.frame);this.frame=null;this.active=false;this.bodies=[];this.layer.replaceChildren();this.layer.classList.add('hidden');}
 }
 
 export class TodoList{
@@ -147,7 +173,7 @@ export class SceneEffects{
   this.pile.set(scene.effect==='overload'?scene.overflowCount||12:0,reduced);
   if(scene.id===this.key&&this.effect===scene.effect)return;
   clearTimeout(this.timer);this.timer=null;this.key=scene.id;this.effect=scene.effect;this.playing=false;
-  this.words.set(scene.effect);
+  this.words.set(scene.effect,reduced);
   this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();document.body.classList.toggle('cinematic-scene',this.cinematic);
   if(!this.cinematic)return;
   const title=(scene.cinematicTitle||scene.text).replaceAll('{name}',name);
