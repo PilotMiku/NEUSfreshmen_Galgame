@@ -108,5 +108,6 @@ export const defaultAssets = {
   "trainingShooting": "assets/photos/trainingShooting.webp",
   "gallery_trainingFormation": "assets/photos/trainingFormation.webp",
   "thumb_trainingFormation": "assets/photos/trainingFormation.thumb.webp",
-  "trainingFormation": "assets/photos/trainingFormation.webp"
+  "trainingFormation": "assets/photos/trainingFormation.webp",
+  "banzhang": "img_human/banzhang.png"
 };

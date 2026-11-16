@@ -29,14 +29,14 @@ export class PhoneChat{
   row.append(avatar,copy);this.thread.append(row);return bubble;
  }
  send(text){
-  this.queue(240,()=>{this.composer.classList.add('is-writing');this.status.textContent='正在输入';this.cue('typing');});
-  Array.from(text).forEach((_,index)=>this.queue(38,()=>{this.draft.textContent=Array.from(text).slice(0,index+1).join('');}));
-  this.queue(180,()=>{this.row('我',text,true);this.draft.textContent='';this.composer.classList.remove('is-writing');this.status.textContent='发送中…';this.cue('send');});
-  this.queue(240,()=>{this.delivery.textContent='已送达';this.status.textContent='发送';});
+  this.queue(400,()=>{this.composer.classList.add('is-writing');this.status.textContent='正在输入';this.cue('typing');});
+  Array.from(text).forEach((_,index)=>this.queue(90,()=>{this.draft.textContent=Array.from(text).slice(0,index+1).join('');}));
+  this.queue(320,()=>{this.row('我',text,true);this.draft.textContent='';this.composer.classList.remove('is-writing');this.status.textContent='发送中…';this.cue('send');});
+  this.queue(320,()=>{this.delivery.textContent='已送达';this.status.textContent='发送';});
  }
  receive(name,text){
-  let indicator;this.queue(300,()=>{indicator=this.row(name,'');indicator.classList.add('chat-typing');for(let i=0;i<3;i++)indicator.append(element('i',''));this.subtitle.textContent=name+'正在输入…';});
-  this.queue(500,()=>{indicator.closest('.chat-row').remove();this.row(name,text);this.subtitle.textContent=this.subtitleText;this.cue('receive');});
+  let indicator;this.queue(450,()=>{indicator=this.row(name,'');indicator.classList.add('chat-typing');for(let i=0;i<3;i++)indicator.append(element('i',''));this.subtitle.textContent=name+'正在输入…';});
+  this.queue(1000,()=>{indicator.closest('.chat-row').remove();this.row(name,text);this.subtitle.textContent=this.subtitleText;this.cue('receive');});
  }
  set(kind,reduced){
   this.clear();this.active=true;this.phone.classList.add('chat-phone');this.phone.classList.toggle('chat-paused',this.paused);this.content.replaceChildren();
@@ -53,8 +53,8 @@ export class PhoneChat{
    this.receive('班长','今晚心理班会，都来啊。');this.receive('心理委员','心理班会 · 随便坐。');
   }else if(kind==='friend'){
    const draft='在吗……';this.queue(400,()=>{this.composer.classList.add('is-writing');this.cue('typing');});
-   Array.from(draft).forEach((_,index)=>this.queue(110,()=>{this.draft.textContent=Array.from(draft).slice(0,index+1).join('');}));
-   this.queue(700,()=>this.cue('erase'));Array.from(draft).forEach((_,index)=>this.queue(80,()=>{this.draft.textContent=Array.from(draft).slice(0,draft.length-index-1).join('');}));
+   Array.from(draft).forEach((_,index)=>this.queue(160,()=>{this.draft.textContent=Array.from(draft).slice(0,index+1).join('');}));
+   this.queue(1000,()=>this.cue('erase'));Array.from(draft).forEach((_,index)=>this.queue(110,()=>{this.draft.textContent=Array.from(draft).slice(0,draft.length-index-1).join('');}));
    this.queue(100,()=>{this.composer.classList.remove('is-writing');this.draft.dataset.placeholder='打了，又删掉了。';});
   }else if(kind==='partner'){
    this.send('有没有高数搭子？');this.queue(350,()=>{this.thread.append(element('div','phone-warn','防诈提醒：不转账、不点链接、不交押金。'));this.cue('receive');});
