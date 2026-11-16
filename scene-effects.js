@@ -1,4 +1,5 @@
 import {createTodoBody,stepTodoPhysics} from './todo-physics.js';
+import {courseRegions,inCourseRegion,randomCoursePosition,moveCourseWord} from './course-layout.js';
 const node=(tag,className,text)=>{const element=document.createElement(tag);element.className=className;if(text!==undefined)element.textContent=text;return element;};
 const courseIntroDuration=3500,courseTextDuration=4200;
 const warningIcon='<svg viewBox="0 0 100 91" focusable="false" aria-hidden="true"><path d="M50 4 98 87.14H2Z" fill="#ffe16a" stroke="#bc8431" stroke-width="3" stroke-linejoin="round"/><path d="M46 33h8l-1 27h-6Z" fill="#d83c46"/><circle cx="50" cy="69" r="4.5" fill="#d83c46"/></svg>';
@@ -14,22 +15,27 @@ class CourseWords{
   this.layer.setAttribute('aria-hidden','true');this.bodies=[];
   this.measure=()=>{
    if(!this.active)return;
-   const previousWidth=this.width,previousHeight=this.height;
-   this.height=Math.max(0,dialogue.getBoundingClientRect().top-14);this.layer.style.height=this.height+'px';this.width=this.layer.clientWidth;
+   const obstacle=dialogue.getBoundingClientRect(),width=this.layer.clientWidth,height=this.layer.clientHeight;
+   // The previous cinematic may still hide the dialogue until render() completes.
+   if(!obstacle.width||!obstacle.height||!width||!height){this.ready=false;this.layer.classList.add('is-positioning');return;}
+   const resized=this.width!==width||this.height!==height;this.width=width;this.height=height;
    for(const body of this.bodies){
-    const oldX=Math.max(1,(previousWidth||this.width)-body.width-16),oldY=Math.max(1,(previousHeight||this.height)-body.height-16);
-    const u=body.x===undefined?Math.random():(body.x-8)/oldX,v=body.y===undefined?Math.random():(body.y-8)/oldY;
+    body.element.hidden=false;
     body.width=body.element.offsetWidth;body.height=body.element.offsetHeight;
-    const spaceX=Math.max(0,this.width-body.width-16),spaceY=Math.max(0,this.height-body.height-16);
-    body.x=8+Math.max(0,Math.min(1,u))*spaceX;body.y=8+Math.max(0,Math.min(1,v))*spaceY;
+    body.regions=courseRegions(width,height,body,obstacle);
+    if(resized||!inCourseRegion(body.regions,body.x,body.y)){
+     const position=randomCoursePosition(body.regions);body.element.hidden=!position;
+     if(position)Object.assign(body,position);
+    }
    }
-   this.paint();
+   this.ready=true;this.paint();this.layer.classList.remove('is-positioning');this.run();
   };
   this.observer=new ResizeObserver(this.measure);this.observer.observe(dialogue);window.addEventListener('resize',this.measure);
  }
  set(effect,reduced=false){
   this.clear();this.active=!!courseWords[effect];this.reduced=reduced;this.layer.classList.toggle('hidden',!this.active);
   if(!this.active)return;
+  this.layer.classList.add('is-positioning');
   courseWords[effect].forEach((text,index)=>{
    const word=node('span','course-word'),copy=node('span','course-word-copy',text);word.append(copy);
    word.style.setProperty('--word-duration',(6+Math.random()*4)+'s');word.style.setProperty('--word-delay',(-Math.random()*10)+'s');
@@ -38,20 +44,18 @@ class CourseWords{
    const angle=Math.random()*Math.PI*2,speed=9+Math.random()*3;
    this.bodies.push({element:word,width:0,height:0,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed});
   });
-  this.measure();this.run();
+  // Wait for scene classes and the dialogue's visibility to settle before placing words.
+  this.layoutFrame=requestAnimationFrame(()=>{this.layoutFrame=null;this.measure();});
  }
- paint(){for(const body of this.bodies)body.element.style.transform=`translate3d(${body.x.toFixed(2)}px,${body.y.toFixed(2)}px,0)`;}
+ paint(){for(const body of this.bodies)if(!body.element.hidden)body.element.style.transform=`translate3d(${body.x.toFixed(2)}px,${body.y.toFixed(2)}px,0)`;}
  run(){
-  if(this.frame||!this.active||this.paused||this.reduced)return;
+  if(this.frame||!this.active||!this.ready||this.paused||this.reduced)return;
   this.lastTime=performance.now();
   const step=now=>{
-   this.frame=null;if(!this.active||this.paused||this.reduced)return;
+   this.frame=null;if(!this.active||!this.ready||this.paused||this.reduced)return;
    const dt=Math.min(.05,(now-this.lastTime)/1000);this.lastTime=now;
    for(const body of this.bodies){
-    body.x+=body.vx*dt;body.y+=body.vy*dt;
-    const right=Math.max(8,this.width-body.width-8),bottom=Math.max(8,this.height-body.height-8);
-    if(body.x<8||body.x>right){body.x=Math.max(8,Math.min(right,body.x));body.vx*=-1;}
-    if(body.y<8||body.y>bottom){body.y=Math.max(8,Math.min(bottom,body.y));body.vy*=-1;}
+    if(!body.element.hidden)moveCourseWord(body,dt);
    }
    this.paint();this.frame=requestAnimationFrame(step);
   };
@@ -59,7 +63,7 @@ class CourseWords{
  }
  setReduced(value){this.reduced=value;cancelAnimationFrame(this.frame);this.frame=null;if(!value)this.run();}
  pause(value){this.paused=value;this.layer.classList.toggle('effect-paused',value);cancelAnimationFrame(this.frame);this.frame=null;if(!value)this.run();}
- clear(){cancelAnimationFrame(this.frame);this.frame=null;this.active=false;this.bodies=[];this.layer.replaceChildren();this.layer.classList.add('hidden');}
+ clear(){cancelAnimationFrame(this.frame);cancelAnimationFrame(this.layoutFrame);this.frame=null;this.layoutFrame=null;this.active=false;this.ready=false;this.bodies=[];this.layer.replaceChildren();this.layer.classList.add('hidden');}
 }
 
 export class TodoList{

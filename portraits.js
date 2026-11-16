@@ -56,6 +56,7 @@ export class PortraitLayer {
     this.container.style.setProperty('--portrait-width', width + 'px');
     this.container.style.setProperty('--portrait-top', (dialogue.top - visibleHeight - parentTop) + 'px');
     this.container.style.setProperty('--portrait-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
+    if (!this.echoReady) return;
     const style = this.companionStyle || {};
     const shift = Math.min(88, width * (style.x ?? .19));
     const aspect = style.rotation ? 1 : (this.echoImage.naturalWidth / this.echoImage.naturalHeight || .75);
@@ -82,7 +83,12 @@ export class PortraitLayer {
     this.echo.classList.remove('is-visible');
     this.echoImage.onload = null;
     this.echoImage.onerror = null;
-    this.echoImage.removeAttribute('src');
+    if (this.echoRequest) {
+      this.echoRequest.onload = null;
+      this.echoRequest.onerror = null;
+      this.echoRequest = null;
+    }
+    // Keep the last valid image while opacity fades; an empty src paints a broken-image box.
     this.echoReady = false;
   }
 
@@ -120,18 +126,30 @@ export class PortraitLayer {
     };
     this.image.src = source || fallback;
     if (source && echoSource) {
-      this.echoImage.onload = () => {
-        if (sequence !== this.sequence || !this.echoImage.naturalWidth) return;
+      // Load offscreen so neither an empty nor a failed image can appear during a fade.
+      const nextEcho = new Image();
+      nextEcho.alt = '';
+      this.echoRequest = nextEcho;
+      nextEcho.onload = () => {
+        if (sequence !== this.sequence || !nextEcho.naturalWidth) return;
+        nextEcho.onload = null;
+        nextEcho.onerror = null;
+        this.echoImage.replaceWith(nextEcho);
+        this.echoImage = nextEcho;
+        this.echoRequest = null;
         this.echoReady = true;
         this.fit();
         if (this.container.classList.contains('is-visible') && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
       };
-      this.echoImage.onerror = () => {
+      nextEcho.onerror = () => {
         if (sequence !== this.sequence) return;
+        nextEcho.onload = null;
+        nextEcho.onerror = null;
+        this.echoRequest = null;
         this.echoReady = false;
         this.echo.classList.remove('is-visible');
       };
-      this.echoImage.src = echoSource;
+      nextEcho.src = echoSource;
     }
   }
 }

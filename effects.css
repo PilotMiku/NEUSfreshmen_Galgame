@@ -10,7 +10,8 @@
 @keyframes todo-added{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}
 .scene-decoration.overload:after,.scene-decoration.warning:after{display:none}
 .scene-decoration.math:after,.scene-decoration.matrix:after,.scene-decoration.english:after{display:none}
-.course-words{position:fixed;top:0;left:0;right:0;height:300px;overflow:hidden;pointer-events:none}
+.course-words{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.course-words.is-positioning{visibility:hidden}
 .course-word{position:absolute;top:0;left:0;width:max-content;max-width:calc(100vw - 28px);text-align:center;font-family:var(--serif);font-size:clamp(24px,2.2vw,38px);line-height:1.45;letter-spacing:.5px;color:#f4f7ff;text-shadow:0 1px 3px #20334b,0 0 10px #1d304880;opacity:.56;will-change:transform;animation:course-word-appear .8s var(--word-appear) ease-out both}
 .course-word-copy{display:block;animation:course-word-float var(--word-duration) var(--word-delay) ease-in-out infinite alternate}
 .course-word:nth-child(3n+2){color:#ffe2ee}
@@ -178,6 +179,7 @@
 .portrait-echo{position:absolute;z-index:2;pointer-events:none;opacity:0;visibility:hidden;overflow:hidden;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease,visibility 0s .45s;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 65%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 65%,transparent 100%)}
 .portrait-echo.is-visible{opacity:var(--echo-opacity,.36);visibility:visible;transform:none;transition:opacity .45s ease,transform .45s ease}
 .portrait-echo>img{display:block;width:100%;height:100%;object-fit:contain;transform:rotate(var(--echo-rotation,0deg));filter:drop-shadow(0 0 10px #f8d66b55)}
+.portrait-echo>img:not([src]){visibility:hidden}
 
 /* A quiet wash marks the transition into the senior's encouragement. */
 .memory-label{position:absolute;top:116px;left:50%;transform:translateX(-50%);padding:7px 20px;border:1px solid #e6d8c8b3;border-radius:20px;background:#fff8ede6;color:#806b58;font-size:12px;letter-spacing:5px;pointer-events:none}
