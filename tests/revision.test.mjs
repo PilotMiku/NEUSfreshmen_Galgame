@@ -20,8 +20,18 @@ test('New saves recover by scene ID rather than a stale array offset',()=>{
 test('Invalid and inherited scene names are rejected without throwing',()=>{
  for(const sceneId of ['missing','__proto__','constructor'])assert.equal(normalizeSave({...oldSave('courses'),version:2,sceneId,trailIds:[]}),null);
 });
-test('Old scene IDs remain available except for the deliberately merged note',()=>{
- for(const id of legacySceneIds.filter(id=>id!=='s10'))assert(Number.isInteger(sceneIndex[id]),id);
+test('Every original scene can still be restored after replacing the help scenarios',()=>{
+ for(const id of legacySceneIds){const result=normalizeSave(oldSave(id));assert(validSave(result),id);}
+});
+test('Retired version 2 help scenes and trails migrate while preserving personal notes',()=>{
+ const oldIds=['s57','s58','help-senior','s60','s61','help-friend','s63','s64','help-partner','s66','s67','s68','help-feeling','s70','s71','s72','help-kfc','s74','s75'];
+ for(const id of oldIds){
+  const result=normalizeSave({...oldSave('s57'),version:2,sceneId:id,index:70,trailIds:['s55','pause',...oldIds],trail:[],notes:{'help-feeling':'有一点紧张','help-friend':'想找朋友聊聊'}});
+  assert(validSave(result),id);assert.equal(result.sceneId,'new-difficulties');assert.deepEqual(result.trailIds,['s55','pause']);
+  assert.equal(result.notes['help-feeling'],'有一点紧张');assert.equal(result.notes['help-friend'],'想找朋友聊聊');
+ }
+ const end=normalizeSave({...oldSave('s77'),version:2,sceneId:'s77',trailIds:['pause',...oldIds,'next-step']});
+ assert.equal(end.sceneId,'s77');assert.deepEqual(end.trailIds,['pause','new-difficulties','next-step']);
 });
 test('No personal status bars or early simulator popup remain',()=>{
  assert(story.every(scene=>scene.stats===undefined));

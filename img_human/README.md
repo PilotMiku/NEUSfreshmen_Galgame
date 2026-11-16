@@ -10,7 +10,7 @@
 | 组宣 | zuxuan.png |
 | 学习委员 | xuewei.png |
 | 文体委员 | wenti.png |
-| 学长 | xuezhang.png |
+| 毛学长 | xuezhang.png |
 | 心理委员 | xinli.png |
 
 建议使用半身或全身立绘，底部对齐，人物四周尽量少留空白。游戏会等比缩放，人物说话时从对话框左侧淡入。

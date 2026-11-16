@@ -16,7 +16,7 @@ export const characters = {
   组宣:{file:'zuxuan',companion:'zuxuan_stand',companionStyle:{height:.88,x:.34,y:.18,opacity:.32},portraitHip:.56,side:'left',color:'#8d88b1',title:'组织 · 宣传'},
   学习委员:{file:'xuewei',companion:'xuewei_stand',companionStyle:{height:.86,x:.30,y:.17,opacity:.32},portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
   文体委员:{file:'wenti',companion:'wenti_stand',companionStyle:{height:1.18,x:.19,y:.16,opacity:.36},portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
-  学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
+  毛学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
   心理委员:{file:'xinli',side:'left',color:'#89a789',title:'班委'},
 };
 export const todos=['学生会面试','班委会','年级会选拔','篮球队选拔','志愿者协会招募','四六级报考','商业精英挑战赛','国庆放假','高数课','线代课','大学生心理健康教育','Python课','劳动教育'];
@@ -101,35 +101,19 @@ at('夜路');
 scene('可是——',{id:'s55'});
 at('夜路','off',4);
 live('pause','最近遇到什么困难？','视觉小说暂停。主持人上场，邀请现场同学分享最近遇到的困难。','比如：一道高数题卡了一晚上。想找人问问，又怕显得自己太笨。',{effect:'blackout'});
-at('文管门口','qiuzhu');
-scene('第一个卡住的瞬间。文管学馆门口碰到学长，嘴张了张，没说出话。',{id:'s57',character:'学长'});
-scene('学长走了。那句想问的话，还在嘴边。',{id:'s58'});
-live('help-senior','要不要叫住学长？','主持人转头看班长：“班长，你要是那个学长，你希望他张嘴吗？”请班长现场回应。','参考回应：“问呗。我现在有空就给你讲，没空咱们另约个时间。”');
-system('求助不是掉价，是提前止损。',{id:'s60'});
-at('宿舍楼下');
-scene('第二个瞬间。半夜给朋友发“在吗”，打了，又删。',{id:'s61',phone:'friend'});
-live('help-friend','一句“在吗”，打了又删。','主持人邀请团支书或人缘好的同学接话：朋友半夜发来一句“在吗”，你会怎么接？','参考回应：“有事直接发就行，我醒了就回。别光发个在吗，我还得猜你怎么了。”');
-system('有些话不用组织好语言，先发出去。',{id:'s63'});
-at('二食堂');
-scene('第三个瞬间。群里找“高数搭子”，屏幕却弹出一条防诈提示。',{id:'s64',phone:'partner'});
-live('help-partner','有人一起学高数吗？','主持人看学委：“你收作业见过多少‘搭子变鸽子’？”请学委接话。主持人补充：搭子可以找，不转账、不点链接、不交押金。','参考回应：“先在班里约两个人，下课一起做两道题。别还没见过面，就让你交资料费。”');
-system('搭子可以找，不转账、不点链接、不交押金。',{id:'s66'});
-at('走廊');
-scene('第四个瞬间。走廊碰到生活委员兼心理委员，我憋了半天。',{id:'s67',character:'生活委员'});
-say('我','我心里不得劲。',{id:'s68',character:'生活委员'});
-live('help-feeling','“我心里不得劲。”','主持人直接看生活委员：“这句你接不接？”','生活委员：接。你说了我就听，二食堂沙发区十分钟，不记名。');
-say('生活委员','接。你说了我就听，二食堂沙发区十分钟，不记名。',{id:'s70'});
-system('暗号不用高级，说出来就行。',{id:'s71'});
+at('夜路','qiuzhu');
+scene('啊，新的生活，困难真是接连不断呢。',{id:'new-difficulties'});
+scene('不过……',{id:'recall-lead',memory:true});
+at('文管学馆');
+say('毛学长','刚来大学，有些事一时应付不过来，很正常。遇到困难就跟我们说一声，同学、班委，还有学长学姐，都可以一起想办法。别急，慢慢来。',{id:'mao-encouragement',memory:true});
 at('夜路');
-scene('第五个瞬间。班群里，有人发了一句：“班长V我50吃KFC。”',{id:'s72',phone:'kfc'});
-live('help-kfc','班长，V不V？','主持人看班长：“V不V？”请班长现场回应。','参考回应：“50没有，饭可以一起吃。到底啥事，边吃边说。”');
-system('有些困难一顿KFC解决不了，但能让你先笑一下再解决。',{id:'s74'});
-system('以上方式，不保证困难消失。但保证，你不是一个人。',{id:'s75'});
-live('next-step','帮忙想个办法。','主持人邀请台下同学：从刚才分享的一个困难出发，一起想一个今天就能做到的小动作。','可以从这里开始：把不会的那道题拍给学委；给朋友发一条完整消息；约生活委员在二食堂坐十分钟。',{reflection:true});
+scene('是呢，遇到自己很难解决的困难，向身边的同学求助，也是不错的选择呢。',{id:'ask-for-help'});
+live('next-step','一起想想办法。','主持人：请大家以小组为单位，从刚才分享的困难里选择一个，讨论可以怎么解决、可以向谁求助，以及今天就能迈出的第一步。讨论结束后，每组推选一位代表分享。','可以记下：我们选的困难是……；可以尝试的办法是……；可以向……求助；今天先做……。',{reflection:true,liveNext:'讨论结束，进入分享',liveHint:'小组讨论结束、选好代表后，由主持人继续。',notePlaceholder:'记录小组选择的困难、解决办法和第一步（可留空）'});
+live('group-sharing','听听大家的办法。','主持人：请各组代表分享。你们讨论了什么困难？想到了哪些办法？准备先从哪一步开始？','分享时可以这样说：“我们讨论的是……，准备先……，如果还是有困难，可以找……一起想办法。”',{reflection:true,liveNext:'分享结束，继续故事',liveHint:'各组代表分享结束后，由主持人继续。',notePlaceholder:'记下分享中想尝试的办法（可留空）'});
 at('文管门口','shouwei',5);
 scene('手机待办还是满的。但有几条旁边，多了一些小标记。',{id:'s77',phone:'resolved'});
 scene('“高数作业”旁标：已找学委问。',{id:'s78',phone:'resolved'});
-scene('“小组作业落单”旁标：已问冉有。',{id:'s79',phone:'resolved'});
+scene('“小组作业落单”旁标：已和同学约好一起做。',{id:'s79',phone:'resolved'});
 scene('“心里不得劲”旁标：已跟生活委员说。',{id:'s80',phone:'resolved'});
 scene('最上面一条新待办：今晚心理班会。我打了个勾。',{id:'s81',phone:'resolved'});
 scene('文管学馆门口，心理委员举着“心理班会 · 随便坐”的牌子，抬头看见我。',{id:'s82',character:'心理委员',decoration:'meeting'});
@@ -138,18 +122,21 @@ scene('我走过去。心里有一句很轻的旁白。',{id:'s84'});
 scene('待办没少几条，但好像……没那么沉了。',{id:'s85',sim:'你不是一个人。'});
 scene('故事到这里，生活才刚刚开始。',{id:'s86',kind:'end'});
 export const sceneIndex = Object.fromEntries(story.map((s,i)=>[s.id,i]));
+// Retired scenes resume at the start of the replacement sequence. Keep their notes readable.
+const retiredHelpIds=['s57','s58','help-senior','s60','s61','help-friend','s63','s64','help-partner','s66','s67','s68','help-feeling','s70','s71','s72','help-kfc','s74','s75'];
+const sceneAliases=Object.fromEntries([['s10','s8'],...retiredHelpIds.map(id=>[id,'new-difficulties'])]);
 export function nextIndex(index,choice) { const s=story[index];if(!s||s.kind==='end')return null;if(s.kind==='choice')return choice===undefined?null:sceneIndex[s.choices[choice]?.target]??null;return s.jump?sceneIndex[s.jump]:index+1<story.length?index+1:null; }
 export function validSave(value){
  if(!value||![1,2].includes(value.version))return false;
  const count=value.version===1?legacySceneIds.length:story.length;
- const base=Number.isInteger(value.index)&&value.index>=0&&value.index<count&&typeof value.name==='string'&&value.name.length<=16&&Array.isArray(value.trail)&&value.trail.length<=1000&&value.trail.every(i=>Number.isInteger(i)&&i>=0&&i<count)&&['cry','ready',null].includes(value.branch)&&value.notes!==null&&typeof value.notes==='object'&&!Array.isArray(value.notes)&&Object.entries(value.notes).every(([key,note])=>typeof note==='string'&&note.length<=500&&Object.hasOwn(sceneIndex,key));
+ const base=Number.isInteger(value.index)&&value.index>=0&&value.index<count&&typeof value.name==='string'&&value.name.length<=16&&Array.isArray(value.trail)&&value.trail.length<=1000&&value.trail.every(i=>Number.isInteger(i)&&i>=0&&i<count)&&['cry','ready',null].includes(value.branch)&&value.notes!==null&&typeof value.notes==='object'&&!Array.isArray(value.notes)&&Object.entries(value.notes).every(([key,note])=>typeof note==='string'&&note.length<=500&&(Object.hasOwn(sceneIndex,key)||Object.hasOwn(sceneAliases,key)));
  if(!base)return false;
  if(value.version===1)return true;
  return typeof value.sceneId==='string'&&sceneIndex[value.sceneId]===value.index&&Array.isArray(value.trailIds)&&value.trailIds.length===value.trail.length&&value.trailIds.every((id,i)=>typeof id==='string'&&sceneIndex[id]===value.trail[i]);
 }
 export function normalizeSave(raw){
  if(!raw||typeof raw!=='object')return null;
- const resolve=id=>{const key=id==='s10'?'s8':id;return Object.hasOwn(sceneIndex,key)?sceneIndex[key]:undefined;};
+ const resolve=id=>{const key=Object.hasOwn(sceneAliases,id)?sceneAliases[id]:id;return Object.hasOwn(sceneIndex,key)?sceneIndex[key]:undefined;};
  let sceneId,trailIds;
  if(raw.version===1){
   if(!validSave(raw))return null;
@@ -159,6 +146,7 @@ export function normalizeSave(raw){
  if(typeof sceneId!=='string'||!Array.isArray(trailIds)||trailIds.length>1000||!trailIds.every(id=>typeof id==='string'&&resolve(id)!==undefined))return null;
  const index=resolve(sceneId);if(index===undefined)return null;
  const trail=trailIds.map(resolve).filter((index,i,array)=>i===0||index!==array[i-1]);
+ if(trail.at(-1)===index)trail.pop();
  const value={...raw,version:2,index,sceneId:story[index].id,trail,trailIds:trail.map(index=>story[index].id)};
  return validSave(value)?value:null;
 }

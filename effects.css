@@ -179,5 +179,15 @@
 .portrait-echo.is-visible{opacity:var(--echo-opacity,.36);visibility:visible;transform:none;transition:opacity .45s ease,transform .45s ease}
 .portrait-echo>img{display:block;width:100%;height:100%;object-fit:contain;transform:rotate(var(--echo-rotation,0deg));filter:drop-shadow(0 0 10px #f8d66b55)}
 
+/* A quiet wash marks the transition into the senior's encouragement. */
+.memory-label{position:absolute;top:116px;left:50%;transform:translateX(-50%);padding:7px 20px;border:1px solid #e6d8c8b3;border-radius:20px;background:#fff8ede6;color:#806b58;font-size:12px;letter-spacing:5px;pointer-events:none}
+.memory-scene #background{filter:sepia(.22) saturate(.8)}
+.memory-scene .scene-tint{background:linear-gradient(0deg,#68544342,transparent 65%),linear-gradient(180deg,#fff1d9c9,transparent 40%);animation:memory-wash .65s ease-out}
+.memory-scene .dialogue{border-color:#c9b69f;background:#fffaf1f7}
+.pure .memory-label{visibility:hidden}
+@keyframes memory-wash{from{background-color:#fff5e5e6}to{background-color:transparent}}
+.motion-reduced.memory-scene .scene-tint{animation:none}
+@media(orientation:landscape) and (max-height:600px){.memory-label{top:65px;padding:3px 14px;font-size:10px}}
+
 /* Arial includes the combining marks used in the committee's crying emoticon. */
 #dialogue-text.emotive-text{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}

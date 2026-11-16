@@ -1,13 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {story,chapters,backgrounds,characters,sceneIndex,nextIndex,validSave} from '../story.js';
+import {legacySceneIds} from '../legacy-scenes.js';
 function route(choice){let i=0,path=[];while(i!==null){assert(!path.includes(i),'No loop');path.push(i);const s=story[i];if(s.kind==='end')break;i=nextIndex(i,s.kind==='choice'?choice:undefined);}return path;}
 test('All scene identifiers are unique',()=>assert.equal(new Set(story.map(s=>s.id)).size,story.length));
 test('Every scene has a supported background, chapter and track',()=>{for(const s of story){assert(backgrounds[s.bg]);assert(chapters[s.chapter]);assert(['open','ke','banwei','xingfu','qiuzhu','shouwei','off'].includes(s.music));assert(s.text.length>0);if(s.character)assert(characters[s.character]);}});
 test('Both military farewell branches reach the ending without crossing',()=>{const a=route(0),b=route(1);assert(a.includes(sceneIndex.cry));assert(!a.includes(sceneIndex.ready));assert(b.includes(sceneIndex.ready));assert(!b.includes(sceneIndex.cry));assert.equal(story[a.at(-1)].kind,'end');assert.equal(a.at(-1),b.at(-1));});
 test('Every scene is reachable across the two routes',()=>assert.equal(new Set([...route(0),...route(1)]).size,story.length));
 test('All branches resolve and an undecided choice pauses',()=>{for(const [i,s]of story.entries()){if(s.jump)assert(Number.isInteger(sceneIndex[s.jump]));if(s.kind==='choice'){assert.equal(nextIndex(i),null);for(const c of s.choices)assert(Number.isInteger(sceneIndex[c.target]));}}});
-test('All five help situations and the audience next step are present',()=>{for(const id of ['pause','help-senior','help-friend','help-partner','help-feeling','help-kfc','next-step'])assert.equal(story[sceneIndex[id]].kind,'live');assert.equal(story[sceneIndex.pause].music,'off');});
-test('Valid save includes branch, full trail and local reflection notes',()=>{const value={version:1,index:sceneIndex['help-feeling'],name:'Player',trail:route(0).slice(0,20),branch:'cry',notes:{'help-feeling':'A little thought'},date:new Date().toISOString()};assert(validSave(value));});
-test('Corrupt or out-of-bounds save data is rejected',()=>{const good={version:1,index:0,name:'Player',trail:[],branch:null,notes:{}};for(const patch of [{index:-1},{index:story.length},{index:NaN},{index:1.5},{version:2},{name:3},{name:'x'.repeat(17)},{trail:[9999]},{trail:null},{branch:'unexpected'},{notes:[]},{notes:{unrecognized:'x'}},{notes:{pause:'x'.repeat(501)}}])assert.equal(validSave({...good,...patch}),false);for(const bad of [null,undefined,{},[],false,'broken'])assert.equal(validSave(bad),false);});
+test('Sharing difficulties leads through the senior memory, discussion and representatives to the ending',()=>{
+ const sequence=['pause','new-difficulties','recall-lead','mao-encouragement','ask-for-help','next-step','group-sharing','s77'];
+ for(let i=0;i<sequence.length-1;i++)assert.equal(nextIndex(sceneIndex[sequence[i]]),sceneIndex[sequence[i+1]]);
+ for(const id of ['pause','next-step','group-sharing'])assert.equal(story[sceneIndex[id]].kind,'live');
+ assert.equal(story[sceneIndex.pause].music,'off');
+ const memory=story[sceneIndex['mao-encouragement']];
+ assert.equal(memory.who,'毛学长');assert.equal(memory.bg,'文管学馆');assert(memory.memory&&memory.spoken);
+ assert(!story[sceneIndex['ask-for-help']].memory);
+});
+test('Valid save includes branch, full trail and local reflection notes',()=>{const value={version:2,index:sceneIndex['next-step'],sceneId:'next-step',name:'Player',trail:[sceneIndex.pause],trailIds:['pause'],branch:'cry',notes:{'next-step':'A little thought','group-sharing':'Our next step'},date:new Date().toISOString()};assert(validSave(value));});
+test('Corrupt or out-of-bounds save data is rejected',()=>{const good={version:1,index:0,name:'Player',trail:[],branch:null,notes:{}};for(const patch of [{index:-1},{index:legacySceneIds.length},{index:NaN},{index:1.5},{version:2},{name:3},{name:'x'.repeat(17)},{trail:[9999]},{trail:null},{branch:'unexpected'},{notes:[]},{notes:{unrecognized:'x'}},{notes:{pause:'x'.repeat(501)}}])assert.equal(validSave({...good,...patch}),false);for(const bad of [null,undefined,{},[],false,'broken'])assert.equal(validSave(bad),false);});
 test('Final scene cannot advance beyond the script',()=>assert.equal(nextIndex(story.length-1),null));

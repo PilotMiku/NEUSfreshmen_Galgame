@@ -33,6 +33,7 @@
   <main id="game" class="game hidden" aria-label="视觉小说">
     <div class="chapter-ribbon"><span id="chapter-number">01</span><div><small id="chapter-label">九月 · 报到</small><h2 id="chapter-title">初来乍到</h2></div><span class="chapter-line"></span></div>
     <div class="location-label"><span>⌖</span><span id="location">车窗</span></div>
+    <div id="memory-label" class="memory-label hidden">回忆</div>
     <aside id="simulator" class="simulator hidden" aria-live="polite"><div class="sim-title">NEU 生活模拟器</div><p id="sim-text"></p></aside>
     <div id="scene-decoration" class="scene-decoration" aria-hidden="true"></div>
     <div id="todo-rain" class="todo-rain" aria-hidden="true"></div>
@@ -45,7 +46,7 @@
     <nav class="game-toolbar" aria-label="游戏控制"><button id="back" title="返回上一句（←）">↶ <span>上一句</span></button><button id="log">☷ <span>回看</span></button><span class="toolbar-divider"></span><button id="save">▣ <span>存档</span></button><button id="load">▤ <span>读档</span></button><span class="toolbar-divider"></span><button id="auto" aria-pressed="false">▷ <span>自动</span></button><button id="hide-ui" title="隐藏对话（H），Esc 返回">◉ <span>隐藏</span></button><button id="home-button">⌂ <span>首页</span></button><span class="toolbar-tip">空格 / 点击继续</span></nav>
     <div class="chapter-progress"><i id="chapter-progress"></i></div>
   </main>
-  <main id="ending" class="ending hidden"><span class="ending-eyebrow">新生 · 完</span><h2>待办没少几条，<br>但好像……<span>没那么沉了。</span></h2><p>“今晚心理班会”旁边，多了一个勾。</p><div class="ending-memo"><span>手机里的待办</span><p id="ending-memory"></p><div>✓ 高数作业：已找学委问<br>✓ 小组作业落单：已问冉有<br>✓ 心里不得劲：已跟生活委员说<br>✓ 今晚心理班会：我来了</div></div><div class="ending-actions"><button id="replay" class="primary-button">重新开始</button><button id="ending-home" class="secondary-button">回到首页</button></div><small>谢谢参与这次班会。</small></main>
+  <main id="ending" class="ending hidden"><span class="ending-eyebrow">新生 · 完</span><h2>待办没少几条，<br>但好像……<span>没那么沉了。</span></h2><p>“今晚心理班会”旁边，多了一个勾。</p><div class="ending-memo"><span>手机里的待办</span><p id="ending-memory"></p><div>✓ 高数作业：已找学委问<br>✓ 小组作业落单：已和同学约好一起做<br>✓ 心里不得劲：已跟生活委员说<br>✓ 今晚心理班会：我来了</div></div><div class="ending-actions"><button id="replay" class="primary-button">重新开始</button><button id="ending-home" class="secondary-button">回到首页</button></div><small>谢谢参与这次班会。</small></main>
 </div>
 <dialog id="modal"><div class="modal-heading"><div><span class="modal-eyebrow" id="modal-eyebrow"></span><h2 id="modal-title"></h2></div><button id="modal-close" class="icon-button" aria-label="关闭弹窗">×</button></div><div id="modal-body"></div></dialog>
 <dialog id="photo-viewer" class="photo-viewer" tabindex="-1" aria-labelledby="photo-title"><header><h2 id="photo-title" data-photo-title></h2><span data-photo-count></span><button type="button" data-photo-close aria-label="关闭相册">×</button></header><p data-photo-story hidden></p><figure><img alt=""><figcaption data-photo-caption></figcaption></figure><footer><button type="button" data-photo-previous>← 上一张</button><button type="button" data-photo-play aria-pressed="false">▷ 播放</button><button type="button" data-photo-next>下一张 →</button></footer></dialog>
