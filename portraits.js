@@ -56,11 +56,19 @@ export class PortraitLayer {
     this.container.style.setProperty('--portrait-width', width + 'px');
     this.container.style.setProperty('--portrait-top', (dialogue.top - visibleHeight - parentTop) + 'px');
     this.container.style.setProperty('--portrait-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
-    const shift = Math.min(64, width * .19), echoWidth = width * 1.05;
+    const style = this.companionStyle || {};
+    const shift = Math.min(88, width * (style.x ?? .19));
+    const aspect = style.rotation ? 1 : (this.echoImage.naturalWidth / this.echoImage.naturalHeight || .75);
+    let echoHeight = visibleHeight * (style.height ?? 1.18), echoWidth = echoHeight * aspect;
+    const left = this.container.offsetLeft + shift;
+    const scale = Math.min(1, Math.max(60, innerWidth - left - 12) / echoWidth);
+    echoHeight *= scale; echoWidth *= scale;
     this.echo.style.width = echoWidth + 'px';
-    this.echo.style.height = (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px';
-    this.echo.style.left = Math.max(8, Math.min(this.container.offsetLeft + shift, innerWidth - echoWidth - 12)) + 'px';
-    this.echo.style.top = (Math.max(headerBottom + 8, dialogue.top - visibleHeight - shift) - parentTop) + 'px';
+    this.echo.style.height = echoHeight + 'px';
+    this.echo.style.left = left + 'px';
+    this.echo.style.top = (Math.max(headerBottom + 8, dialogue.top - visibleHeight * (1 + (style.y ?? .16))) - parentTop) + 'px';
+    this.echo.style.setProperty('--echo-opacity', style.opacity ?? .36);
+    this.echo.style.setProperty('--echo-rotation', (style.rotation || 0) + 'deg');
   }
 
   hide() {
@@ -91,6 +99,7 @@ export class PortraitLayer {
     this.label.textContent = name;
     this.container.dataset.character = name;
     this.hipFraction = character.portraitHip ?? .62;
+    this.companionStyle = character.companionStyle || {};
     this.container.dataset.portrait = source ? 'image' : 'placeholder';
     this.image.onload = () => {
       if (sequence !== this.sequence || !this.image.complete || !this.image.naturalWidth) return;
@@ -114,6 +123,7 @@ export class PortraitLayer {
       this.echoImage.onload = () => {
         if (sequence !== this.sequence || !this.echoImage.naturalWidth) return;
         this.echoReady = true;
+        this.fit();
         if (this.container.classList.contains('is-visible') && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
       };
       this.echoImage.onerror = () => {

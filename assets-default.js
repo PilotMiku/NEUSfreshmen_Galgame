@@ -114,5 +114,12 @@ export const defaultAssets = {
   "shenghuo": "img_human/shenghuo.png",
   "xuewei": "img_human/xuewei.png",
   "wenti": "img_human/wenti.png",
-  "wenti_stand": "img_human/wenti_stand.png"
+  "wenti_stand": "img_human/wenti_stand.png",
+  "banzhang_stand": "img_human/banzhang_stand.png",
+  "shenghuo_stand": "img_human/shenghuo_stand.png",
+  "xuewei_stand": "img_human/xuewei_stand.png",
+  "tuanzhishu_stand": "img_human/tuanzhishu_stand.png",
+  "zuxuan_stand": "img_human/zuxuan_stand.png",
+  "tuanzhishu": "img_human/tuanzhishu.png",
+  "zuxuan": "img_human/zuxuan.png"
 };

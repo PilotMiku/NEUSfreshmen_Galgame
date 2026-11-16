@@ -10,12 +10,12 @@ export const chapters = [
 export const backgrounds = {开学典礼:'openingCeremony',雨中校园:'rainCampus',车窗:'chechuang',校门:'xiaomen',文管学馆:'wenguan',图书馆:'tushuguan',小南湖:'xiaonanhu',二食堂:'ercantang',宿舍楼下:'sushe',军训场:'junxun',教室:'jiaoshi',走廊:'zoulang',文管门口:'wenguanmenkou',夜路:'sunset'};
 export const characters = {
   主角:{file:'zhujue',side:'center',color:'#7a9f88',title:'一个普通同学'},
-  班长:{file:'banzhang',portraitHip:.62,side:'left',color:'#789789',title:'班委'},
-  团支书:{file:'tuanzhishu',side:'left',color:'#be8e73',title:'班委'},
-  生活委员:{file:'shenghuo',portraitHip:.56,side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
-  组宣:{file:'zuxuan',side:'left',color:'#8d88b1',title:'组织 · 宣传'},
-  学习委员:{file:'xuewei',portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
-  文体委员:{file:'wenti',companion:'wenti_stand',portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
+  班长:{file:'banzhang',companion:'banzhang_stand',companionStyle:{height:1.12,x:.22,y:.17,opacity:.30},portraitHip:.62,side:'left',color:'#789789',title:'班委'},
+  团支书:{file:'tuanzhishu',companion:'tuanzhishu_stand',companionStyle:{height:.88,x:.33,y:.19,opacity:.32},portraitHip:.56,side:'left',color:'#be8e73',title:'班委'},
+  生活委员:{file:'shenghuo',companion:'shenghuo_stand',companionStyle:{height:.80,x:.32,y:.16,opacity:.34,rotation:-90},portraitHip:.56,side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
+  组宣:{file:'zuxuan',companion:'zuxuan_stand',companionStyle:{height:.88,x:.34,y:.18,opacity:.32},portraitHip:.56,side:'left',color:'#8d88b1',title:'组织 · 宣传'},
+  学习委员:{file:'xuewei',companion:'xuewei_stand',companionStyle:{height:.86,x:.30,y:.17,opacity:.32},portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
+  文体委员:{file:'wenti',companion:'wenti_stand',companionStyle:{height:1.18,x:.19,y:.16,opacity:.36},portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
   学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
   心理委员:{file:'xinli',side:'left',color:'#89a789',title:'班委'},
 };
@@ -82,18 +82,18 @@ scene('一辆自行车擦身而过。我往旁边躲了躲，低头继续回复�
 at('走廊','banwei',3);
 scene('第二天，在走廊里，我碰到了班长。',{id:'s39'});
 say('班长','有啥不懂的随时cue我，不能秒回，但一定尽力帮你解决(wink)',{id:'s40',sim:'检测到一个愿意回复你的人。'});
-scene('转过走廊，团支书走过来。',{id:'s41'});
-say('团支书','青年大学习记得看，但看不完也别慌，先跟我说一声。',{id:'s42'});
-scene('生活委员兼副班和心理委员，停下来和我打招呼。',{id:'s43'});
-say('生活委员','班费的事找我，心里不得劲也找我。二食堂沙发区，随时。',{id:'s44'});
-scene('组宣从教室里探出头。',{id:'s45'});
-say('组宣','群里消息不用条条秒回，重要的我会再@一遍。你先把觉睡够。',{id:'s46'});
-scene('学习委员兼双创委员，抱着书走过来。',{id:'s47'});
-say('学习委员','作业别拖，商赛别慌。不会的先问我，我也不会咱一起问老师。',{id:'s48'});
-scene('文体委员兼生涯发展委员，朝我挥挥手。',{id:'s49'});
-say('文体委员','该打球打球，该看演出看演出。生涯规划不急，你先玩明白再说。',{id:'s50'});
-scene('六个人说完，手机震了一下。班群消息：今晚心理班会，都来啊。',{id:'s51',phone:'classMeeting'});
-scene('我看了一眼，把手机揣进兜里，继续往前走。',{id:'s52'});
+scene('团支书见我还攥着手机，停下来，示意我慢慢说。',{id:'s41'});
+say('团支书','我就在这里，不躲，不逃，把你的坏脾气稳稳接住了',{id:'s42'});
+scene('生活委员兼副班和心理委员走过来，给我示范了一句求助暗号。',{id:'s43'});
+say('生活委员','555｡°(°¯᷄◠¯᷅°)°｡ 心理委员我不得劲儿',{id:'s44'});
+scene('我没忍住笑了。组宣从教室里探出头，接着认真安利起自己的心头好。',{id:'s45'});
+say('组宣','我喜欢水豚噜噜😳😳',{id:'s46'});
+scene('学习委员兼双创委员抱着书走来，听我说起没弄懂的高数题。',{id:'s47'});
+say('学习委员','有学习问题随时喊我，我主打一个贴心服务',{id:'s48'});
+scene('文体委员兼生涯发展委员一边看活动安排，一边朝我挥手。',{id:'s49'});
+say('文体委员','文体委员是最忙的班委（奶龙唐笑）',{id:'s50'});
+scene('几句聊下来，我记住了名字，也记住了各自的梗。手机一震：今晚心理班会，都来啊。',{id:'s51',phone:'classMeeting'});
+scene('我看了一眼，把手机揣进兜里。真有事的时候，好像也没那么难开口了。',{id:'s52'});
 at('小南湖','xingfu');
 scene('日子好像，慢慢顺过来了。',{id:'s53'});
 scene('我开始记得一些小事：哪家窗口好吃、哪天没早八、哪次笑得很真。',{id:'s54'});

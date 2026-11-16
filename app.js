@@ -103,13 +103,13 @@ function setAuto(value){auto=value;$('auto').classList.toggle('active',auto);$('
 function scheduleAuto(){clearTimeout(autoTimer);if(!auto||screen!=='game'||$('modal').open||gallery.open||slideshowTimer||effects.busy||chat.busy||document.hidden||pure)return;const s=story[state.index];if(['choice','live','end'].includes(s.kind))return;autoTimer=setTimeout(()=>advance(),Math.max(1800,fullText.length*65));}
 function syncPauses(){const blocked=screen!=='game'||$('modal').open||document.hidden||pure;effects.pause(blocked||gallery.open);phoneTodos.pause(blocked||gallery.open);chat.pause(blocked||gallery.open);sound.events.pause(screen==='home'||$('modal').open||document.hidden||pure);gallery.pause(blocked);}
 function setDialogueText(text){
- const container=$('dialogue-text');container.replaceChildren();let start=0;
+ const container=$('dialogue-text');container.classList.toggle('emotive-text',text.includes('¯᷄'));container.replaceChildren();let start=0;
  for(const match of text.matchAll(/（[^）]*）/g)){container.append(document.createTextNode(text.slice(start,match.index)),el('span','stage-direction',match[0]));start=match.index+match[0].length;}
  container.append(document.createTextNode(text.slice(start)));
 }
 function maybeSlideshow(){const scene=story[state.index];if(screen!=='game'||typing||!scene.slideshow||settings.motion||slideshowPlayedFor===scene.id||$('modal').open||document.hidden||pure)return false;slideshowPlayedFor=scene.id;slideshowTimer=setTimeout(()=>{slideshowTimer=null;if(screen==='game'&&story[state.index].id===scene.id&&!$('modal').open&&!document.hidden&&!pure)gallery.show(scene.phone,assets,0,true,scene.text.split('（')[0]);else slideshowPlayedFor=null;},1000);return true;}
 function finishText(){clearInterval(typeTimer);setDialogueText(fullText);typing=false;if(!maybeSlideshow())scheduleAuto();}
-function typeText(text){clearInterval(typeTimer);clearTimeout(autoTimer);fullText=text;$('dialogue-text').textContent='';if(settings.speed===0||settings.motion){finishText();return;}typing=true;const chars=Array.from(text);let n=0;typeTimer=setInterval(()=>{n++;$('dialogue-text').textContent=chars.slice(0,n).join('');if(n>=chars.length)finishText();},settings.speed);}
+function typeText(text){clearInterval(typeTimer);clearTimeout(autoTimer);fullText=text;$('dialogue-text').classList.toggle('emotive-text',text.includes('¯᷄'));$('dialogue-text').textContent='';if(settings.speed===0||settings.motion){finishText();return;}typing=true;const chars=Array.from(text);let n=0;typeTimer=setInterval(()=>{n++;$('dialogue-text').textContent=chars.slice(0,n).join('');if(n>=chars.length)finishText();},settings.speed);}
 function showGame(){showScreen('game');render();}
 function renderPortrait(scene){
  const who=scene.character||(scene.spoken&&scene.who!=='我'?scene.who:null);
