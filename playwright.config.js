@@ -29,7 +29,6 @@ export default defineConfig({
     command: 'npm run build && node scripts/server.mjs --dist --base /NEUSfreshmen_Galgame',
     url: 'http://127.0.0.1:4180/NEUSfreshmen_Galgame/',
     env: { PORT: '4180' },
-    env: { PORT: '4180' },
     reuseExistingServer: false,
     timeout: 30000,
     gracefulShutdown: { signal: 'SIGTERM', timeout: 1000 },

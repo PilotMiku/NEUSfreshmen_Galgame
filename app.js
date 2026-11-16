@@ -787,22 +787,33 @@ function renderPhone(kind, scene = {}) {
 }
 function fitSceneLayout() {
   const phone = $('phone'),
-    dialogue = $('dialogue');
-  if (
-    screen !== 'game' ||
-    phone.classList.contains('hidden') ||
-    !dialogue.offsetHeight ||
-    matchMedia('(orientation:landscape) and (max-height:600px)').matches
-  ) {
-    phone.style.maxHeight = '';
-    return;
+    dialogue = $('dialogue'),
+    game = $('game');
+  if (screen !== 'game' || phone.classList.contains('hidden') || !dialogue.offsetHeight) return;
+  const landscape = matchMedia('(orientation:landscape) and (max-height:600px)').matches;
+  const mobile = innerWidth <= 760;
+  const ratio = 19.5 / 9;
+  const topLimit =
+    document.querySelector('.topbar').getBoundingClientRect().bottom + (landscape ? 12 : 20);
+  const toolbarTop = document.querySelector('.game-toolbar').getBoundingClientRect().top;
+  const dialogueTop = dialogue.getBoundingClientRect().top;
+  let height, top;
+  if (landscape) {
+    height = Math.min(180 * ratio, innerHeight - topLimit - 16);
+    top = topLimit;
+  } else if (mobile) {
+    const bottom = Math.min(dialogueTop + 30, toolbarTop - 16);
+    height = Math.min(Math.min(224, innerWidth * 0.56) * ratio, bottom - topLimit);
+    top = bottom - height;
+  } else {
+    height = Math.min(310 * ratio, toolbarTop - topLimit - 20);
+    top = Math.max(topLimit, dialogueTop + 100 - height);
   }
-  const room =
-    dialogue.getBoundingClientRect().top -
-    $('game').getBoundingClientRect().top -
-    phone.offsetTop -
-    24;
-  phone.style.maxHeight = Math.max(150, Math.floor(room)) + 'px';
+  height = Math.max(100, height);
+  phone.classList.toggle('phone-compact', height / ratio < 160);
+  // Geometry belongs to the game layer so the dialogue can reserve the same handset width.
+  game.style.setProperty('--phone-width', (height / ratio).toFixed(2) + 'px');
+  game.style.setProperty('--phone-top', (top - game.getBoundingClientRect().top).toFixed(2) + 'px');
 }
 new ResizeObserver(fitSceneLayout).observe($('dialogue'));
 window.addEventListener('resize', fitSceneLayout);

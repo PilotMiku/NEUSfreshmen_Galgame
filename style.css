@@ -705,19 +705,13 @@ h1 > i {
   bottom: 133px;
 }
 .phone {
-  z-index: 2;
   background: #f7f6ef;
   border: 6px solid #eed;
   border-radius: 30px;
-  width: 255px;
-  height: 385px;
   padding: 13px 13px 21px;
   animation: 0.5s phoneIn;
   position: absolute;
-  top: 8%;
-  right: 16%;
   overflow: hidden;
-  transform: rotate(5deg);
   box-shadow: 8px 13px 25px #17372933;
 }
 .phone:before {
@@ -1470,10 +1464,6 @@ dialog::backdrop {
     right: 13%;
   }
   .phone {
-    width: 280px;
-    height: 420px;
-    top: 15%;
-    right: 20%;
   }
   .game-toolbar {
     bottom: 35px;
@@ -1517,9 +1507,6 @@ dialog::backdrop {
     margin-top: 20px;
   }
   .phone {
-    width: 225px;
-    height: 325px;
-    top: 5%;
   }
   .phone-content {
     max-height: 235px;
@@ -1594,9 +1581,6 @@ dialog::backdrop {
     right: 5%;
   }
   .phone {
-    width: 235px;
-    height: 350px;
-    right: 11%;
   }
   .simulator {
     width: 250px;
@@ -1868,12 +1852,7 @@ dialog::backdrop {
   .phone {
     border-width: 5px;
     border-radius: 25px;
-    width: 194px;
-    height: 280px;
     padding: 12px 11px;
-    top: 23%;
-    right: 11%;
-    transform: rotate(5deg);
   }
   .phone-top {
     margin-bottom: 17px;
@@ -2120,9 +2099,6 @@ dialog::backdrop {
     margin-top: 19px;
   }
   .phone {
-    width: 174px;
-    height: 240px;
-    top: 25%;
   }
   .phone-content {
     max-height: 175px;
@@ -2372,12 +2348,8 @@ dialog::backdrop {
     border-width: 7px;
     border-radius: 36px;
     flex-direction: column;
-    width: 370px;
-    height: 520px;
     padding: 19px 19px 26px;
     display: flex;
-    top: 0;
-    transform: rotate(3deg);
   }
   .phone:before {
     width: 78px;
@@ -2469,15 +2441,10 @@ dialog::backdrop {
 }
 @media (min-width: 1600px) {
   .phone {
-    top: 0;
-    right: 18%;
   }
 }
 @media (min-width: 1600px) and (min-height: 1000px) {
   .phone {
-    width: 410px;
-    height: 610px;
-    top: 1%;
   }
   .phone-content {
     font-size: 15px;
@@ -2488,16 +2455,12 @@ dialog::backdrop {
 }
 @media (min-width: 1600px) and (max-height: 999px) {
   .phone {
-    height: min(520px, 100svh - 405px);
   }
 }
 @media (min-width: 761px) and (max-height: 850px) {
   .phone {
     border-radius: 32px;
-    width: 320px;
-    height: min(430px, 100svh - 350px);
     padding: 15px 15px 23px;
-    top: 0;
   }
   .phone-top {
     margin-bottom: 19px;
@@ -2528,7 +2491,6 @@ dialog::backdrop {
     top: 5%;
   }
   .phone {
-    height: min(430px, 100svh - 395px);
   }
 }
 .character {
@@ -2785,16 +2747,11 @@ dialog::backdrop {
     left: 27%;
   }
   .phone {
-    right: max(4%, env(safe-area-inset-right));
-    width: var(--landscape-phone-width);
-    height: calc(100svh - 104px - env(safe-area-inset-bottom));
     border: 5px solid #eed;
     border-radius: 24px;
     flex-direction: column;
     padding: 10px 10px 17px;
     display: flex;
-    top: 4px;
-    transform: none;
   }
   .phone:before {
     width: 55px;
@@ -4912,4 +4869,159 @@ dialog {
   .ending-reflection > p {
     max-height: 64px;
   }
+}
+
+/* The handset keeps a 9:19.5 body ratio; the whole object scales with the available room. */
+.phone {
+  position: absolute;
+  z-index: 5;
+  width: var(--phone-width, 260px);
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 9 / 19.5;
+  top: var(--phone-top, 24px);
+  right: 8%;
+  bottom: auto;
+  left: auto;
+  display: flex;
+  flex-direction: column;
+  border-width: clamp(4px, calc(var(--phone-width, 260px) * 0.022), 7px);
+  border-radius: clamp(20px, calc(var(--phone-width, 260px) * 0.105), 34px);
+  padding: clamp(8px, calc(var(--phone-width, 260px) * 0.055), 18px);
+  padding-bottom: clamp(18px, calc(var(--phone-width, 260px) * 0.085), 26px);
+  transform: rotate(3deg);
+  transform-origin: center;
+  animation: phone-arrive 0.45s ease-out both;
+  box-shadow:
+    0 0 0 1px #8fa8c5,
+    inset 0 0 0 1px #ffffffd9,
+    0 22px 40px #172f5140,
+    7px 10px 0 #243f6633;
+}
+.phone-top,
+.phone-heading {
+  flex-shrink: 0;
+}
+.phone-top {
+  margin-bottom: clamp(10px, calc(var(--phone-width, 260px) * 0.065), 20px);
+}
+.phone-heading {
+  font-size: clamp(11px, calc(var(--phone-width, 260px) * 0.063), 19px);
+}
+.phone-content {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+.chat-phone .phone-heading {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.has-phone .dialogue {
+  padding-right: calc(var(--phone-width, 260px) + 48px);
+}
+@keyframes phone-arrive {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+@media (max-width: 760px) {
+  .phone {
+    right: 6%;
+    transform: rotate(3deg);
+  }
+  .has-phone .dialogue {
+    padding-right: 21px;
+    padding-top: 46px;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .phone {
+    right: max(4%, env(safe-area-inset-right));
+    transform: rotate(1.5deg);
+  }
+  .has-phone .dialogue {
+    right: calc(var(--phone-width, 140px) + 2%);
+    padding-top: 11px;
+    padding-right: 32px;
+  }
+  .has-phone .game-toolbar {
+    right: calc(var(--phone-width, 140px) + 6%);
+  }
+}
+.motion-reduced .phone {
+  animation: none;
+}
+/* Keep a small handset's screen in proportion when a large dialogue font uses more room. */
+.has-phone .simulator {
+  z-index: 6;
+}
+.phone-compact .phone-top {
+  font-size: 6px;
+  margin-bottom: 8px;
+}
+.phone-compact .phone-heading {
+  font-size: 10px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  padding-bottom: 8px;
+}
+.phone-compact.chat-phone .phone-heading {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.phone-compact .chat-subtitle,
+.phone-compact .phone-time {
+  font-size: 6px;
+  padding: 4px 0;
+  margin: 3px 0;
+}
+.phone-compact .chat-thread {
+  padding: 2px 3px 6px;
+}
+.phone-compact .chat-row {
+  gap: 4px;
+  margin: 8px 0;
+}
+.phone-compact .chat-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 7px;
+}
+.phone-compact .chat-message {
+  max-width: calc(100% - 20px);
+}
+.phone-compact .chat-bubble {
+  padding: 4px;
+  font-size: 8px;
+}
+.phone-compact .chat-sender,
+.phone-compact .chat-delivery {
+  font-size: 6px;
+}
+.phone-compact .chat-compose {
+  gap: 3px;
+  padding-top: 4px;
+}
+.phone-compact .chat-voice {
+  font-size: 10px;
+}
+.phone-compact .chat-draft {
+  min-height: 18px;
+  padding: 3px;
+  font-size: 7px;
+}
+.phone-compact .chat-draft:empty:before {
+  font-size: 6px;
+}
+.phone-compact .chat-send {
+  padding: 4px 3px;
+  font-size: 7px;
 }
