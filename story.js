@@ -1,29 +1,29 @@
 export const chapters = [
-  {name:'初来乍到', en:'THE FIRST DAY', note:'九月，新的开始。'},
-  {name:'迷彩色的告别', en:'DAYS IN CAMOUFLAGE', note:'有些告别，比想象中难。'},
-  {name:'这就是大学吗', en:'A LITTLE OVERWHELMED', note:'先呼吸，再一件一件来。'},
-  {name:'身边的那些人', en:'PEOPLE BY MY SIDE', note:'原来，有些话会被好好接住。'},
-  {name:'试着开口', en:'IT IS OKAY TO ASK', note:'不用组织好所有语言，先开口。'},
-  {name:'没那么沉了', en:'A NEW CHAPTER', note:'今晚心理班会，随便坐。'},
+  {name:'初来乍到', en:'九月 · 报到', note:'入学第一天'},
+  {name:'军训结束', en:'九月 · 军训', note:'闭幕式之后'},
+  {name:'这就是大学吗', en:'第一周 · 上课', note:'新学期课表'},
+  {name:'身边的那些人', en:'课间', note:'班群里又有新消息'},
+  {name:'试着开口', en:'心理班会', note:'现场互动'},
+  {name:'没那么沉了', en:'今天晚上', note:'文管学馆门口'},
 ];
 export const backgrounds = {车窗:'chechuang',校门:'xiaomen',文管学馆:'wenguan',图书馆:'tushuguan',小南湖:'xiaonanhu',二食堂:'ercantang',宿舍楼下:'sushe',军训场:'junxun',教室:'jiaoshi',走廊:'zoulang',文管门口:'wenguanmenkou',夜路:'yelu'};
 export const characters = {
   主角:{file:'zhujue',side:'center',color:'#7a9f88',title:'一个普通同学'},
-  班长:{file:'banzhang',side:'left',color:'#789789',title:'慢一点也会回复你'},
-  团支书:{file:'tuanzhishu',side:'left',color:'#be8e73',title:'有事，先跟我说一声'},
+  班长:{file:'banzhang',side:'left',color:'#789789',title:'班委'},
+  团支书:{file:'tuanzhishu',side:'left',color:'#be8e73',title:'班委'},
   生活委员:{file:'shenghuo',side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
-  组宣:{file:'zuxuan',side:'left',color:'#8d88b1',title:'先把觉睡够'},
+  组宣:{file:'zuxuan',side:'left',color:'#8d88b1',title:'组织 · 宣传'},
   学习委员:{file:'xuewei',side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
   文体委员:{file:'wenti',side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
-  学长:{file:'xuezhang',side:'right',color:'#7e8fa8',title:'可以向他开口'},
-  心理委员:{file:'xinli',side:'right',color:'#89a789',title:'心理班会 · 随便坐'},
+  学长:{file:'xuezhang',side:'right',color:'#7e8fa8',title:'高年级同学'},
+  心理委员:{file:'xinli',side:'right',color:'#89a789',title:'班委'},
 };
 export const todos=['学生会面试','班委会','年级会选拔','篮球队选拔','志愿者协会招募','四六级报考','商业精英挑战赛','国庆放假','高数课','线代课','大学生心理健康教育','Python课','劳动教育'];
 export const story=[];
 let context={chapter:0,bg:'车窗',music:'open'};
 function scene(text, extra={}) { const item={...context,id:`s${story.length}`,who:'我',text,...extra};story.push(item);return item; }
 function at(bg,music,chapter){context={...context,bg,...(music!==undefined?{music}:{}),...(chapter!==undefined?{chapter}:{})};}
-function say(who,text,extra={}){return scene(text,{who,...extra});}
+function say(who,text,extra={}){return scene(text,{who,spoken:true,...extra});}
 function system(text,extra={}){return scene(text,{who:'NEU生活模拟器',sim:text,...extra});}
 function live(id,title,prompt,response,extra={}){return scene(prompt,{id,kind:'live',who:'主持人',live:{title,prompt,response},...extra});}
 scene('手机相册自动播放。照片晃、糊、歪，字幕一行行蹦出来。',{phone:'album'});
@@ -48,7 +48,7 @@ system('检测到宿主情绪波动，轻微上扬。',{stats:[58,68,58]});
 scene('似乎大学生活也不是那么……');
 scene('话不说满。照片里，大家开始笑、约饭、起外号。',{phone:'trainingHappy'});
 scene('军训结束。闭幕式上，教官转过身，走向人群之外。');
-scene('我看着那个越来越远的背影。',{id:'farewell',kind:'choice',choices:[{text:'转过身的瞬间，鼻子突然酸了',detail:'有些不舍，还没来得及说。',target:'cry'},{text:'觉得自己做好了准备',detail:'虽然也不知道，准备好了什么。',target:'ready'}]});
+scene('我看着那个越来越远的背影。',{id:'farewell',kind:'choice',choices:[{text:'转过身的瞬间，鼻子突然酸了',detail:'没出声，在原地站了一会儿。',target:'cry'},{text:'觉得自己做好了准备',detail:'虽然也不知道，准备好了什么。',target:'ready'}]});
 scene('转过身的瞬间，鼻子突然酸了。没有出声，就是站那儿愣了一会儿。',{id:'cry'});
 scene('后来某天夜里，我突然想起教官喊口令的声音。',{jump:'courses'});
 scene('我觉得自己做好了准备。虽然，也不知道准备好了什么。',{id:'ready'});
@@ -92,19 +92,19 @@ scene('我开始记得一些小事：哪家窗口好吃、哪天没早八、哪�
 at('夜路');
 scene('可是——');
 at('夜路','off',4);
-live('pause','如果是我，会怎么办？','视觉小说暂停。主持人上场，邀请现场同学分享最近遇到的困难。','有时候，我也会卡住：题目不会做、融不进小组、想找人说话，又怕打扰。',{effect:'blackout'});
+live('pause','最近遇到什么困难？','视觉小说暂停。主持人上场，邀请现场同学分享最近遇到的困难。','比如：一道高数题卡了一晚上。想找人问问，又怕显得自己太笨。',{effect:'blackout'});
 at('文管门口','qiuzhu');
 scene('第一个卡住的瞬间。文管学馆门口碰到学长，嘴张了张，没说出话。',{character:'学长'});
 scene('学长走了。那句想问的话，还在嘴边。');
-live('help-senior','想问的话，能不能说出口？','主持人转头看班长：“班长，你要是那个学长，你希望他张嘴吗？”请班长现场回应。','参考回应：我希望。你可以先说“学长，我想问个事”。如果我现在没空，我们也可以另约时间。');
+live('help-senior','要不要叫住学长？','主持人转头看班长：“班长，你要是那个学长，你希望他张嘴吗？”请班长现场回应。','参考回应：“问呗。我现在有空就给你讲，没空咱们另约个时间。”');
 system('求助不是掉价，是提前止损。');
 at('宿舍楼下');
 scene('第二个瞬间。半夜给朋友发“在吗”，打了，又删。',{phone:'friend'});
-live('help-friend','一句“在吗”，打了又删。','主持人邀请团支书或人缘好的同学接话：朋友半夜发来一句“在吗”，你会怎么接？','参考回应：可以把事情一起发来。我没及时回，不代表你打扰了我；等我看到，就能知道怎么陪你。');
+live('help-friend','一句“在吗”，打了又删。','主持人邀请团支书或人缘好的同学接话：朋友半夜发来一句“在吗”，你会怎么接？','参考回应：“有事直接发就行，我醒了就回。别光发个在吗，我还得猜你怎么了。”');
 system('有些话不用组织好语言，先发出去。');
 at('二食堂');
 scene('第三个瞬间。群里找“高数搭子”，屏幕却弹出一条防诈提示。',{phone:'partner'});
-live('help-partner','想找个搭子，一起扛。','主持人看学委：“你收作业见过多少‘搭子变鸽子’？”请学委接话。主持人补充：搭子可以找，不转账、不点链接、不交押金。','参考回应：先约定具体时间和一道题，从班里认识的同学开始。有人临时放鸽子，也不妨碍我再问问学委。');
+live('help-partner','有人一起学高数吗？','主持人看学委：“你收作业见过多少‘搭子变鸽子’？”请学委接话。主持人补充：搭子可以找，不转账、不点链接、不交押金。','参考回应：“先在班里约两个人，下课一起做两道题。别还没见过面，就让你交资料费。”');
 system('搭子可以找，不转账、不点链接、不交押金。');
 at('走廊');
 scene('第四个瞬间。走廊碰到生活委员兼心理委员，我憋了半天。',{character:'生活委员'});
@@ -114,10 +114,10 @@ say('生活委员','接。你说了我就听，二食堂沙发区十分钟，不
 system('暗号不用高级，说出来就行。');
 at('夜路');
 scene('第五个瞬间。班群里，有人发了一句：“班长V我50吃KFC。”',{phone:'kfc'});
-live('help-kfc','有些困难，也可以笑着开场。','主持人看班长：“V不V？”请班长现场回应。','参考回应：V不V另说，先一起吃顿饭。吃完，把你卡住的事说给我听听。');
+live('help-kfc','班长，V不V？','主持人看班长：“V不V？”请班长现场回应。','参考回应：“50没有，饭可以一起吃。到底啥事，边吃边说。”');
 system('有些困难一顿KFC解决不了，但能让你先笑一下再解决。');
 system('以上方式，不保证困难消失。但保证，你不是一个人。',{stats:[65,76,60]});
-live('next-step','帮一个困难，想出下一步。','主持人邀请台下同学：从刚才分享的一个困难出发，一起想一个今天就能做到的小动作。','可以从这里开始：把不会的那道题拍给学委；给朋友发一条完整消息；约生活委员在二食堂坐十分钟。',{reflection:true});
+live('next-step','帮忙想个办法。','主持人邀请台下同学：从刚才分享的一个困难出发，一起想一个今天就能做到的小动作。','可以从这里开始：把不会的那道题拍给学委；给朋友发一条完整消息；约生活委员在二食堂坐十分钟。',{reflection:true});
 at('文管门口','shouwei',5);
 scene('手机待办还是满的。但有几条旁边，多了一些小标记。',{phone:'resolved'});
 scene('“高数作业”旁标：已找学委问。',{phone:'resolved'});

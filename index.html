@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f2e9"><meta name="description" content="第一次离家这么远。一个普通同学的 NEU 入学故事，在忙乱的日子里，慢慢学会向身边的人开口。">
+  <meta name="theme-color" content="#f4f2e9"><meta name="description" content="一个东北大学普通新生的入学日常。军训、早八、回不完的群消息，还有第一次心理班会。">
   <title>新生 · NEU生活模拟器</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
@@ -11,39 +11,38 @@
 <div id="app">
   <div class="scene-backdrop" aria-hidden="true"><img id="background" src="assets/photos/xiaomen.jpg" alt=""><div class="scene-tint"></div><div class="grain"></div></div>
   <header class="topbar">
-    <a class="brand" id="brand" href="#" aria-label="返回新生首页"><span class="brand-mark">生<span>NEU</span></span><span class="brand-name">新生<span>A NEW CHAPTER</span></span></a>
-    <div class="top-middle"><span class="small-spark">✳</span><span id="top-caption">每一段新生活，都从这里开始。</span></div>
+    <a class="brand" id="brand" href="#" aria-label="返回新生首页"><span class="brand-mark">生<span>NEU</span></span><span class="brand-name">新生<span>东北大学 · 入学篇</span></span></a>
+    <div class="top-middle"><span id="top-caption">新生心理班会 · 互动剧场</span></div>
     <div class="header-actions"><button class="icon-button" id="sound" aria-label="开启声音" title="声音">♫<span class="sound-slash"></span></button><button class="icon-button" id="fullscreen" aria-label="切换全屏" title="全屏">⛶</button><button class="icon-button" id="settings" aria-label="打开设置" title="设置">⚙</button></div>
   </header>
   <main id="home" class="home">
     <div class="home-copy">
-      <div class="eyebrow"><span class="little-line"></span> NEU LIFE SIMULATOR <span class="edition">入学篇</span></div>
-      <div class="title-wrap"><h1>新<span>生</span><i>。</i></h1><span class="title-note">我的大学，刚刚开始</span></div>
-      <p class="home-lead">第一次离家这么远，<br>这一次，故事的主角是<span class="underline">普通的我</span>。</p>
-      <p class="home-description">一张饭卡，一部手机，一串还没做完的待办。<br>在陌生的校园里，慢慢找到属于自己的位置。</p>
-      <div class="start-actions"><button class="primary-button" id="start"><span class="play-triangle">▷</span> 开启新生活 <span class="button-arrow">↗</span></button><button class="continue-button" id="continue" disabled>继续故事 <span>↗</span></button></div>
-      <div class="home-meta"><span><i class="green-dot"></i> 校园日常视觉小说</span><span class="meta-separator"></span><span>约 15–20 分钟</span><span class="meta-separator"></span><button id="how-to">游玩说明 <span>↗</span></button></div>
+      <div class="eyebrow"><span class="little-line"></span> NEU 生活模拟器 <span class="edition">2026 · 秋</span></div>
+      <div class="title-wrap"><h1>新<span>生</span><i>。</i></h1><span class="title-note">九月，来学校报到</span></div>
+      <p class="home-lead">第一次离家这么远。<br>先去报到吧。</p>
+      <p class="home-description">军训、早八，还有回不完的“收到”。<br>我是班上的一个普通同学。这是刚入学的那些事。</p>
+      <div class="start-actions"><button class="primary-button" id="start"><span class="play-triangle">▷</span> 开始游戏 <span class="button-arrow">→</span></button><button class="continue-button" id="continue" disabled>继续游戏 <span>→</span></button></div>
+      <div class="home-meta"><span><i class="green-dot"></i> 校园视觉小说</span><span class="meta-separator"></span><span>约 15–20 分钟</span><span class="meta-separator"></span><button id="how-to">操作说明</button></div>
     </div>
-    <div class="cover-sticker" aria-hidden="true"><span>HELLO, MY</span><strong>新生活！</strong><svg viewBox="0 0 50 32"><path d="M3 22Q18 30 36 8M27 7l11-1-1 12" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
-    <div class="photo-caption"><span class="photo-pin"></span><span>九月 · 校门口</span><span class="photo-date">DAY 01</span></div>
-    <footer class="home-footer"><span>献给每一个正在适应新生活的你</span><span class="footer-right">不必一下子，就成为很厉害的大人。 <span>✳</span></span></footer>
+    <div class="photo-caption"><span class="photo-pin"></span><span>九月 · 校门口</span><span class="photo-date">报到那天</span></div>
+    <footer class="home-footer"><span>从报到，到第一次心理班会。</span><span class="footer-right">点击 / 空格继续</span></footer>
   </main>
   <main id="game" class="game hidden" aria-label="视觉小说">
-    <div class="chapter-ribbon"><span id="chapter-number">01</span><div><small id="chapter-label">CHAPTER ONE</small><h2 id="chapter-title">初来乍到</h2></div><span class="chapter-line"></span></div>
+    <div class="chapter-ribbon"><span id="chapter-number">01</span><div><small id="chapter-label">九月 · 报到</small><h2 id="chapter-title">初来乍到</h2></div><span class="chapter-line"></span></div>
     <div class="location-label"><span>⌖</span><span id="location">车窗</span></div>
     <aside id="simulator" class="simulator hidden" aria-live="polite"><div class="sim-title"><span>✳</span> NEU 生活模拟器 <i></i></div><p id="sim-text"></p><div class="sim-bars"><span>电量 <i><b id="energy"></b></i></span><span>快乐 <i><b id="happiness"></b></i></span><span>学业 <i><b id="study"></b></i></span></div></aside>
     <div id="scene-decoration" class="scene-decoration" aria-hidden="true"></div>
     <div id="character" class="character hidden"><img id="character-image" alt=""><div class="character-tag" id="character-tag"></div></div>
     <div id="phone" class="phone hidden"><div class="phone-top"><span>9:41</span><span>●●● ▰</span></div><div class="phone-heading" id="phone-title"></div><div class="phone-content" id="phone-content"></div><div class="phone-home"></div></div>
-    <section id="choice-panel" class="choice-panel hidden" aria-label="剧情选择"><div class="choice-eyebrow">A MOMENT TO REMEMBER</div><h3>这一刻，我的心情是……</h3><div id="choices"></div><p>不用选对，只要选此刻的自己。</p></section>
-    <section id="live-panel" class="live-panel hidden" aria-label="分享环节"><span class="live-badge" id="live-badge">故事暂停 · 留一点时间给自己</span><h3 id="live-title"></h3><p id="live-prompt"></p><blockquote id="live-response"></blockquote><textarea id="live-note" rows="2" maxlength="500" placeholder="如果愿意，写下此刻的想法……（只保存在本机）" aria-label="我的想法"></textarea><div class="live-bottom"><span id="live-hint">想一想也可以，空着也可以。</span><button id="live-next" class="primary-button">继续故事 <span>→</span></button></div></section>
+    <section id="choice-panel" class="choice-panel hidden" aria-label="剧情选择"><div class="choice-eyebrow">军训结束</div><h3>转过身的那一刻——</h3><div id="choices"></div><p>选择后继续。</p></section>
+    <section id="live-panel" class="live-panel hidden" aria-label="分享环节"><span class="live-badge" id="live-badge">班会互动</span><h3 id="live-title"></h3><p id="live-prompt"></p><blockquote id="live-response"></blockquote><textarea id="live-note" rows="2" maxlength="500" placeholder="写点什么（可留空，只保存在本机）" aria-label="我的想法"></textarea><div class="live-bottom"><span id="live-hint">可直接继续。</span><button id="live-next" class="primary-button">继续 <span>→</span></button></div></section>
     <section id="dialogue" class="dialogue" aria-label="剧情对话" tabindex="0" role="button"><div class="dialogue-heading"><span class="speaker-mark"></span><span id="speaker">我</span><span id="speaker-note">心里的声音</span><span class="dialogue-count" id="scene-count"></span></div><p id="dialogue-text" aria-live="polite"></p><div class="dialogue-bottom"><span id="dialogue-context">九月，新的开始。</span><span class="advance-hint">点击继续 <span>▾</span></span></div></section>
-    <nav class="game-toolbar" aria-label="游戏控制"><button id="back" title="返回上一句（←）">↶ <span>上一句</span></button><button id="log">☷ <span>回看</span></button><span class="toolbar-divider"></span><button id="save">▣ <span>存档</span></button><button id="load">▤ <span>读档</span></button><span class="toolbar-divider"></span><button id="auto" aria-pressed="false">▷ <span>自动</span></button><button id="hide-ui" title="隐藏对话（H）">◉ <span>纯享</span></button><button id="home-button">⌂ <span>首页</span></button><span class="toolbar-tip">SPACE / 点击 · 继续</span></nav>
+    <nav class="game-toolbar" aria-label="游戏控制"><button id="back" title="返回上一句（←）">↶ <span>上一句</span></button><button id="log">☷ <span>回看</span></button><span class="toolbar-divider"></span><button id="save">▣ <span>存档</span></button><button id="load">▤ <span>读档</span></button><span class="toolbar-divider"></span><button id="auto" aria-pressed="false">▷ <span>自动</span></button><button id="hide-ui" title="隐藏对话（H），Esc 返回">◉ <span>隐藏</span></button><button id="home-button">⌂ <span>首页</span></button><span class="toolbar-tip">空格 / 点击继续</span></nav>
     <div class="chapter-progress"><i id="chapter-progress"></i></div>
   </main>
-  <main id="ending" class="ending hidden"><span class="ending-eyebrow">THE BEGINNING OF SOMETHING GOOD</span><span class="ending-flower">✳</span><h2>待办没少几条，<br>但好像……<span>没那么沉了。</span></h2><p>大学生活还在继续。<br>这一次，我知道了，自己不是一个人。</p><div class="ending-memo"><span>我的第一学期 · 一点小收获</span><p id="ending-memory"></p><div>✓ 高数作业：已找学委问<br>✓ 小组作业落单：已问冉有<br>✓ 心里不得劲：已跟生活委员说<br>✓ 今晚心理班会：我来了</div></div><div class="ending-actions"><button id="replay" class="primary-button">再遇见一次 <span>↗</span></button><button id="ending-home" class="secondary-button">回到首页</button></div><small>故事到这里，生活才刚刚开始。</small></main>
+  <main id="ending" class="ending hidden"><span class="ending-eyebrow">新生 · 完</span><h2>待办没少几条，<br>但好像……<span>没那么沉了。</span></h2><p>“今晚心理班会”旁边，多了一个勾。</p><div class="ending-memo"><span>手机里的待办</span><p id="ending-memory"></p><div>✓ 高数作业：已找学委问<br>✓ 小组作业落单：已问冉有<br>✓ 心里不得劲：已跟生活委员说<br>✓ 今晚心理班会：我来了</div></div><div class="ending-actions"><button id="replay" class="primary-button">重新开始</button><button id="ending-home" class="secondary-button">回到首页</button></div><small>谢谢参与这次班会。</small></main>
 </div>
-<dialog id="modal"><div class="modal-heading"><div><span class="modal-eyebrow" id="modal-eyebrow">A LITTLE PAUSE</span><h2 id="modal-title"></h2></div><button id="modal-close" class="icon-button" aria-label="关闭弹窗">×</button></div><div id="modal-body"></div></dialog>
+<dialog id="modal"><div class="modal-heading"><div><span class="modal-eyebrow" id="modal-eyebrow"></span><h2 id="modal-title"></h2></div><button id="modal-close" class="icon-button" aria-label="关闭弹窗">×</button></div><div id="modal-body"></div></dialog>
 <div id="toast" class="toast" role="status"></div>
 <noscript>请启用 JavaScript 来开启《新生》的故事。</noscript>
 <script type="module" src="app.js"></script>

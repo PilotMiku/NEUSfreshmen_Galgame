@@ -24,5 +24,14 @@ const body='<path d="M172 209v45l27 31 27-31v-45" fill="#e9c9ac"/><path d="M162 
 const specs=glasses?'<g stroke="#60685c" stroke-width="2" fill="#d9e5d5" fill-opacity=".12"><rect x="131" y="133" width="45" height="31" rx="9"/><rect x="217" y="133" width="45" height="31" rx="9"/><path d="M176 144q21-10 41 0M120 140l11 2m131 0 12-2"/></g>':'';
 await writeFile(file('assets/'+c.file+'.svg'),'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 700">'+hair+body+face+fringe+specs+'</svg>');
 }
+
+// Missing campus photos use a location card rather than an invented building.
+function locationCard(title, subtitle, night=false){
+ const bg=night?'#24352f':'#e8e2d4',ink=night?'#b7c6b4':'#7d806c',line=night?'#738673':'#b3b5a0';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="'+bg+'"/><path d="M100 130h1400v740H100z" fill="none" stroke="'+line+'" stroke-opacity=".3"/><path d="M715 355h170M715 560h170" stroke="'+line+'" stroke-opacity=".5"/><text x="800" y="453" text-anchor="middle" font-family="Songti SC,STSong,serif" font-size="58" letter-spacing="15" fill="'+ink+'">'+title+'</text><text x="800" y="510" text-anchor="middle" font-family="PingFang SC,sans-serif" font-size="18" letter-spacing="5" fill="'+ink+'">'+subtitle+'</text></svg>';
+}
+await writeFile(file('assets/ercantang.svg'),locationCard('\u4e8c\u98df\u5802','\u6c99\u53d1\u533a'));
+await writeFile(file('assets/sushe.svg'),locationCard('\u5bbf\u820d\u697c\u4e0b','00:47',true));
+
 await writeFile(file('asset-manifest.json'),JSON.stringify(manifest,null,2));
 console.log('Prepared '+Object.keys(manifest).length+' campus photos, 12 fallback scenes and 9 original vector characters.');

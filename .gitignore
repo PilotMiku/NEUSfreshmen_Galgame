@@ -5,3 +5,5 @@ artifacts/
 .openai/*.tar.gz
 
 图片/
+
+.openai/
