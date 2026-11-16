@@ -29,6 +29,13 @@ export class PortraitLayer {
     this.key = null;
     this.sequence = 0;
     this.frame = null;
+    this.echo = document.createElement('div');
+    this.echo.className = 'portrait-echo';
+    this.echo.setAttribute('aria-hidden', 'true');
+    this.echoImage = document.createElement('img');
+    this.echoImage.alt = '';
+    this.echo.append(this.echoImage);
+    container.before(this.echo);
     container.className = 'character left';
     container.setAttribute('aria-hidden', 'true');
     this.reflow = () => this.fit();
@@ -49,6 +56,11 @@ export class PortraitLayer {
     this.container.style.setProperty('--portrait-width', width + 'px');
     this.container.style.setProperty('--portrait-top', (dialogue.top - visibleHeight - parentTop) + 'px');
     this.container.style.setProperty('--portrait-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
+    const shift = Math.min(64, width * .19), echoWidth = width * 1.05;
+    this.echo.style.width = echoWidth + 'px';
+    this.echo.style.height = (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px';
+    this.echo.style.left = Math.max(8, Math.min(this.container.offsetLeft + shift, innerWidth - echoWidth - 12)) + 'px';
+    this.echo.style.top = (Math.max(headerBottom + 8, dialogue.top - visibleHeight - shift) - parentTop) + 'px';
   }
 
   hide() {
@@ -59,11 +71,17 @@ export class PortraitLayer {
     this.image.onerror = null;
     this.container.classList.remove('is-visible');
     this.container.setAttribute('aria-hidden', 'true');
+    this.echo.classList.remove('is-visible');
+    this.echoImage.onload = null;
+    this.echoImage.onerror = null;
+    this.echoImage.removeAttribute('src');
+    this.echoReady = false;
   }
 
   show(name, character = {}, assets = {}) {
     const source = typeof assets[character.file] === 'string' ? assets[character.file] : null;
-    const key = name + '\0' + (source || 'placeholder');
+    const echoSource = character.companion ? assets[character.companion] : null;
+    const key = name + '\0' + (source || 'placeholder') + '\0' + (echoSource || '');
     if (this.key === key) return;
     this.hide();
     this.key = key;
@@ -81,14 +99,29 @@ export class PortraitLayer {
         if (sequence !== this.sequence) return;
         this.container.setAttribute('aria-hidden', 'false');
         this.container.classList.add('is-visible');
+        if (this.echoReady && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
       });
     };
     this.image.onerror = () => {
       if (sequence !== this.sequence) return;
       this.image.onerror = null;
       this.container.dataset.portrait = 'placeholder';
+      this.echo.classList.remove('is-visible');
       this.image.src = fallback;
     };
     this.image.src = source || fallback;
+    if (source && echoSource) {
+      this.echoImage.onload = () => {
+        if (sequence !== this.sequence || !this.echoImage.naturalWidth) return;
+        this.echoReady = true;
+        if (this.container.classList.contains('is-visible') && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
+      };
+      this.echoImage.onerror = () => {
+        if (sequence !== this.sequence) return;
+        this.echoReady = false;
+        this.echo.classList.remove('is-visible');
+      };
+      this.echoImage.src = echoSource;
+    }
   }
 }

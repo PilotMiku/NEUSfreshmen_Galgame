@@ -173,3 +173,8 @@
 .character[data-portrait="image"]>img{position:absolute;top:0;left:0;width:100%;height:auto;object-position:top;object-fit:contain}
 @media(max-width:760px){.character[data-portrait="image"]{left:4%}}
 @media(orientation:landscape) and (max-height:600px){.character[data-portrait="image"]{left:4%}}
+
+/* A translucent companion follows the portrait, offset behind its right shoulder. */
+.portrait-echo{position:absolute;z-index:2;pointer-events:none;opacity:0;visibility:hidden;overflow:hidden;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease,visibility 0s .45s;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 65%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 65%,transparent 100%)}
+.portrait-echo.is-visible{opacity:.36;visibility:visible;transform:none;transition:opacity .45s ease,transform .45s ease}
+.portrait-echo>img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 10px #f8d66b55)}

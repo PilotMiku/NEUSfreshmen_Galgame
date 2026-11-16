@@ -15,7 +15,7 @@ export const characters = {
   生活委员:{file:'shenghuo',portraitHip:.56,side:'left',color:'#bc9a65',title:'副班 · 心理委员'},
   组宣:{file:'zuxuan',side:'left',color:'#8d88b1',title:'组织 · 宣传'},
   学习委员:{file:'xuewei',portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
-  文体委员:{file:'wenti',portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
+  文体委员:{file:'wenti',companion:'wenti_stand',portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
   学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
   心理委员:{file:'xinli',side:'left',color:'#89a789',title:'班委'},
 };

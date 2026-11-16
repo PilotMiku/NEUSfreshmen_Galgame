@@ -113,5 +113,6 @@ export const defaultAssets = {
   "mobile_sunset": "assets/photos/sunset.mobile.webp",
   "shenghuo": "img_human/shenghuo.png",
   "xuewei": "img_human/xuewei.png",
-  "wenti": "img_human/wenti.png"
+  "wenti": "img_human/wenti.png",
+  "wenti_stand": "img_human/wenti_stand.png"
 };
