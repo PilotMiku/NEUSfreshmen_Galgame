@@ -1,4 +1,6 @@
 const node=(tag,className,text)=>{const element=document.createElement(tag);element.className=className;if(text!==undefined)element.textContent=text;return element;};
+const courseIntroDuration=3500,courseTextDuration=4200;
+const warningIcon='<svg viewBox="0 0 100 91" focusable="false" aria-hidden="true"><path d="M50 4 98 87.14H2Z" fill="#ffe16a" stroke="#bc8431" stroke-width="3" stroke-linejoin="round"/><path d="M46 33h8l-1 27h-6Z" fill="#d83c46"/><circle cx="50" cy="69" r="4.5" fill="#d83c46"/></svg>';
 
 export class TodoList{
  constructor(onChange){this.onChange=onChange;this.target=0;this.count=0;this.paused=false;}
@@ -94,16 +96,30 @@ export class FallingTodos{
 export class SceneEffects{
  constructor(overlay,pile,dialogue,todos,onFinished){
   this.overlay=overlay;this.heading=overlay.querySelector('[data-cinematic-title]');this.note=overlay.querySelector('[data-cinematic-note]');
+  this.warnings=node('div','course-warning-signs');this.warnings.setAttribute('aria-hidden','true');overlay.prepend(this.warnings);
+  overlay.style.setProperty('--course-intro',courseIntroDuration+'ms');
+  window.addEventListener('resize',()=>{if(this.effect==='course-warning'&&this.playing)this.renderWarnings(courseIntroDuration+courseTextDuration-this.remaining+(this.paused?0:performance.now()-this.startedAt));});
   this.pile=new FallingTodos(pile,dialogue,todos);this.onFinished=onFinished;this.key=null;this.playing=false;
  }
  get cinematic(){return ['binding','welcome','course-warning'].includes(this.effect);}
  get busy(){return this.playing;}
- clear(){clearTimeout(this.timer);this.timer=null;this.key=null;this.effect=null;this.playing=false;this.overlay.className='cinematic-overlay hidden';this.pile.clear();document.body.classList.remove('cinematic-scene');}
+ clear(){clearTimeout(this.timer);this.timer=null;this.key=null;this.effect=null;this.playing=false;this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();this.pile.clear();document.body.classList.remove('cinematic-scene');}
+ renderWarnings(elapsed=0){
+  const width=this.overlay.clientWidth,height=this.overlay.clientHeight,columns=Math.max(3,Math.ceil(width/180)),size=width/columns;
+  const rows=Math.ceil(height/(size*.66)),count=columns*rows,fragment=document.createDocumentFragment();
+  const order=Array.from({length:columns},(_,index)=>index).sort((a,b)=>Math.abs(a-(columns-1)/2)-Math.abs(b-(columns-1)/2));
+  for(let index=0;index<count;index++){
+   const sign=node('span','course-warning-sign');sign.innerHTML=warningIcon;
+   sign.style.left=(order[index%columns]+.5)*100/columns+'%';sign.style.top=(rows-Math.floor(index/columns)-.5)*100/rows+'%';
+   sign.style.width=size*1.18+'px';sign.style.setProperty('--warning-delay',(index/(count-1)*2800-elapsed)+'ms');fragment.append(sign);
+  }
+  this.warnings.replaceChildren(fragment);
+ }
  set(scene,name,reduced){
   this.pile.set(scene.effect==='overload'?scene.overflowCount||12:0,reduced);
   if(scene.id===this.key&&this.effect===scene.effect)return;
   clearTimeout(this.timer);this.timer=null;this.key=scene.id;this.effect=scene.effect;this.playing=false;
-  this.overlay.className='cinematic-overlay hidden';document.body.classList.toggle('cinematic-scene',this.cinematic);
+  this.overlay.className='cinematic-overlay hidden';this.warnings.replaceChildren();document.body.classList.toggle('cinematic-scene',this.cinematic);
   if(!this.cinematic)return;
   const title=(scene.cinematicTitle||scene.text).replaceAll('{name}',name);
   this.heading.replaceChildren();Array.from(title).forEach((letter,index)=>{const span=node('span','cinematic-letter',letter);span.style.setProperty('--letter-index',index);this.heading.append(span);});
@@ -111,7 +127,8 @@ export class SceneEffects{
   this.overlay.className='cinematic-overlay '+scene.effect+(reduced?' finished':'');
   this.overlay.classList.toggle('effect-paused',!!this.paused);
   if(reduced)return;
-  this.playing=true;this.remaining=scene.effect==='course-warning'?4200:Math.max(1900,title.length*140+650);this.resumeTimer();
+  if(scene.effect==='course-warning')this.renderWarnings();
+  this.playing=true;this.remaining=scene.effect==='course-warning'?courseIntroDuration+courseTextDuration:Math.max(1900,title.length*140+650);this.resumeTimer();
  }
  resumeTimer(){if(!this.playing||this.paused)return;this.startedAt=performance.now();this.timer=setTimeout(()=>this.finish(),this.remaining);}
  finish(){if(!this.playing)return false;clearTimeout(this.timer);this.timer=null;this.playing=false;this.overlay.classList.add('finished');this.onFinished();return true;}

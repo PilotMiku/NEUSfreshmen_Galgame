@@ -20,8 +20,12 @@
 .cinematic-overlay>p{position:relative;z-index:1;margin:0;max-width:620px;font-size:13px;color:#bec8b1;line-height:1.9;letter-spacing:1px;opacity:0;animation:cinematic-note .3s 1.4s forwards}
 .cinematic-overlay>small{position:absolute;bottom:75px;left:0;right:0;font-size:10px;letter-spacing:2px;color:#e4e8d68f}
 .cinematic-overlay.welcome .cinematic-heading{font-size:clamp(27px,4vw,54px);letter-spacing:3px}
-.cinematic-overlay.course-warning{background:transparent;animation:course-blackout .9s ease forwards}
-.course-warning .cinematic-heading{max-width:none;white-space:nowrap;font-size:clamp(38px,7vw,112px);letter-spacing:3px;color:#f4e8d6;animation:course-zoom 4.2s cubic-bezier(.2,.6,.2,1) forwards}
+.cinematic-overlay.course-warning{background:transparent;animation:course-blackout .9s var(--course-intro) ease forwards}
+.course-warning .cinematic-heading{max-width:none;white-space:nowrap;font-size:clamp(38px,7vw,112px);letter-spacing:3px;color:#f4e8d6;animation:course-zoom 4.2s var(--course-intro) cubic-bezier(.2,.6,.2,1) both}
+.course-warning-signs{display:none;position:absolute;inset:0;pointer-events:none}
+.course-warning:not(.finished) .course-warning-signs{display:block;animation:warning-clear .45s var(--course-intro) ease forwards}
+.course-warning-sign{position:absolute;opacity:0;translate:-50% -50%;animation:warning-arrive .26s var(--warning-delay) ease-out forwards;filter:drop-shadow(0 5px 0 #5b493948)}
+.course-warning-sign svg{display:block;width:100%;height:auto}
 .course-warning .cinematic-letter{opacity:1;transform:none;animation:none}
 .course-warning>p:empty{display:none}
 .cinematic-overlay.finished{background:#17261f;animation:none}
@@ -34,6 +38,8 @@
 .pure .cinematic-overlay,.pure .todo-rain{visibility:hidden}
 @keyframes bind-letter{to{opacity:1;transform:none}}
 @keyframes cinematic-note{to{opacity:1}}
+@keyframes warning-arrive{from{opacity:0;transform:translateY(-35px) scale(.6)}75%{opacity:1;transform:translateY(3px) scale(1.06)}to{opacity:1;transform:none}}
+@keyframes warning-clear{to{opacity:0;visibility:hidden}}
 @keyframes course-blackout{to{background:#080a09}}
 @keyframes course-zoom{0%{transform:scale(.32);opacity:0}15%{opacity:1}45%{transform:scale(.8)}74%{transform:scale(1.05)}100%{transform:scale(1.8);opacity:1}}
 .photo-viewer{width:min(1120px,94vw);height:min(880px,92svh);max-width:96vw;max-height:94svh;padding:14px 20px;background:#14231e;color:#f3f4e7;border:1px solid #d7dfc84d;border-radius:4px;box-shadow:0 15px 90px #0009;overflow:hidden}
