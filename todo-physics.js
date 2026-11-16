@@ -2,6 +2,8 @@ const dot=(a,b)=>a.x*b.x+a.y*b.y;
 const cross=(a,b)=>a.x*b.y-a.y*b.x;
 const add=(a,b,scale=1)=>({x:a.x+b.x*scale,y:a.y+b.y*scale});
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+// Per-second drag keeps cards from skating or spinning long after an impact.
+const linearDamping=.8,angularDamping=.9,contactFriction=.65;
 
 export function createTodoBody(x,y,width,height,random=Math.random){
  return {x,y,width,height,vx:(random()-.5)*180,vy:30+random()*50,angle:(random()-.5)*.85,omega:(random()-.5)*3.6,invMass:1,invInertia:12/(width*width+height*height)};
@@ -70,7 +72,7 @@ function solve(contact){
   const normalImpulse={x:normal.x*magnitude,y:normal.y*magnitude};impulse(a,point,normalImpulse,-1);impulse(b,point,normalImpulse,1);
   const tangent={x:-normal.y,y:normal.x},nextA=velocity(a,point),nextB=velocity(b,point);
   const tangentMass=a.invMass+(b?.invMass||0)+cross(ra,tangent)**2*a.invInertia+cross(rb,tangent)**2*(b?.invInertia||0);
-  const friction=clamp(-dot({x:nextB.x-nextA.x,y:nextB.y-nextA.y},tangent)/tangentMass,-magnitude*.48,magnitude*.48);
+  const friction=clamp(-dot({x:nextB.x-nextA.x,y:nextB.y-nextA.y},tangent)/tangentMass,-magnitude*contactFriction,magnitude*contactFriction);
   const frictionImpulse={x:tangent.x*friction,y:tangent.y*friction};impulse(a,point,frictionImpulse,-1);impulse(b,point,frictionImpulse,1);
  }
 }
@@ -83,7 +85,8 @@ function findContacts(bodies,width,floor){
  return contacts;
 }
 export function stepTodoPhysics(bodies,width,floor,dt){
- for(const body of bodies){body.vy+=1050*dt;body.vx*=Math.exp(-.15*dt);body.omega*=Math.exp(-.55*dt);body.x+=body.vx*dt;body.y+=body.vy*dt;body.angle=(body.angle+body.omega*dt)%(Math.PI*2);}
+ const drag=Math.exp(-linearDamping*dt),spinDrag=Math.exp(-angularDamping*dt);
+ for(const body of bodies){body.vy+=1050*dt;body.vx*=drag;body.vy*=drag;body.omega*=spinDrag;body.x+=body.vx*dt;body.y+=body.vy*dt;body.angle=(body.angle+body.omega*dt)%(Math.PI*2);}
  const contacts=findContacts(bodies,width,floor);
  let impact=0;
  for(const contact of contacts)contact.bounce=contact.contacts.map(point=>{const a=velocity(contact.a,point),b=velocity(contact.b,point),speed=dot({x:b.x-a.x,y:b.y-a.y},contact.normal);impact=Math.max(impact,-speed);return speed< -80?-speed*contact.restitution:0;});
