@@ -1,3 +1,4 @@
+import {createTodoBody,stepTodoPhysics} from './todo-physics.js';
 const node=(tag,className,text)=>{const element=document.createElement(tag);element.className=className;if(text!==undefined)element.textContent=text;return element;};
 const courseIntroDuration=3500,courseTextDuration=4200;
 const warningIcon='<svg viewBox="0 0 100 91" focusable="false" aria-hidden="true"><path d="M50 4 98 87.14H2Z" fill="#ffe16a" stroke="#bc8431" stroke-width="3" stroke-linejoin="round"/><path d="M46 33h8l-1 27h-6Z" fill="#d83c46"/><circle cx="50" cy="69" r="4.5" fill="#d83c46"/></svg>';
@@ -56,38 +57,27 @@ export class FallingTodos{
   element.style.width=this.cardWidth+'px';element.style.height=this.cardHeight+'px';this.container.append(element);
   const columns=Math.max(1,Math.min(3,Math.floor((this.width-24)/(this.cardWidth+8))));
   const spread=columns*(this.cardWidth+6),column=(index*2+Math.floor(index/columns))%columns;
-  this.bodies.push({element,x:(this.width-spread)/2+column*(this.cardWidth+6)+(index%3-1)*7,y:-this.cardHeight-20,vx:(index%3-1)*14,vy:0,angle:(index%5-2)*1.5});
+  const body=createTodoBody((this.width-spread)/2+column*(this.cardWidth+6)+this.cardWidth/2+(Math.random()-.5)*24,-this.cardWidth/2-25,this.cardWidth,this.cardHeight);
+  body.element=element;this.bodies.push(body);this.sinceSpawn=0;
  }
  settle(){
   const columns=Math.max(1,Math.min(3,Math.floor((this.width-24)/(this.cardWidth+8))));
   const left=(this.width-columns*(this.cardWidth+6))/2;
-  this.bodies.forEach((body,index)=>{body.x=left+(index%columns)*(this.cardWidth+6);body.y=this.floor-this.cardHeight*(Math.floor(index/columns)+1)-2;body.vx=0;body.vy=0;});this.paint();
+  this.bodies.forEach((body,index)=>{body.width=this.cardWidth;body.height=this.cardHeight;body.invInertia=12/(body.width**2+body.height**2);body.x=left+(index%columns)*(this.cardWidth+6)+this.cardWidth/2;body.y=this.floor-this.cardHeight*(Math.floor(index/columns)+.5)-3;body.vx=0;body.vy=0;body.omega=0;body.angle=this.reduced?0:(Math.random()-.5)*.2;});this.paint();
  }
- paint(){for(const body of this.bodies)body.element.style.transform=`translate(${body.x.toFixed(1)}px,${body.y.toFixed(1)}px) rotate(${body.angle}deg)`;}
+ paint(){for(const body of this.bodies)body.element.style.transform=`translate(${(body.x-body.width/2).toFixed(1)}px,${(body.y-body.height/2).toFixed(1)}px) rotate(${body.angle*180/Math.PI}deg)`;}
  run(){
   if(this.frame||this.paused||!this.active||this.reduced)return;
-  this.lastTime=performance.now();this.spawnTime=0;this.restFrames=0;
+  this.lastTime=performance.now();this.spawnTime=0;this.restFrames=0;this.accumulator=0;
   const step=now=>{
    this.frame=null;if(this.paused||!this.active||this.reduced)return;
-   const dt=Math.min(.025,(now-this.lastTime)/1000);this.lastTime=now;this.spawnTime+=dt;
+   const dt=Math.min(.04,(now-this.lastTime)/1000);this.lastTime=now;this.spawnTime+=dt;this.sinceSpawn=(this.sinceSpawn||0)+dt;
    if(this.bodies.length<this.target&&this.spawnTime>.18){this.spawn();this.spawnTime=0;}
-   for(const body of this.bodies){body.vy+=1050*dt;body.x+=body.vx*dt;body.y+=body.vy*dt;}
-   for(let pass=0;pass<5;pass++){
-    for(let i=0;i<this.bodies.length;i++)for(let j=i+1;j<this.bodies.length;j++){
-     const a=this.bodies[i],b=this.bodies[j],overlapX=Math.min(a.x+this.cardWidth,b.x+this.cardWidth)-Math.max(a.x,b.x),overlapY=Math.min(a.y+this.cardHeight,b.y+this.cardHeight)-Math.max(a.y,b.y);
-     if(overlapX<=0||overlapY<=0)continue;
-     if(overlapX<overlapY&&overlapX<25){const shift=overlapX/2+.1;if(a.x<b.x){a.x-=shift;b.x+=shift;}else{a.x+=shift;b.x-=shift;}a.vx*=.7;b.vx*=.7;}
-     else{const top=a.y<=b.y?a:b,bottom=top===a?b:a;if(bottom.y+this.cardHeight>=this.floor-2){top.y-=overlapY+.1;top.vy=Math.min(0,top.vy)*.2;}else{top.y-=overlapY*.55;bottom.y+=overlapY*.45;const speed=Math.max(0,Math.min(top.vy,bottom.vy));top.vy=speed;bottom.vy=speed;}top.vx*=.94;}
-    }
-    for(const body of this.bodies){
-     if(body.x<10){body.x=10;body.vx=Math.abs(body.vx)*.3;}if(body.x+this.cardWidth>this.width-10){body.x=this.width-this.cardWidth-10;body.vx=-Math.abs(body.vx)*.3;}
-     if(body.y+this.cardHeight>this.floor-2){body.y=this.floor-this.cardHeight-2;body.vy=Math.abs(body.vy)<25?0:-body.vy*.1;body.vx*=.8;}
-    }
-   }
+   this.accumulator+=dt;while(this.accumulator>=1/120){stepTodoPhysics(this.bodies,this.width,this.floor,1/120);this.accumulator-=1/120;}
    this.paint();
-   const moving=this.bodies.some(body=>Math.abs(body.vy)>10||Math.abs(body.vx)>2);
+   const moving=this.bodies.some(body=>Math.abs(body.vy)>10||Math.abs(body.vx)>5||Math.abs(body.omega)>.08);
    this.restFrames=moving?0:this.restFrames+1;
-   if(this.bodies.length<this.target||this.restFrames<45)this.frame=requestAnimationFrame(step);
+   if(this.bodies.length<this.target||(this.restFrames<90&&this.sinceSpawn<14))this.frame=requestAnimationFrame(step);
   };
   this.frame=requestAnimationFrame(step);
  }
@@ -107,11 +97,13 @@ export class SceneEffects{
  renderWarnings(elapsed=0){
   const width=this.overlay.clientWidth,height=this.overlay.clientHeight,columns=Math.max(3,Math.ceil(width/180)),size=width/columns;
   const rows=Math.ceil(height/(size*.66)),count=columns*rows,fragment=document.createDocumentFragment();
-  const order=Array.from({length:columns},(_,index)=>index).sort((a,b)=>Math.abs(a-(columns-1)/2)-Math.abs(b-(columns-1)/2));
+  const positions=Array.from({length:count},(_,index)=>index);
+  for(let index=count-1;index>0;index--){const other=Math.floor(Math.random()*(index+1));[positions[index],positions[other]]=[positions[other],positions[index]];}
   for(let index=0;index<count;index++){
    const sign=node('span','course-warning-sign');sign.innerHTML=warningIcon;
-   sign.style.left=(order[index%columns]+.5)*100/columns+'%';sign.style.top=(rows-Math.floor(index/columns)-.5)*100/rows+'%';
-   sign.style.width=size*1.18+'px';sign.style.setProperty('--warning-delay',(index/(count-1)*2800-elapsed)+'ms');fragment.append(sign);
+   const position=positions[index],column=position%columns,row=Math.floor(position/columns);
+   sign.style.left=(column+.5+(Math.random()-.5)*.38)*100/columns+'%';sign.style.top=(row+.5+(Math.random()-.5)*.36)*100/rows+'%';
+   sign.style.width=size*(1.22+Math.random()*.18)+'px';sign.style.setProperty('--warning-delay',(index/(count-1)*2800-elapsed)+'ms');fragment.append(sign);
   }
   this.warnings.replaceChildren(fragment);
  }

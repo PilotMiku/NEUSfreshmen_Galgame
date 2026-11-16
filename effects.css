@@ -38,7 +38,7 @@
 .pure .cinematic-overlay,.pure .todo-rain{visibility:hidden}
 @keyframes bind-letter{to{opacity:1;transform:none}}
 @keyframes cinematic-note{to{opacity:1}}
-@keyframes warning-arrive{from{opacity:0;transform:translateY(-35px) scale(.6)}75%{opacity:1;transform:translateY(3px) scale(1.06)}to{opacity:1;transform:none}}
+@keyframes warning-arrive{from{opacity:0;transform:scale(.6)}75%{opacity:1;transform:scale(1.06)}to{opacity:1;transform:none}}
 @keyframes warning-clear{to{opacity:0;visibility:hidden}}
 @keyframes course-blackout{to{background:#080a09}}
 @keyframes course-zoom{0%{transform:scale(.32);opacity:0}15%{opacity:1}45%{transform:scale(.8)}74%{transform:scale(1.05)}100%{transform:scale(1.8);opacity:1}}

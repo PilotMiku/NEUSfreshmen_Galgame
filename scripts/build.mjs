@@ -2,7 +2,7 @@ import {mkdir,copyFile,cp,stat,writeFile,readFile,rm} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const root=process.cwd(),dist=resolve(root,'dist');
 await rm(dist,{recursive:true,force:true});await mkdir(dist,{recursive:true});
-for(const file of ['index.html','style.css','effects.css','theme.css','app.js','story.js','audio.js','portraits.js','albums.js','scene-effects.js','legacy-scenes.js'])await copyFile(resolve(root,file),resolve(dist,file));
+for(const file of ['index.html','style.css','effects.css','theme.css','app.js','story.js','audio.js','portraits.js','albums.js','scene-effects.js','todo-physics.js','legacy-scenes.js'])await copyFile(resolve(root,file),resolve(dist,file));
 for(const folder of ['assets','img_bg','img_human','audio']){try{await stat(resolve(root,folder));await cp(resolve(root,folder),resolve(dist,folder),{recursive:true});}catch(e){if(e.code!=='ENOENT')throw e;}}
 const entries=JSON.parse(await readFile(resolve(root,"asset-manifest.json"),"utf8"));
 const groups={img_bg:['chechuang','xiaomen','wenguan','tushuguan','xiaonanhu','ercantang','sushe','junxun','jiaoshi','zoulang','wenguanmenkou','yelu'],img_human:['zhujue','banzhang','tuanzhishu','shenghuo','zuxuan','xuewei','wenti','xuezhang','xinli'],audio:['bgm_open','bgm_ke','bgm_banwei','bgm_xingfu','bgm_qiuzhu','bgm_shouwei']};
