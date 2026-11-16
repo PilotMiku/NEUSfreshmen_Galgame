@@ -1,6 +1,23 @@
 {
-  "name": "xinsheng-neu", "version": "1.0.0", "private": true, "type": "module",
+  "name": "xinsheng-neu",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "description": "新生 · 一段属于普通同学的大学生活视觉小说",
-  "scripts": {"dev": "node scripts/server.mjs", "start": "node scripts/server.mjs", "build": "node scripts/build.mjs", "test": "node --test"},
-  "engines": {"node": ">=20"}
+  "scripts": {
+    "dev": "node scripts/server.mjs",
+    "start": "node scripts/server.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
+    "assets:portraits": "node scripts/optimize-portraits.mjs",
+    "format": "prettier --write \"*.js\" \"scripts/*.mjs\" \"tests/*.mjs\" \"e2e/*.js\" style.css index.html playwright.config.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "prettier": "^3.10.1"
+  }
 }

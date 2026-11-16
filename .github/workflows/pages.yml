@@ -28,10 +28,24 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: npm
+      - name: Install development tools
+        run: npm ci
       - name: Check story
         run: npm test
-      - name: Build
-        run: npm run build
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Browser regression against the built site
+        run: npm run test:e2e
+      - name: Keep browser failure reports
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: browser-regression-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site

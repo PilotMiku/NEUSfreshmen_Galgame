@@ -22,4 +22,31 @@ npm run dev
 
 人物立绘可后续替换：[添加方法](img_human/README.md)。
 
-`npm test` 检查剧情，`npm run build` 生成静态站点。推送到 main 后自动部署至 GitHub Pages。
+`npm test` 检查剧情和播放逻辑，`npm run build` 生成静态站点。推送到 main 后自动检查并部署至 GitHub Pages。
+
+## 回看与播放
+
+通关后，首页和结尾会解锁六章回看。章节回看使用独立的临时进度，不会覆盖原来的自动存档或班会笔记。结尾会展示自己在讨论环节写下的“下一步”；没有填写时不额外显示。
+
+设置弹窗、隐藏界面、相册及切到后台会暂停相应的剧情播放。正文、手机消息和自动推进保留剩余时间，恢复后继续。章节音乐使用短暂交叉淡化，音乐与音效仍可分别调节。
+
+## 开发检查
+
+```sh
+npm ci
+npm test
+npx playwright install chromium
+npm run test:e2e
+```
+
+浏览器测试自动构建站点，并在与 GitHub Pages 相同的子目录路径下测试电脑、手机竖屏和横屏。部署只有在代码及浏览器检查全部通过后才继续；失败时可在 Actions 下载报告和截图。本机已有 Chrome 时，也可运行 `PLAYWRIGHT_CHANNEL=chrome npm run test:e2e`。
+
+`npm run build` 会把整组模块与样式放入 `static/<内容指纹>/`，并给图片和素材清单加入内容指纹。相同输入产生相同版本；修改脚本、样式或素材会生成新版本。`dist/version.json` 可用来核对线上版本。
+
+## 代码与发布结构
+
+- `app.js` 负责场景协调；`session.js` 管理进度快照、章节回看与结尾笔记。
+- `playback.js` 管理可暂停计时器和正文打字；`storage.js` 保留原来的本机存档格式。
+- `settings.js`、`save-panel.js` 分别管理设置和存读档界面。
+- `style.css` 是唯一的样式入口，整合了原先散落的布局、特效和配色覆盖；使用 `npm run format` 格式化源文件。
+- 构建把同一版脚本和样式放进 `static/<内容指纹>/`，素材文件也带有内容指纹；只打包清单引用的素材；已生成压缩版本的人物不会再附带原始 PNG。

@@ -1,0 +1,74 @@
+{
+  "banzhang": {
+    "source": "img_human/banzhang.png",
+    "sha256": "56c0483a35f7b63ba2d9e9ad950d7e9a9bbcd07b8fb2f6bbdbebc01ef0c1a7e6",
+    "desktop": "img_human/optimized/banzhang.desktop.webp",
+    "mobile": "img_human/optimized/banzhang.mobile.webp"
+  },
+  "banzhang_stand": {
+    "source": "img_human/banzhang_stand.png",
+    "sha256": "1ea931cf3fb345ce3048c3db1d77175cd00ef0077d64f960f12c8ac0f276a3ec",
+    "desktop": "img_human/optimized/banzhang_stand.desktop.webp",
+    "mobile": "img_human/optimized/banzhang_stand.mobile.webp"
+  },
+  "shenghuo": {
+    "source": "img_human/shenghuo.png",
+    "sha256": "73b226c0b3e8966368533aa6da725f4139a12008264e93894ac8e68a278247e9",
+    "desktop": "img_human/optimized/shenghuo.desktop.webp",
+    "mobile": "img_human/optimized/shenghuo.mobile.webp"
+  },
+  "shenghuo_stand": {
+    "source": "img_human/shenghuo_stand.png",
+    "sha256": "78cde5e9c58e0532f0054d3802a3bd62cec0e2bcef13b1de3c1180456c2d2dd6",
+    "desktop": "img_human/optimized/shenghuo_stand.desktop.webp",
+    "mobile": "img_human/optimized/shenghuo_stand.mobile.webp"
+  },
+  "tuanzhishu": {
+    "source": "img_human/tuanzhishu.png",
+    "sha256": "6208bd197ffffa1a13d8ab534d9a037502fe18f799fb73d451253f88330ab27b",
+    "desktop": "img_human/optimized/tuanzhishu.desktop.webp",
+    "mobile": "img_human/optimized/tuanzhishu.mobile.webp"
+  },
+  "tuanzhishu_stand": {
+    "source": "img_human/tuanzhishu_stand.png",
+    "sha256": "7fbdd4fbbba348de92b801c17689bff318c9b7cf52d97a539b8265556d7e7958",
+    "desktop": "img_human/optimized/tuanzhishu_stand.desktop.webp",
+    "mobile": "img_human/optimized/tuanzhishu_stand.mobile.webp"
+  },
+  "wenti": {
+    "source": "img_human/wenti.png",
+    "sha256": "85e88b00ad2de42d06c72099cb8a08c0ee14e6562d8e1b623d518b325e9e1f8d",
+    "desktop": "img_human/optimized/wenti.desktop.webp",
+    "mobile": "img_human/optimized/wenti.mobile.webp"
+  },
+  "wenti_stand": {
+    "source": "img_human/wenti_stand.png",
+    "sha256": "27dd74903bd63a791a8a63117e10a68a0bd5fffdc795bd4ee0a3e6b72e67f67d",
+    "desktop": "img_human/optimized/wenti_stand.desktop.webp",
+    "mobile": "img_human/optimized/wenti_stand.mobile.webp"
+  },
+  "xuewei": {
+    "source": "img_human/xuewei.png",
+    "sha256": "a7c4839d37b969ffad5e308dd82b6606e355970bf6fdf0588e4c4e09478a0df9",
+    "desktop": "img_human/optimized/xuewei.desktop.webp",
+    "mobile": "img_human/optimized/xuewei.mobile.webp"
+  },
+  "xuewei_stand": {
+    "source": "img_human/xuewei_stand.png",
+    "sha256": "8197846dd2bf9c2db92a61b3b8bfcfaa99e5a5d891692bdd42113dfc50c633e4",
+    "desktop": "img_human/optimized/xuewei_stand.desktop.webp",
+    "mobile": "img_human/optimized/xuewei_stand.mobile.webp"
+  },
+  "zuxuan": {
+    "source": "img_human/zuxuan.png",
+    "sha256": "3a6ddc87b9d273f330b8fa6bc50dbab442cf1a97b6b20e8f54efc24cba55bc86",
+    "desktop": "img_human/optimized/zuxuan.desktop.webp",
+    "mobile": "img_human/optimized/zuxuan.mobile.webp"
+  },
+  "zuxuan_stand": {
+    "source": "img_human/zuxuan_stand.png",
+    "sha256": "11cd2e5b656b97e69dba22705a4bc2a63e28eeb5ecb148bba2c7cf221cfc1066",
+    "desktop": "img_human/optimized/zuxuan_stand.desktop.webp",
+    "mobile": "img_human/optimized/zuxuan_stand.mobile.webp"
+  }
+}

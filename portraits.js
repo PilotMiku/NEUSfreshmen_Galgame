@@ -1,6 +1,16 @@
-const escapeXml = text => String(text).replace(/[&<>"']/g, character => ({
-  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
-}[character]));
+import { portraitSource } from './asset-loader.js';
+const escapeXml = (text) =>
+  String(text).replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&apos;',
+      })[character],
+  );
 
 // A neutral stand-in, kept separate from the finished character artwork.
 export function portraitPlaceholder(name, color = '#789789') {
@@ -44,31 +54,49 @@ export class PortraitLayer {
   }
 
   fit() {
-    if (!this.dialogue || this.container.dataset.portrait !== 'image' || !this.image.naturalWidth) return;
+    if (!this.dialogue || this.container.dataset.portrait !== 'image' || !this.image.naturalWidth)
+      return;
     const dialogue = this.dialogue.getBoundingClientRect();
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 0;
     const parentTop = this.container.offsetParent?.getBoundingClientRect().top || 0;
     // Frame the original artwork down to the hips, aligned with the dialogue edge.
-    const hipRatio = this.image.naturalHeight / this.image.naturalWidth * this.hipFraction;
-    const desiredWidth = innerWidth <= 760 ? Math.min(280, innerWidth * .62) : Math.min(330, innerWidth * .22);
-    const visibleHeight = Math.min(desiredWidth * 1.3, Math.max(60, dialogue.top - headerBottom - 30));
+    const hipRatio = (this.image.naturalHeight / this.image.naturalWidth) * this.hipFraction;
+    const desiredWidth =
+      innerWidth <= 760 ? Math.min(280, innerWidth * 0.62) : Math.min(330, innerWidth * 0.22);
+    const visibleHeight = Math.min(
+      desiredWidth * 1.3,
+      Math.max(60, dialogue.top - headerBottom - 30),
+    );
     const width = visibleHeight / hipRatio;
     this.container.style.setProperty('--portrait-width', width + 'px');
-    this.container.style.setProperty('--portrait-top', (dialogue.top - visibleHeight - parentTop) + 'px');
-    this.container.style.setProperty('--portrait-height', (visibleHeight + Math.min(120, dialogue.height * .6)) + 'px');
+    this.container.style.setProperty(
+      '--portrait-top',
+      dialogue.top - visibleHeight - parentTop + 'px',
+    );
+    this.container.style.setProperty(
+      '--portrait-height',
+      visibleHeight + Math.min(120, dialogue.height * 0.6) + 'px',
+    );
     if (!this.echoReady) return;
     const style = this.companionStyle || {};
-    const shift = Math.min(88, width * (style.x ?? .19));
-    const aspect = style.rotation ? 1 : (this.echoImage.naturalWidth / this.echoImage.naturalHeight || .75);
-    let echoHeight = visibleHeight * (style.height ?? 1.18), echoWidth = echoHeight * aspect;
+    const shift = Math.min(88, width * (style.x ?? 0.19));
+    const aspect = style.rotation
+      ? 1
+      : this.echoImage.naturalWidth / this.echoImage.naturalHeight || 0.75;
+    let echoHeight = visibleHeight * (style.height ?? 1.18),
+      echoWidth = echoHeight * aspect;
     const left = this.container.offsetLeft + shift;
     const scale = Math.min(1, Math.max(60, innerWidth - left - 12) / echoWidth);
-    echoHeight *= scale; echoWidth *= scale;
+    echoHeight *= scale;
+    echoWidth *= scale;
     this.echo.style.width = echoWidth + 'px';
     this.echo.style.height = echoHeight + 'px';
     this.echo.style.left = left + 'px';
-    this.echo.style.top = (Math.max(headerBottom + 8, dialogue.top - visibleHeight * (1 + (style.y ?? .16))) - parentTop) + 'px';
-    this.echo.style.setProperty('--echo-opacity', style.opacity ?? .36);
+    this.echo.style.top =
+      Math.max(headerBottom + 8, dialogue.top - visibleHeight * (1 + (style.y ?? 0.16))) -
+      parentTop +
+      'px';
+    this.echo.style.setProperty('--echo-opacity', style.opacity ?? 0.36);
     this.echo.style.setProperty('--echo-rotation', (style.rotation || 0) + 'deg');
   }
 
@@ -93,8 +121,11 @@ export class PortraitLayer {
   }
 
   show(name, character = {}, assets = {}) {
-    const source = typeof assets[character.file] === 'string' ? assets[character.file] : null;
-    const echoSource = character.companion ? assets[character.companion] : null;
+    const small = matchMedia('(max-width:760px)').matches || navigator.connection?.saveData;
+    const source = portraitSource(character.file, assets, small);
+    const echoSource = character.companion
+      ? portraitSource(character.companion, assets, small)
+      : null;
     const key = name + '\0' + (source || 'placeholder') + '\0' + (echoSource || '');
     if (this.key === key) return;
     this.hide();
@@ -104,7 +135,7 @@ export class PortraitLayer {
     this.image.alt = name;
     this.label.textContent = name;
     this.container.dataset.character = name;
-    this.hipFraction = character.portraitHip ?? .62;
+    this.hipFraction = character.portraitHip ?? 0.62;
     this.companionStyle = character.companionStyle || {};
     this.container.dataset.portrait = source ? 'image' : 'placeholder';
     this.image.onload = () => {
@@ -114,7 +145,8 @@ export class PortraitLayer {
         if (sequence !== this.sequence) return;
         this.container.setAttribute('aria-hidden', 'false');
         this.container.classList.add('is-visible');
-        if (this.echoReady && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
+        if (this.echoReady && this.container.dataset.portrait === 'image')
+          this.echo.classList.add('is-visible');
       });
     };
     this.image.onerror = () => {
@@ -139,7 +171,11 @@ export class PortraitLayer {
         this.echoRequest = null;
         this.echoReady = true;
         this.fit();
-        if (this.container.classList.contains('is-visible') && this.container.dataset.portrait === 'image') this.echo.classList.add('is-visible');
+        if (
+          this.container.classList.contains('is-visible') &&
+          this.container.dataset.portrait === 'image'
+        )
+          this.echo.classList.add('is-visible');
       };
       nextEcho.onerror = () => {
         if (sequence !== this.sequence) return;

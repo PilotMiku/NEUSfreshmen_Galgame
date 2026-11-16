@@ -1,33 +1,177 @@
-// Original local music and effects. Optional user MP3s take priority.
-import {EventSounds,renderScore} from './event-sounds.js';
-import {musicTracks,musicStep} from './music-score.js';
+// Each music track has its own bus so adjacent chapters can overlap during a short fade.
+import { EventSounds, renderScore } from './event-sounds.js';
+import { musicTracks, musicStep } from './music-score.js';
 export class Soundtrack {
- constructor(){this.enabled=false;this.volume=.35;this.current='off';this.timer=null;this.ctx=null;this.master=null;this.voices=new Set();this.assetMap={};this.media=null;this.tick=0;this.generation=0;this.events=new EventSounds();}
- async unlock(){try{if(!this.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.ctx=new AC();this.master=this.ctx.createGain();this.master.gain.value=this.volume*.4;this.master.connect(this.ctx.destination);this.events.attach(this.ctx);}if(this.ctx.state==='suspended')await this.ctx.resume();this.update();}catch{}}
- setEnabled(value){if(this.enabled===value)return;this.enabled=value;this.events.setEnabled(value);this.update();}
- cue(name,options){this.events.play(name,options);}
- setVolume(value){this.volume=value;if(this.master)this.master.gain.setTargetAtTime(value*.4,this.ctx.currentTime,.2);if(this.media)this.media.volume=value;}
- play(track){if(track===this.current)return;this.current=track;this.tick=0;this.update();}
- stop(){this.generation++;clearInterval(this.timer);this.timer=null;for(const voice of this.voices){try{voice.stop();}catch{}}this.voices.clear();if(this.media){this.media.onerror=null;this.media.pause();this.media.removeAttribute('src');this.media.load();this.media=null;}}
- update(){
-  this.stop();if(!this.enabled||this.current==='off'||document.hidden)return;
-  const file=this.assetMap[`bgm_${this.current}`];if(!file){this.synth();return;}
-  const generation=this.generation,media=new Audio(file);this.media=media;media.loop=true;media.volume=this.volume;
-  const fallback=()=>{if(this.generation!==generation||this.media!==media)return;this.media=null;media.onerror=null;media.pause();media.removeAttribute('src');media.load();this.synth();};
-  media.onerror=fallback;media.play().catch(fallback);
- }
- synth(){
-  if(!this.ctx||!this.enabled||!musicTracks[this.current]||document.hidden)return;
-  const track=this.current,interval=30/musicTracks[track].bpm;
-  this.nextBeat=this.ctx.currentTime+.04;
-  const schedule=()=>{
-   // Schedule against the audio clock so browser timers do not loosen the beat.
-   if(this.nextBeat<this.ctx.currentTime-.1)this.nextBeat=this.ctx.currentTime+.03;
-   while(this.nextBeat<this.ctx.currentTime+.18){
-    renderScore(this.ctx,this.master,musicStep(track,this.tick++),{startTime:this.nextBeat,onVoice:voice=>{this.voices.add(voice);voice.addEventListener('ended',()=>this.voices.delete(voice),{once:true});}});
-    this.nextBeat+=interval;
-   }
-  };
-  schedule();this.timer=setInterval(schedule,60);
- }
+  constructor() {
+    this.enabled = false;
+    this.paused = false;
+    this.volume = 0.35;
+    this.current = 'off';
+    this.ctx = null;
+    this.master = null;
+    this.assetMap = {};
+    this.sessions = new Set();
+    this.events = new EventSounds();
+    this.resumeTick = 0;
+  }
+  get voices() {
+    return new Set([...this.sessions].flatMap((session) => [...session.voices]));
+  }
+  get timer() {
+    return this.session?.timer ?? null;
+  }
+  get tick() {
+    return this.session?.tick ?? this.resumeTick;
+  }
+  async unlock() {
+    try {
+      if (!this.ctx) {
+        const Context = window.AudioContext || window.webkitAudioContext;
+        if (!Context) return;
+        this.ctx = new Context();
+        this.master = this.ctx.createGain();
+        this.master.gain.value = this.volume * 0.4;
+        this.master.connect(this.ctx.destination);
+        this.events.attach(this.ctx);
+      }
+      if (this.ctx.state === 'suspended') await this.ctx.resume();
+      this.update();
+    } catch {}
+  }
+  setEnabled(value) {
+    if (this.enabled === value) return;
+    this.enabled = value;
+    this.events.setEnabled(value);
+    this.update();
+  }
+  cue(name, options) {
+    this.events.play(name, options);
+  }
+  setVolume(value) {
+    this.volume = value;
+    if (this.master) this.master.gain.setTargetAtTime(value * 0.4, this.ctx.currentTime, 0.15);
+  }
+  play(track) {
+    if (track === this.current) return;
+    this.current = track;
+    this.resumeTick = 0;
+    if (this.session) {
+      this.retire(this.session, 0.55);
+      this.session = null;
+    }
+    this.update();
+  }
+  ramp(gain, value, duration) {
+    const now = this.ctx.currentTime;
+    if (gain.cancelAndHoldAtTime) gain.cancelAndHoldAtTime(now);
+    else {
+      gain.cancelScheduledValues(now);
+      gain.setValueAtTime(gain.value, now);
+    }
+    gain.linearRampToValueAtTime(value, now + duration);
+  }
+  dispose(session) {
+    if (!this.sessions.has(session)) return;
+    clearInterval(session.timer);
+    clearTimeout(session.cleanup);
+    for (const voice of session.voices) {
+      try {
+        voice.stop();
+      } catch {}
+    }
+    session.voices.clear();
+    if (session.media) {
+      session.media.onerror = null;
+      session.media.pause();
+      session.media.removeAttribute('src');
+      session.media.load();
+      session.media = null;
+    }
+    session.mediaNode?.disconnect();
+    session.bus.disconnect();
+    this.sessions.delete(session);
+  }
+  retire(session, duration) {
+    // Retiring oscillators continue to their scheduled end while their bus fades out.
+    clearInterval(session.timer);
+    session.timer = null;
+    session.retiring = true;
+    this.ramp(session.bus.gain, 0, duration);
+    session.cleanup = setTimeout(() => this.dispose(session), duration * 1000 + 40);
+  }
+  stop() {
+    for (const session of [...this.sessions]) this.dispose(session);
+    this.session = null;
+  }
+  pause(value) {
+    if (this.paused === value) return;
+    this.paused = value;
+    if (value) {
+      this.resumeTick = this.tick;
+      this.stop();
+    } else this.update();
+  }
+  update() {
+    if (!this.enabled || this.paused || document.hidden) {
+      this.stop();
+      return;
+    }
+    if (!this.ctx || this.current === 'off' || this.session) return;
+    const session = {
+      track: this.current,
+      bus: this.ctx.createGain(),
+      voices: new Set(),
+      tick: this.resumeTick,
+      timer: null,
+    };
+    session.bus.gain.value = 0;
+    session.bus.connect(this.master);
+    this.sessions.add(session);
+    this.session = session;
+    this.ramp(session.bus.gain, 1, 0.55);
+    const file = this.assetMap[`bgm_${session.track}`];
+    if (!file) {
+      this.synth(session);
+      return;
+    }
+    const media = new Audio(file);
+    session.media = media;
+    media.loop = true;
+    media.volume = 1;
+    session.mediaNode = this.ctx.createMediaElementSource(media);
+    session.mediaNode.connect(session.bus);
+    const fallback = () => {
+      if (!this.sessions.has(session) || session.retiring || session.media !== media) return;
+      media.onerror = null;
+      media.pause();
+      media.removeAttribute('src');
+      media.load();
+      session.media = null;
+      session.mediaNode.disconnect();
+      this.synth(session);
+    };
+    media.onerror = fallback;
+    media.play().catch(fallback);
+  }
+  synth(session) {
+    if (!musicTracks[session.track] || !this.sessions.has(session) || session.retiring) return;
+    const interval = 30 / musicTracks[session.track].bpm;
+    session.nextBeat = this.ctx.currentTime + 0.04;
+    const schedule = () => {
+      if (session.nextBeat < this.ctx.currentTime - 0.1)
+        session.nextBeat = this.ctx.currentTime + 0.03;
+      while (session.nextBeat < this.ctx.currentTime + 0.18) {
+        renderScore(this.ctx, session.bus, musicStep(session.track, session.tick++), {
+          startTime: session.nextBeat,
+          onVoice: (voice) => {
+            session.voices.add(voice);
+            voice.addEventListener('ended', () => session.voices.delete(voice), { once: true });
+          },
+        });
+        session.nextBeat += interval;
+      }
+    };
+    schedule();
+    session.timer = setInterval(schedule, 60);
+  }
 }

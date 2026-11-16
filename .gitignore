@@ -7,3 +7,5 @@ artifacts/
 图片/
 
 .openai/
+playwright-report/
+test-results/

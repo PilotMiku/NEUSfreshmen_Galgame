@@ -1,14 +1,65 @@
-import {mkdir,copyFile,cp,stat,writeFile,readFile,rm} from 'node:fs/promises';
-import {resolve} from 'node:path';
-const root=process.cwd(),dist=resolve(root,'dist');
-const entries=JSON.parse(await readFile(resolve(root,'asset-manifest.json'),'utf8'));
-const referencedPhotos=new Set(Object.values(entries).map(file=>resolve(root,file)));
-await rm(dist,{recursive:true,force:true});await mkdir(dist,{recursive:true});
-for(const file of ['index.html','style.css','effects.css','theme.css','app.js','background-transition.js','asset-loader.js','assets-default.js','story.js','audio.js','music-score.js','event-sounds.js','phone-chat.js','resolved-todos.js','portraits.js','albums.js','scene-effects.js','course-layout.js','todo-physics.js','legacy-scenes.js'])await copyFile(resolve(root,file),resolve(dist,file));
-for(const folder of ['assets','img_bg','img_human','audio']){try{await stat(resolve(root,folder));await cp(resolve(root,folder),resolve(dist,folder),{recursive:true,filter:source=>!(/[/\\]assets[/\\]photos[/\\].+\.(?:jpg|webp)$/i.test(source))||referencedPhotos.has(source)});}catch(e){if(e.code!=='ENOENT')throw e;}}
-const groups={img_bg:['chechuang','xiaomen','wenguan','tushuguan','xiaonanhu','ercantang','sushe','junxun','jiaoshi','zoulang','wenguanmenkou','yelu'],img_human:['zhujue','banzhang','tuanzhishu','shenghuo','zuxuan','xuewei','wenti','xuezhang','xinli','wenti_stand','banzhang_stand','tuanzhishu_stand','shenghuo_stand','xuewei_stand','zuxuan_stand'],audio:['bgm_open','bgm_ke','bgm_banwei','bgm_xingfu','bgm_qiuzhu','bgm_shouwei']};
-for(const[kind,names]of Object.entries(groups))for(const name of names){const file=`${kind}/${name}.${kind==='audio'?'mp3':'png'}`;try{await stat(resolve(root,file));entries[name]=file;}catch{}}
-await writeFile(resolve(dist,'asset-manifest.json'),JSON.stringify(entries,null,2));
-await writeFile(resolve(dist,'assets-default.js'),'export const defaultAssets = '+JSON.stringify(entries,null,2)+';\n');
-await writeFile(resolve(dist,'.nojekyll'),'');
-console.log('已构建到 dist/；素材清单已更新。');
+import { mkdir, copyFile, readdir, readFile, writeFile, rm } from 'node:fs/promises';
+import { resolve, dirname, extname } from 'node:path';
+import { createHash } from 'node:crypto';
+import { resolveAssetManifest } from './asset-manifest.mjs';
+const root = process.cwd(),
+  dist = resolve(root, 'dist'),
+  hash = (value) => createHash('sha256').update(value).digest('hex').slice(0, 12);
+await rm(dist, { recursive: true, force: true });
+await mkdir(dist, { recursive: true });
+const entries = await resolveAssetManifest(root),
+  copies = new Map();
+async function fingerprint(file) {
+  if (copies.has(file)) return copies.get(file);
+  const bytes = await readFile(resolve(root, file)),
+    extension = extname(file),
+    output = (extension ? file.slice(0, -extension.length) : file) + '.' + hash(bytes) + extension;
+  copies.set(file, output);
+  await mkdir(dirname(resolve(dist, output)), { recursive: true });
+  await writeFile(resolve(dist, output), bytes);
+  return output;
+}
+for (const [key, file] of Object.entries(entries)) entries[key] = await fingerprint(file);
+let html = await readFile(resolve(root, 'index.html'), 'utf8'),
+  css = await readFile(resolve(root, 'style.css'), 'utf8');
+// Hash HTML resources as well as the manifest's photographs and portraits.
+for (const match of [
+  ...html.matchAll(/(?:src|href)="((?:assets|img_bg|img_human|audio)\/[^"?#]+)"/g),
+]) {
+  const output = await fingerprint(match[1]);
+  html = html.replaceAll('"' + match[1] + '"', '"' + output + '"');
+}
+for (const match of [...css.matchAll(/url\(["']?((?:assets|img_bg|img_human)\/[^)'"?#]+)["']?\)/g)])
+  css = css.replaceAll(match[1], '../../' + (await fingerprint(match[1])));
+const modules = (await readdir(root))
+    .filter(
+      (file) => file.endsWith('.js') && !file.endsWith('.config.js') && !file.endsWith('.test.js'),
+    )
+    .sort(),
+  sources = new Map();
+for (const file of modules)
+  sources.set(
+    file,
+    file === 'assets-default.js'
+      ? 'export const defaultAssets = ' + JSON.stringify(entries, null, 2) + ';\n'
+      : await readFile(resolve(root, file), 'utf8'),
+  );
+// One fingerprint identifies the entire module graph, keeping all relative imports in sync.
+const version = hash(html + css + [...sources.values()].join('\n') + JSON.stringify(entries)),
+  release = `static/${version}`;
+await mkdir(resolve(dist, release), { recursive: true });
+for (const [file, source] of sources) await writeFile(resolve(dist, release, file), source);
+await writeFile(resolve(dist, release, 'style.css'), css);
+await writeFile(resolve(dist, release, 'asset-manifest.json'), JSON.stringify(entries, null, 2));
+html = html
+  .replace('href="style.css"', `href="${release}/style.css"`)
+  .replace('src="app.js"', `src="${release}/app.js"`);
+await writeFile(resolve(dist, 'index.html'), html);
+// Keep location cards available when a network request for a primary asset fails.
+for (const file of await readdir(resolve(root, 'assets')))
+  if (file.endsWith('.svg'))
+    await copyFile(resolve(root, 'assets', file), resolve(dist, 'assets', file));
+await writeFile(resolve(dist, 'asset-manifest.json'), JSON.stringify(entries, null, 2));
+await writeFile(resolve(dist, 'version.json'), JSON.stringify({ version }, null, 2));
+await writeFile(resolve(dist, '.nojekyll'), '');
+console.log(`已构建到 dist/，版本 ${version}；脚本、样式和素材均已加入指纹。`);
