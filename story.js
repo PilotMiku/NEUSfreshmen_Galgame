@@ -111,11 +111,11 @@ scene('是呢，遇到自己很难解决的困难，向身边的同学求助，�
 live('next-step','一起想想办法。','主持人：请大家以小组为单位，从刚才分享的困难里选择一个，讨论可以怎么解决、可以向谁求助，以及今天就能迈出的第一步。讨论结束后，每组推选一位代表分享。','可以记下：我们选的困难是……；可以尝试的办法是……；可以向……求助；今天先做……。',{reflection:true,liveNext:'讨论结束，进入分享',liveHint:'小组讨论结束、选好代表后，由主持人继续。',notePlaceholder:'记录小组选择的困难、解决办法和第一步（可留空）'});
 live('group-sharing','听听大家的办法。','主持人：请各组代表分享。你们讨论了什么困难？想到了哪些办法？准备先从哪一步开始？','分享时可以这样说：“我们讨论的是……，准备先……，如果还是有困难，可以找……一起想办法。”',{reflection:true,liveNext:'分享结束，继续故事',liveHint:'各组代表分享结束后，由主持人继续。',notePlaceholder:'记下分享中想尝试的办法（可留空）'});
 at('文管门口','shouwei',5);
-scene('手机待办还是满的。但有几条旁边，多了一些小标记。',{id:'s77',phone:'resolved'});
-scene('“高数作业”旁标：已找学委问。',{id:'s78',phone:'resolved'});
-scene('“小组作业落单”旁标：已和同学约好一起做。',{id:'s79',phone:'resolved'});
-scene('“心里不得劲”旁标：已跟生活委员说。',{id:'s80',phone:'resolved'});
-scene('最上面一条新待办：今晚心理班会。我打了个勾。',{id:'s81',phone:'resolved'});
+scene('手机待办还是满的。我把已经有着落的事，一条条记下来。',{id:'s77',phone:'resolved',resolvedCount:0});
+scene('“高数作业”旁标：已找学委问。',{id:'s78',phone:'resolved',resolvedCount:1});
+scene('“小组作业落单”旁标：已和同学约好一起做。',{id:'s79',phone:'resolved',resolvedCount:2});
+scene('“心里不得劲”旁标：已跟生活委员说。',{id:'s80',phone:'resolved',resolvedCount:3});
+scene('最上面一条新待办：今晚心理班会。我打了个勾。',{id:'s81',phone:'resolved',resolvedCount:4});
 scene('文管学馆门口，心理委员举着“心理班会 · 随便坐”的牌子，抬头看见我。',{id:'s82',character:'心理委员',decoration:'meeting'});
 say('心理委员','就差你了。',{id:'s83',decoration:'meeting'});
 scene('我走过去。心里有一句很轻的旁白。',{id:'s84'});

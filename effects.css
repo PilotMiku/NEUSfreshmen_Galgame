@@ -191,3 +191,23 @@
 
 /* Arial includes the combining marks used in the committee's crying emoticon. */
 #dialogue-text.emotive-text{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+
+/* Each ending task is checked only after its own narration finishes. */
+.resolved-todo.phone-item{position:relative;animation:none;border-radius:5px}
+.resolved-todo .phone-checkbox{position:relative;display:grid;place-items:center}
+.resolved-todo .phone-checkbox svg{width:100%;height:100%;overflow:visible}
+.resolved-todo .phone-checkbox path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.resolved-todo.checked .phone-checkbox path{stroke-dashoffset:0}
+.resolved-todo.completing{animation:todo-complete-glow 1s ease-out both}
+.resolved-todo.completing .phone-checkbox{animation:todo-check-pop .6s ease-out both}
+.resolved-todo.completing .phone-checkbox path{animation:todo-check-draw .4s .12s ease-out both}
+.resolved-todo.completing .resolved-note{animation:todo-note-in .65s .15s ease-out both}
+.resolved-todo.completing:after{content:'';position:absolute;inset:1px 0;border:1px solid #7c9bc170;border-radius:5px;pointer-events:none;animation:todo-complete-ring .9s ease-out both}
+.resolved-todos.is-paused .resolved-todo,.resolved-todos.is-paused .resolved-todo *,.resolved-todos.is-paused .resolved-todo:after{animation-play-state:paused}
+@keyframes todo-check-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes todo-check-pop{0%{transform:scale(.7)}45%{transform:scale(1.25)}75%{transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes todo-complete-glow{0%{background:#a7c4e14d;box-shadow:0 0 14px #8eafd640}100%{background:transparent;box-shadow:0 0 0 transparent}}
+@keyframes todo-complete-ring{0%{opacity:0;transform:scale(.95)}25%{opacity:.8}100%{opacity:0;transform:scale(1.035)}}
+@keyframes todo-note-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.motion-reduced .resolved-todo,.motion-reduced .resolved-todo *,.motion-reduced .resolved-todo:after,.resolved-todos.is-reduced .resolved-todo,.resolved-todos.is-reduced .resolved-todo *,.resolved-todos.is-reduced .resolved-todo:after{animation:none}
+@media(prefers-reduced-motion:reduce){.resolved-todo,.resolved-todo *,.resolved-todo:after{animation:none!important}}
