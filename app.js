@@ -4,6 +4,7 @@ import {PortraitLayer} from './portraits.js';
 import {albums,PhotoViewer} from './albums.js';
 import {TodoList,SceneEffects} from './scene-effects.js';
 import {PhoneChat,chatKinds} from './phone-chat.js';
+import {BackgroundTransition} from './background-transition.js';
 import {defaultAssets} from './assets-default.js';
 import {fetchManifest,backgroundSource,loadImage,preloadImage} from './asset-loader.js';
 const $=id=>document.getElementById(id),sound=new Soundtrack(),KEY='xinsheng.v1';
@@ -31,6 +32,7 @@ function persistSettings(){storage.set('settings',settings);applySettings();}
 function cleanTimers(){clearInterval(typeTimer);clearTimeout(autoTimer);clearTimeout(slideshowTimer);slideshowTimer=null;typing=false;}
 function snapshot(){return {...state,version:2,sceneId:story[state.index].id,trail:[...state.trail],trailIds:state.trail.map(index=>story[index].id),notes:{...state.notes},date:new Date().toISOString()};}
 function autoSave(){storage.set('auto',snapshot());$('continue').disabled=false;}
+const backgroundTransition=new BackgroundTransition($('background'));
 let backgroundRequest,backgroundKey='xiaomen',manifestLoading=false;
 const assetIssues=new Map();
 function assetStatus(){
@@ -51,11 +53,12 @@ async function background(name,force=false){
  try{
   await loadImage(src,{signal:request.signal});
   if(request.signal.aborted)return;
-  $('background').src=src;
+  await backgroundTransition.show(src,{signal:request.signal,reduced:settings.motion});
  }catch(error){
   if(request.signal.aborted)return;
   // Keep a local, location-specific card available even when the photograph fails.
-  $('background').src='assets/'+key+'.svg';
+  await backgroundTransition.show('assets/'+key+'.svg',{signal:request.signal,reduced:settings.motion});
+  if(request.signal.aborted)return;
   assetIssues.set('background','背景暂未加载，已显示备用画面');assetStatus();
  }
 }
@@ -82,7 +85,12 @@ async function refreshAssets(){
   assets={...defaultAssets,...manifest};sound.assetMap=assets;
   assetIssues.delete('manifest');
   background(screen==='home'?'校门':screen==='ending'?'文管门口':story[state.index].bg,true);
-  if(screen==='game')renderPortrait(story[state.index]);
+  if(screen==='game'){
+   const scene=story[state.index];renderPortrait(scene);
+   // Refresh previews too if the game began before the latest manifest arrived.
+   if(albums[scene.phone]&&!chatKinds.has(scene.phone))renderPhone(scene.phone,scene);
+   if(gallery.open){gallery.assets=assets;gallery.render();}
+  }
  }catch{
   assetIssues.set('manifest','素材信息暂未更新，仍可继续游戏');
  }finally{

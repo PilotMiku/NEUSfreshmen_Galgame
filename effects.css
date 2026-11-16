@@ -159,3 +159,6 @@
 .photo-viewer figure{position:relative}.photo-status{display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;min-height:28px;font-size:14px}
 .photo-status:has(button[hidden]):has(span:empty){display:none}.photo-status button[hidden]{display:none}
 .photo-viewer img[hidden]{display:none}
+
+/* A small overscan hides the blurred edge during scenery transitions. */
+.scene-backdrop{inset:-18px}

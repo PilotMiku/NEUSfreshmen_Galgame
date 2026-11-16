@@ -53,9 +53,11 @@ test('Replacement photos are mapped by filename and library appears in the campu
  const {albums}=await import('../albums.js');assert(albums.campus2.photos.some(photo=>photo.key==='tushuguan'));
 });
 
-test('Opening portrait photos bake their orientation into both WebP sizes',async()=>{
- for(const key of ['journeyNight','journeyDusk'])for(const suffix of ['', '.thumb']){
-  const bytes=await readFile(new URL('../assets/photos/'+key+suffix+'.webp',import.meta.url));
+test('The four corrected album photos use fresh upright URLs and baked orientation',async()=>{
+ const manifest=JSON.parse(await readFile(new URL('../asset-manifest.json',import.meta.url),'utf8'));
+ for(const key of ['journeyNight','journeyDusk','sushe','treeRoad'])for(const prefix of ['gallery_', 'thumb_']){
+  const path=manifest[prefix+key];assert(path.includes('.upright.'),'The old cached URL must change');
+  const bytes=await readFile(new URL('../'+path,import.meta.url));
   let dimensions;
   for(let offset=12;offset+8<=bytes.length;){
    const type=bytes.toString('ascii',offset,offset+4),size=bytes.readUInt32LE(offset+4),start=offset+8;
@@ -64,6 +66,6 @@ test('Opening portrait photos bake their orientation into both WebP sizes',async
    if(type==='VP8 ')dimensions=[bytes.readUInt16LE(start+6)&0x3fff,bytes.readUInt16LE(start+8)&0x3fff];
    offset+=8+size+(size%2);
   }
-  assert(dimensions&&dimensions[1]>dimensions[0],key+suffix+' must have upright portrait pixels');
+  assert(dimensions&&dimensions[1]>dimensions[0],key+prefix+' must have upright portrait pixels');
  }
 });
