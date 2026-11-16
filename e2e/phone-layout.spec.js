@@ -30,7 +30,8 @@ async function verifyPhone(page) {
       overflow: document.documentElement.scrollWidth > innerWidth,
     };
   });
-  expect(Math.abs(geometry.ratio - 19.5 / 9)).toBeLessThan(0.025);
+  expect(geometry.ratio).toBeGreaterThan(1.75);
+  expect(geometry.ratio).toBeLessThan(1.95);
   expect(geometry.p.top).toBeGreaterThanOrEqual(0);
   expect(geometry.p.left).toBeGreaterThanOrEqual(0);
   expect(geometry.p.right).toBeLessThanOrEqual(geometry.width);

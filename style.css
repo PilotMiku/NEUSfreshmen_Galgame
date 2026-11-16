@@ -4871,7 +4871,7 @@ dialog {
   }
 }
 
-/* The handset keeps a 9:19.5 body ratio; the whole object scales with the available room. */
+/* A wider handset balances the composition while scaling with the available room. */
 .phone {
   position: absolute;
   z-index: 5;
@@ -4879,7 +4879,7 @@ dialog {
   height: auto;
   min-height: 0;
   max-height: none;
-  aspect-ratio: 9 / 19.5;
+  aspect-ratio: 1 / 1.85;
   top: var(--phone-top, 24px);
   right: 8%;
   bottom: auto;
@@ -4933,8 +4933,8 @@ dialog {
 }
 @media (max-width: 760px) {
   .phone {
-    right: 6%;
-    transform: rotate(3deg);
+    right: 4%;
+    transform: rotate(2deg);
   }
   .has-phone .dialogue {
     padding-right: 21px;

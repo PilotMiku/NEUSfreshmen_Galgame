@@ -792,21 +792,22 @@ function fitSceneLayout() {
   if (screen !== 'game' || phone.classList.contains('hidden') || !dialogue.offsetHeight) return;
   const landscape = matchMedia('(orientation:landscape) and (max-height:600px)').matches;
   const mobile = innerWidth <= 760;
-  const ratio = 19.5 / 9;
+  const ratio = 1.85;
   const topLimit =
-    document.querySelector('.topbar').getBoundingClientRect().bottom + (landscape ? 12 : 20);
+    document.querySelector('.topbar').getBoundingClientRect().bottom +
+    (landscape ? 12 : mobile ? 36 : 20);
   const toolbarTop = document.querySelector('.game-toolbar').getBoundingClientRect().top;
   const dialogueTop = dialogue.getBoundingClientRect().top;
   let height, top;
   if (landscape) {
-    height = Math.min(180 * ratio, innerHeight - topLimit - 16);
+    height = Math.min(390, innerHeight - topLimit - 16);
     top = topLimit;
   } else if (mobile) {
     const bottom = Math.min(dialogueTop + 30, toolbarTop - 16);
-    height = Math.min(Math.min(224, innerWidth * 0.56) * ratio, bottom - topLimit);
+    height = Math.min(480, innerWidth * 0.62 * ratio, bottom - topLimit);
     top = bottom - height;
   } else {
-    height = Math.min(310 * ratio, toolbarTop - topLimit - 20);
+    height = Math.min(670, toolbarTop - topLimit - 20);
     top = Math.max(topLimit, dialogueTop + 100 - height);
   }
   height = Math.max(100, height);
