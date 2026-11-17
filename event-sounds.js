@@ -306,6 +306,7 @@ export const sceneCues = {
   'new-difficulties': 'sigh',
   'recall-lead': 'memory',
   'mao-encouragement': 'help',
+  'mao-encouragement-continued': 'help',
   'ask-for-help': 'warm',
   'next-step': 'live',
   'group-sharing': 'share',

@@ -1,8 +1,10 @@
-// Only the scenery blurs. Each navigation can cancel the previous transition.
+// Keep decoded scenery underneath each fade, including when navigation interrupts it.
 export class BackgroundTransition {
   constructor(image) {
     this.image = image;
     this.layer = image.parentElement;
+    this.frames = new Set();
+    this.revision = 0;
   }
   pause(value) {
     this.paused = value;
@@ -12,45 +14,65 @@ export class BackgroundTransition {
     }
   }
 
-  async blur(from, to, duration, signal) {
-    this.animation?.cancel();
-    const animation = this.layer.animate(
-      [{ filter: `blur(${from}px)` }, { filter: `blur(${to}px)` }],
-      {
-        duration,
-        easing: 'ease-in-out',
-        fill: 'forwards',
-      },
-    );
-    this.animation = animation;
-    if (this.paused) animation.pause();
-    const cancel = () => animation.cancel();
-    signal.addEventListener('abort', cancel, { once: true });
-    try {
-      await animation.finished;
-      if (to === 0) animation.cancel();
-      return !signal.aborted;
-    } catch {
-      return false;
-    } finally {
-      signal.removeEventListener('abort', cancel);
-    }
+  freeze() {
+    if (!this.animation) return;
+    const frame = this.animation.effect.target;
+    frame.style.opacity = getComputedStyle(frame).opacity;
+    this.animation.cancel();
+    this.animation = null;
   }
 
-  async show(src, { signal, reduced = false } = {}) {
-    this.animation?.cancel();
-    if (signal.aborted || this.image.getAttribute('src') === src) return;
-    if (reduced) {
-      this.image.src = src;
-      return;
-    }
-    if (!(await this.blur(0, 14, 240, signal))) return;
-    this.image.src = src;
-    // The caller has loaded this source; decode before revealing it at full sharpness.
-    try {
-      await this.image.decode();
-    } catch {}
+  clear() {
+    for (const frame of this.frames) frame.remove();
+    this.frames.clear();
+  }
+
+  async show(src, { signal = new AbortController().signal, reduced = false } = {}) {
     if (signal.aborted) return;
-    await this.blur(14, 0, 360, signal);
+    const revision = ++this.revision;
+    this.freeze();
+    if (this.image.getAttribute('src') === src && !this.frames.size) return;
+
+    const frame = this.image.cloneNode(false);
+    frame.removeAttribute('id');
+    frame.classList.add('background-frame');
+    frame.src = src;
+    // Decode offscreen so the current scenery stays intact while the next one loads.
+    await frame.decode();
+    if (signal.aborted || revision !== this.revision) return;
+
+    if (!reduced) {
+      frame.style.opacity = '0';
+      this.layer.insertBefore(frame, this.layer.querySelector('.scene-tint'));
+      this.frames.add(frame);
+      const animation = frame.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 850,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        fill: 'forwards',
+      });
+      this.animation = animation;
+      if (this.paused) animation.pause();
+      // Preserve the visible blend instead of snapping back during rapid navigation.
+      const cancel = () => {
+        if (this.animation === animation) this.freeze();
+      };
+      signal.addEventListener('abort', cancel, { once: true });
+      try {
+        await animation.finished;
+      } catch {
+        return;
+      } finally {
+        signal.removeEventListener('abort', cancel);
+      }
+    }
+
+    if (signal.aborted || revision !== this.revision) return;
+    this.image.src = src;
+    // Retain the fully visible overlay until the permanent image is ready to paint.
+    await this.image.decode();
+    if (signal.aborted || revision !== this.revision) return;
+    this.animation?.cancel();
+    this.animation = null;
+    this.clear();
   }
 }

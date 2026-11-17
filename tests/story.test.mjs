@@ -9,7 +9,7 @@ test('Both military farewell branches reach the ending without crossing',()=>{co
 test('Every scene is reachable across the two routes',()=>assert.equal(new Set([...route(0),...route(1)]).size,story.length));
 test('All branches resolve and an undecided choice pauses',()=>{for(const [i,s]of story.entries()){if(s.jump)assert(Number.isInteger(sceneIndex[s.jump]));if(s.kind==='choice'){assert.equal(nextIndex(i),null);for(const c of s.choices)assert(Number.isInteger(sceneIndex[c.target]));}}});
 test('Sharing difficulties leads through the senior memory, discussion and representatives to the ending',()=>{
- const sequence=['pause','new-difficulties','recall-lead','mao-encouragement','ask-for-help','next-step','group-sharing','s77'];
+ const sequence=['pause','new-difficulties','recall-lead','mao-encouragement','mao-encouragement-continued','ask-for-help','next-step','group-sharing','s77'];
  for(let i=0;i<sequence.length-1;i++)assert.equal(nextIndex(sceneIndex[sequence[i]]),sceneIndex[sequence[i+1]]);
  for(const id of ['pause','next-step','group-sharing'])assert.equal(story[sceneIndex[id]].kind,'live');
  assert.equal(story[sceneIndex.pause].music,'off');

@@ -78,7 +78,7 @@ test('Mao companion appears with his transparent portrait during his memory and 
 }, testInfo) => {
   await boot(page, 'mao-encouragement', { settings: { motion: false } });
   await expect(page.locator('#dialogue-text')).toHaveText(
-    '遇到困难时，大家可以向辅导员老师、学长学姐请教，也可以和身边同学交流，大家一起想办法！需要帮助时，别不好意思开口~',
+    '遇到困难时，大家可以向辅导员老师、学长学姐请教。',
   );
   await expect(page.locator('#character')).toHaveAttribute('data-portrait', 'image');
   await expect(page.locator('#character')).toHaveClass(/is-visible/);
@@ -109,11 +109,17 @@ test('Mao companion appears with his transparent portrait during his memory and 
   expect(bounds.y).toBeGreaterThanOrEqual(header.y + header.height);
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(page.viewportSize().width);
   await page.screenshot({ path: `artifacts/mao-companion-${testInfo.project.name}.png` });
+  await next(page, 'mao-encouragement-continued');
+  await expect(page.locator('#dialogue-text')).toHaveText(
+    '也可以和身边同学交流，大家一起想办法！需要帮助时，别不好意思开口~',
+  );
+  await expect(companion).toHaveClass(/is-visible/);
+  await expect(page.locator('#character')).toHaveClass(/is-visible/);
   await next(page, 'ask-for-help');
   await expect(companion).not.toHaveClass(/is-visible/);
   await expect(page.locator('#character')).not.toHaveClass(/is-visible/);
   await page.locator('#back').click();
-  await current(page, 'mao-encouragement');
+  await current(page, 'mao-encouragement-continued');
   await expect(companion).toHaveClass(/is-visible/);
   expect(failedResponses.get(page)).toEqual([]);
 });
