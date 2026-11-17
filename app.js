@@ -116,6 +116,7 @@ function applySettings() {
   $('sound').setAttribute('aria-label', settings.sound ? '关闭声音' : '开启声音');
   sound.setVolume(settings.volume);
   sound.events.setVolume(settings.effectsVolume);
+  sound.ambience.setVolume(settings.ambienceVolume);
   sound.setEnabled(settings.sound);
   if (screen === 'game') {
     effects.words.setReduced(settings.motion);
@@ -308,6 +309,7 @@ function showScreen(next) {
   chat.clear();
   sound.events.stop();
   phoneKind = null;
+  sound.ambience.play('off');
   portraits.hide();
   screen = next;
   for (const id of ['home', 'game', 'ending']) $(id).classList.toggle('hidden', id !== next);
@@ -467,7 +469,7 @@ function render() {
     document.body.classList.toggle(cls, val);
   $('memory-label').classList.toggle('hidden', !s.memory);
   background(s.bg);
-  sound.play(s.music);
+  sound.enter(s, settings);
   const chapter = chapters[s.chapter];
   $('chapter-number').textContent = String(s.chapter + 1).padStart(2, '0');
   $('chapter-label').textContent = chapter.en;

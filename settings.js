@@ -4,6 +4,7 @@ export function loadSettings(storage, reduced = false) {
       speed: 32,
       volume: 0.35,
       effectsVolume: 0.9,
+      ambienceVolume: 0.35,
       font: 21,
       mode: 'solo',
       sound: true,
@@ -15,6 +16,7 @@ export function loadSettings(storage, reduced = false) {
     ['speed', 0, 65],
     ['volume', 0, 1],
     ['effectsVolume', 0, 1],
+    ['ambienceVolume', 0, 1],
     ['font', 17, 27],
   ])
     if (Number.isFinite(saved[key])) settings[key] = Math.max(min, Math.min(max, saved[key]));
@@ -49,6 +51,7 @@ export function settingsPanel(settings, persistSettings, onModeChange) {
   range('文字大小', 'font', 17, 27, 1, '调整正文大小。');
   range('音乐音量', 'volume', 0, 1, 0.05, '右上角音符控制所有声音。');
   range('音效音量', 'effectsVolume', 0, 1, 0.05, '台词场景音效、手机键盘、消息和碰撞声。');
+  range('环境音量', 'ambienceVolume', 0, 1, 0.05, '雨声、车厢声和室外微风；现场发言时自动安静。');
   const row = el('div', 'setting-row'),
     label = el('label', '', '游玩方式'),
     select = el('select');

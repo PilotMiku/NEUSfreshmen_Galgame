@@ -1,6 +1,8 @@
 // Each music track has its own bus so adjacent chapters can overlap during a short fade.
 import { EventSounds, renderScore } from './event-sounds.js';
 import { musicTracks, musicStep } from './music-score.js';
+import { Ambience } from './ambience.js';
+import { sceneAudio } from './scene-audio.js';
 export class Soundtrack {
   constructor() {
     this.enabled = false;
@@ -12,6 +14,7 @@ export class Soundtrack {
     this.assetMap = {};
     this.sessions = new Set();
     this.events = new EventSounds();
+    this.ambience = new Ambience();
     this.resumeTick = 0;
   }
   get voices() {
@@ -33,6 +36,7 @@ export class Soundtrack {
         this.master.gain.value = this.volume * 0.4;
         this.master.connect(this.ctx.destination);
         this.events.attach(this.ctx);
+        this.ambience.attach(this.ctx);
       }
       if (this.ctx.state === 'suspended') await this.ctx.resume();
       this.update();
@@ -40,12 +44,19 @@ export class Soundtrack {
   }
   setEnabled(value) {
     if (this.enabled === value) return;
+    if (!value) this.resumeTick = this.tick;
     this.enabled = value;
     this.events.setEnabled(value);
+    this.ambience.setEnabled(value);
     this.update();
   }
   cue(name, options) {
     this.events.play(name, options);
+  }
+  enter(scene, { mode = 'solo' } = {}) {
+    const mix = sceneAudio(scene, mode);
+    this.play(mix.music);
+    this.ambience.play(mix.ambience);
   }
   setVolume(value) {
     this.volume = value;
@@ -104,6 +115,7 @@ export class Soundtrack {
     this.session = null;
   }
   pause(value) {
+    this.ambience.pause(value);
     if (this.paused === value) return;
     this.paused = value;
     if (value) {

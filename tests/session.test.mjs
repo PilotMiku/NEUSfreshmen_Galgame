@@ -43,6 +43,7 @@ test('The extracted storage keeps existing keys and validates saved progress', (
     speed: 32,
     volume: 0.35,
     effectsVolume: 0.9,
+    ambienceVolume: 0.35,
     font: 21,
     mode: 'solo',
     sound: true,

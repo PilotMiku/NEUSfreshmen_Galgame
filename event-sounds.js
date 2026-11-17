@@ -335,6 +335,7 @@ export function renderScore(
 ) {
   const sources = [];
   for (const note of score) {
+    if (strength <= 0) continue;
     const start = startTime + note.at,
       gain = ctx.createGain();
     let source;
@@ -359,7 +360,12 @@ export function renderScore(
     }
     const level = Math.max(0.0001, note.level * Math.max(0, strength));
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(level, start + Math.min(0.008, note.duration / 4));
+    const attack = Math.min(note.attack ?? 0.008, note.duration / 3);
+    gain.gain.exponentialRampToValueAtTime(level, start + attack);
+    if (note.release !== undefined) {
+      const release = Math.min(note.release, note.duration - attack);
+      gain.gain.setValueAtTime(level, start + note.duration - release);
+    }
     gain.gain.exponentialRampToValueAtTime(0.0001, start + note.duration);
     gain.connect(destination);
     const ended = source.onended;
@@ -385,8 +391,11 @@ export const cueMix = {
   todo: 1.8,
   rain: 1.5,
   bounce: 1.4,
-  welcome: 0.85,
-  alarm: 0.9,
+  welcome: 0.75,
+  alarm: 0.6,
+  heartbeat: 0.65,
+  march: 0.7,
+  surprise: 0.8,
 };
 export class EventSounds {
   constructor() {
@@ -400,7 +409,7 @@ export class EventSounds {
     if (this.ctx) return;
     this.ctx = ctx;
     this.master = ctx.createGain();
-    this.master.gain.value = this.volume * 0.85;
+    this.master.gain.value = this.volume * 0.62;
     this.limiter = ctx.createDynamicsCompressor();
     this.limiter.threshold.value = -10;
     this.limiter.knee.value = 12;
@@ -416,7 +425,7 @@ export class EventSounds {
   }
   setVolume(value) {
     this.volume = value;
-    if (this.master) this.master.gain.setTargetAtTime(value * 0.85, this.ctx.currentTime, 0.025);
+    if (this.master) this.master.gain.setTargetAtTime(value * 0.62, this.ctx.currentTime, 0.025);
   }
   pause(value) {
     this.paused = value;
