@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#f4f2e9" />
+    <meta name="theme-color" content="#fffdf5" />
     <meta
       name="description"
       content="一个东北大学普通新生的入学日常。军训、早八、回不完的群消息，还有第一次心理班会。"
@@ -45,6 +45,9 @@
         </div>
       </header>
       <main id="home" class="home">
+        <div class="cover-doodle cover-cloud" data-doodle="cloud" aria-hidden="true"></div>
+        <div class="cover-doodle cover-star" data-doodle="sparkle" aria-hidden="true"></div>
+        <div class="cover-doodle cover-plane" data-doodle="plane" aria-hidden="true"></div>
         <div class="home-copy">
           <div class="eyebrow">
             <span class="little-line"></span> NEU 生活模拟器 <span class="edition">2026 · 秋</span>
@@ -69,6 +72,18 @@
             ><button id="how-to">操作说明</button><button data-chapters hidden>章节回看</button>
           </div>
         </div>
+        <figure class="cover-postcard" aria-hidden="true">
+          <img
+            src="assets/photos/campusWelcome.webp"
+            alt=""
+            decoding="async"
+            loading="lazy"
+            width="380"
+            height="250"
+          />
+          <span class="postcard-flower" data-doodle="flower"></span>
+          <figcaption>今天，开始新的故事</figcaption>
+        </figure>
         <div class="photo-caption">
           <span class="photo-pin"></span><span>九月 · 校门口</span
           ><span class="photo-date">报到那天</span>
@@ -113,6 +128,7 @@
           <div class="phone-top"><span>9:41</span><span>●●● ▰</span></div>
           <div class="phone-heading" id="phone-title"></div>
           <div class="phone-content" id="phone-content"></div>
+          <span class="phone-sticker" data-doodle="flower" aria-hidden="true"></span>
           <div class="phone-home"></div>
         </div>
         <section id="choice-panel" class="choice-panel hidden" aria-label="剧情选择">
@@ -140,7 +156,9 @@
         </section>
         <section id="dialogue" class="dialogue" aria-label="剧情对话" tabindex="0" role="button">
           <div class="dialogue-heading">
-            <span class="speaker-mark"></span><span id="speaker">我</span
+            <span class="speaker-label"
+              ><span class="speaker-glyph" id="speaker-icon" aria-hidden="true"></span
+              ><span id="speaker">我</span></span
             ><span id="speaker-note">心里的声音</span
             ><span class="dialogue-count" id="scene-count"></span>
           </div>
@@ -163,10 +181,13 @@
         <div class="chapter-progress"><i id="chapter-progress"></i></div>
       </main>
       <main id="ending" class="ending hidden">
-        <span class="ending-eyebrow">新生 · 完</span>
+        <span class="ending-eyebrow">新生手账 · 第一页完成</span>
         <h2>待办没少几条，<br />但好像……<span>没那么沉了。</span></h2>
         <p>“今晚心理班会”旁边，多了一个勾。</p>
         <div class="ending-memo">
+          <div class="ending-stamp" aria-hidden="true">
+            <span data-doodle="leaf"></span><b>第一步</b><small>已迈出</small>
+          </div>
           <span>手机里的待办</span>
           <p id="ending-memory"></p>
           <div>
@@ -178,6 +199,9 @@
           <span id="ending-reflection-label"></span>
           <p id="ending-reflection-text"></p>
         </section>
+        <div class="ending-signature">
+          <span id="ending-signature"></span><time id="ending-date"></time>
+        </div>
         <div class="ending-actions">
           <button data-chapters class="secondary-button" hidden>章节回看</button
           ><button id="replay" class="primary-button">重新开始</button

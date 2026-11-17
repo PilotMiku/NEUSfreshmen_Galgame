@@ -21,6 +21,7 @@ import { savePanel } from './save-panel.js';
 import { newGameState, sessionSnapshot, chapterReplayState, endingReflection } from './session.js';
 import { PausableTimer, Typewriter } from './playback.js';
 import { element as el } from './ui.js';
+import { decorateInterface, decorateSpeaker } from './icons.js';
 import { defaultAssets } from './assets-default.js';
 import {
   fetchManifest,
@@ -476,6 +477,7 @@ function render() {
     (replaying ? '章节回看 · ' : state.name + '的大学生活 · ') + chapter.name;
   $('dialogue-context').textContent = s.memory ? '回忆 · 教学楼外' : chapter.note;
   $('speaker').textContent = s.who;
+  decorateSpeaker(s, characters[s.who]);
   $('speaker-note').textContent =
     s.who === '我'
       ? s.spoken
@@ -596,6 +598,12 @@ function showEnding() {
       : '后来某次离别，我发现自己还是会愣一下。';
   if (!replaying) storage.set('completed', true);
   renderEndingReflection();
+  $('ending-signature').textContent = state.name + '的校园手账';
+  $('ending-date').textContent = new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
   updateChapterAccess();
   autoSave();
 }
@@ -930,6 +938,7 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', () => {
   if (screen === 'game') autoSave();
 });
+decorateInterface();
 sound.assetMap = assets;
 applySettings();
 showHome();
