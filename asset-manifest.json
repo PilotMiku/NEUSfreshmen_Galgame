@@ -132,5 +132,9 @@
   "mobile_xuewei": "img_human/optimized/xuewei.mobile.webp",
   "mobile_xuewei_stand": "img_human/optimized/xuewei_stand.mobile.webp",
   "mobile_zuxuan": "img_human/optimized/zuxuan.mobile.webp",
-  "mobile_zuxuan_stand": "img_human/optimized/zuxuan_stand.mobile.webp"
+  "mobile_zuxuan_stand": "img_human/optimized/zuxuan_stand.mobile.webp",
+  "xuezhang_stand": "img_human/optimized/xuezhang_stand.desktop.webp",
+  "mobile_xuezhang_stand": "img_human/optimized/xuezhang_stand.mobile.webp",
+  "xuezhang": "img_human/optimized/xuezhang.desktop.webp",
+  "mobile_xuezhang": "img_human/optimized/xuezhang.mobile.webp"
 }

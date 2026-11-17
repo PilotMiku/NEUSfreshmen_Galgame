@@ -59,6 +59,12 @@
     "desktop": "img_human/optimized/xuewei_stand.desktop.webp",
     "mobile": "img_human/optimized/xuewei_stand.mobile.webp"
   },
+  "xuezhang_stand": {
+    "source": "img_human/xuezhang_stand.png",
+    "sha256": "d834e89164e6c757e6af8716664a454aa037bc95c2a2e64538b5e76a41e4266d",
+    "desktop": "img_human/optimized/xuezhang_stand.desktop.webp",
+    "mobile": "img_human/optimized/xuezhang_stand.mobile.webp"
+  },
   "zuxuan": {
     "source": "img_human/zuxuan.png",
     "sha256": "3a6ddc87b9d273f330b8fa6bc50dbab442cf1a97b6b20e8f54efc24cba55bc86",
@@ -70,5 +76,11 @@
     "sha256": "11cd2e5b656b97e69dba22705a4bc2a63e28eeb5ecb148bba2c7cf221cfc1066",
     "desktop": "img_human/optimized/zuxuan_stand.desktop.webp",
     "mobile": "img_human/optimized/zuxuan_stand.mobile.webp"
+  },
+  "xuezhang": {
+    "source": "img_human/xuezhang.png",
+    "sha256": "be366de89dbea71304b8a449a484733b9c3696a4e58207ec3d9bd2f26720af1d",
+    "desktop": "img_human/optimized/xuezhang.desktop.webp",
+    "mobile": "img_human/optimized/xuezhang.mobile.webp"
   }
 }

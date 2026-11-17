@@ -16,7 +16,7 @@ export const characters = {
   组宣:{file:'zuxuan',companion:'zuxuan_stand',companionStyle:{height:.88,x:.34,y:.18,opacity:.32},portraitHip:.56,side:'left',color:'#8d88b1',title:'组织 · 宣传'},
   学习委员:{file:'xuewei',companion:'xuewei_stand',companionStyle:{height:.86,x:.30,y:.17,opacity:.32},portraitHip:.53,side:'left',color:'#7a9eae',title:'学习委员 · 双创委员'},
   文体委员:{file:'wenti',companion:'wenti_stand',companionStyle:{height:1.18,x:.19,y:.16,opacity:.36},portraitHip:.58,side:'left',color:'#b78984',title:'文体委员 · 生涯发展委员'},
-  毛学长:{file:'xuezhang',side:'left',color:'#7e8fa8',title:'高年级同学'},
+  毛学长:{file:'xuezhang',companion:'xuezhang_stand',companionStyle:{height:.94,x:.32,y:.16,opacity:.36},portraitHip:.68,side:'left',color:'#7e8fa8',title:'高年级同学'},
 };
 // The life committee member also serves as the psychology committee member.
 characters.心理委员=characters.生活委员;
@@ -106,7 +106,7 @@ at('夜路','qiuzhu');
 scene('啊，新的生活，困难真是接连不断呢。',{id:'new-difficulties'});
 scene('不过……',{id:'recall-lead',memory:true});
 at('文管学馆');
-say('毛学长','刚来大学，有些事一时应付不过来，很正常。遇到困难就跟我们说一声，同学、班委，还有学长学姐，都可以一起想办法。别急，慢慢来。',{id:'mao-encouragement',memory:true});
+say('毛学长','遇到困难时，大家可以向辅导员老师、学长学姐请教，也可以和身边同学交流，大家一起想办法！需要帮助时，别不好意思开口~',{id:'mao-encouragement',memory:true});
 at('夜路');
 scene('是呢，遇到自己很难解决的困难，向身边的同学求助，也是不错的选择呢。',{id:'ask-for-help'});
 live('next-step','一起想想办法。','主持人：请大家以小组为单位，从刚才分享的困难里选择一个，讨论可以怎么解决、可以向谁求助，以及今天就能迈出的第一步。讨论结束后，每组推选一位代表分享。','可以记下：我们选的困难是……；可以尝试的办法是……；可以向……求助；今天先做……。',{reflection:true,liveNext:'讨论结束，进入分享',liveHint:'小组讨论结束、选好代表后，由主持人继续。',notePlaceholder:'记录小组选择的困难、解决办法和第一步（可留空）'});

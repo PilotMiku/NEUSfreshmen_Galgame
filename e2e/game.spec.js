@@ -73,6 +73,51 @@ test('companion retains a valid image throughout exit fade', async ({ page }) =>
   await expect(page.locator('.portrait-echo')).toHaveCSS('opacity', '0');
 });
 
+test('Mao companion appears with his transparent portrait during his memory and exits with it', async ({
+  page,
+}, testInfo) => {
+  await boot(page, 'mao-encouragement', { settings: { motion: false } });
+  await expect(page.locator('#dialogue-text')).toHaveText(
+    '遇到困难时，大家可以向辅导员老师、学长学姐请教，也可以和身边同学交流，大家一起想办法！需要帮助时，别不好意思开口~',
+  );
+  await expect(page.locator('#character')).toHaveAttribute('data-portrait', 'image');
+  await expect(page.locator('#character')).toHaveClass(/is-visible/);
+  await expect(page.locator('#character-image')).toHaveAttribute(
+    'src',
+    /xuezhang\.(mobile|desktop)\.[a-f0-9]{12}\.webp$/,
+  );
+  expect(
+    await page.locator('#character-image').evaluate((img) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      return ctx.getImageData(0, 0, 1, 1).data[3];
+    }),
+  ).toBe(0);
+  const companion = page.locator('.portrait-echo');
+  await expect(companion).toHaveClass(/is-visible/);
+  await expect(companion).toHaveCSS('opacity', '0.36');
+  await expect(companion.locator('img')).toHaveAttribute(
+    'src',
+    /xuezhang_stand\.(mobile|desktop)\.[a-f0-9]{12}\.webp$/,
+  );
+  expect(await companion.locator('img').evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+  const bounds = await companion.boundingBox();
+  const header = await page.locator('.topbar').boundingBox();
+  expect(bounds.y).toBeGreaterThanOrEqual(header.y + header.height);
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(page.viewportSize().width);
+  await page.screenshot({ path: `artifacts/mao-companion-${testInfo.project.name}.png` });
+  await next(page, 'ask-for-help');
+  await expect(companion).not.toHaveClass(/is-visible/);
+  await expect(page.locator('#character')).not.toHaveClass(/is-visible/);
+  await page.locator('#back').click();
+  await current(page, 'mao-encouragement');
+  await expect(companion).toHaveClass(/is-visible/);
+  expect(failedResponses.get(page)).toEqual([]);
+});
+
 test('text pauses and resumes behind settings, hidden UI and a background tab', async ({
   page,
 }) => {

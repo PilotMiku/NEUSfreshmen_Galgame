@@ -32,6 +32,7 @@ const groups = {
     'shenghuo_stand',
     'xuewei_stand',
     'zuxuan_stand',
+    'xuezhang_stand',
   ],
   audio: ['bgm_open', 'bgm_ke', 'bgm_banwei', 'bgm_xingfu', 'bgm_qiuzhu', 'bgm_shouwei'],
 };
